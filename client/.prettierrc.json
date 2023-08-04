@@ -1,0 +1,9 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.printWidth": 200,
+  "prettier.jsxSingleQuote": true,
+  "prettier.singleQuote": true,
+  "[javascript]": {
+    "editor.formatOnSave": true
+  }
+}
