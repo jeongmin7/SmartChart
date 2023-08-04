@@ -16,15 +16,7 @@ const Input = ({
   ...restProps
 }) => {
   const [inputValue, setInputValue] = useState(value ? value : "");
-  const checkType = () => {
-    if (email) {
-      return "email";
-    }
-    if (password) {
-      return "password";
-    }
-    return "text";
-  };
+
   const handleChange = (e) => {
     setInputValue(e.target.value);
     onChange(e);
@@ -34,7 +26,7 @@ const Input = ({
       <Wrapper>
         <InputStyle
           id={id}
-          type={checkType()}
+          type={id ? id : "text"}
           name={name}
           placeholder={placeholder}
           disabled={disabled}
