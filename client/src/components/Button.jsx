@@ -7,12 +7,14 @@ const Button = ({
   bgColor,
   fgColor,
   width,
+  height,
   ...restProps
 }) => {
   const style = {
     backgroundColor: bgColor || "",
     color: fgColor || "",
     width: width || "",
+    height: height || "",
   };
 
   return <ButtonS type={type} style={style} {...restProps} />;
