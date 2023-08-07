@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 
 const Input = ({
   id,
+  width,
   name = "",
   labelVisible,
   email,
@@ -22,44 +23,32 @@ const Input = ({
     onChange(e);
   };
   return (
-    <Container>
-      <Wrapper>
-        <InputStyle
-          id={id}
-          type={id ? id : "text"}
-          name={name}
-          placeholder={placeholder}
-          disabled={disabled}
-          value={inputValue}
-          onChange={handleChange}
-          {...restProps}
-        />
-      </Wrapper>
+    <>
+      <InputStyle
+        id={id}
+        type={id ? id : "text"}
+        name={name}
+        width={width}
+        placeholder={placeholder}
+        disabled={disabled}
+        value={inputValue}
+        onChange={handleChange}
+        {...restProps}
+      />
       {errorProp && <span role="alert">{errorProp.message}</span>}
-    </Container>
+    </>
   );
 };
 
 export default Input;
-const Container = styled.div`
-  width: 80%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 3rem;
-  margin-bottom: 1rem;
-`;
+
+// const Container = styled.div`
+//   width: ${(props) => props.width || "100%"};
+// `;
 
 const InputStyle = styled.input`
   display: flex;
-  width: 80%;
+  width: ${(props) => props.width || "100%"};
   height: 2.5rem;
-  justify-content: center;
-  align-items: center;
+  margin-bottom: 1rem;
 `;
