@@ -4,9 +4,9 @@ import LoginFormContainer from "../Container/LoginFormContainer";
 
 const Login = () => {
   return (
-    <div>
+    <>
       <LoginFormContainer />
-    </div>
+    </>
   );
 };
 
