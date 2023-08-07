@@ -2,18 +2,11 @@ import React from "react";
 import { styled } from "styled-components";
 import symbol from "../assets/symbol.png";
 
-const Logo = () => {
+const Logo = ({ logo }) => {
   return (
-    <Wrapper>
-      <Icons>
-        {/* <BsCapsulePill /> */}
-        <img
-          src={symbol}
-          alt="logo
-        "
-        />
-      </Icons>
-      <Title>아프Da</Title>
+    <Wrapper logo={logo}>
+      <Title logo={logo}>Smart Chart</Title>
+      <Icon src={symbol} alt="logo" logo={logo} />
     </Wrapper>
   );
 };
@@ -21,27 +14,21 @@ const Logo = () => {
 export default Logo;
 const Wrapper = styled.div`
   display: flex;
-  position: relative;
-  flex-direction: column;
-  margin: 0px;
-  margin-bottom: 5rem;
+  flex-direction: row;
+  width: ${(props) => (props.logo ? "15rem" : "30rem")};
+  height: ${(props) => (props.logo ? "3rem" : "5rem")};
+  align-items: flex-end;
 `;
 const Title = styled.div`
-  display: flex;
-  position: absolute;
-  top: 50px;
-  left: 10px;
-  font-family: Inter;
-  font-size: 96px;
-  font-weight: 800;
-  line-height: 116px;
-  letter-spacing: 0em;
-  text-align: left;
   color: #1798e1;
+  font-weight: 700;
+  font-size: ${(props) => (props.logo ? "2rem" : "4rem")};
+  position: absolute;
 `;
-
-const Icons = styled.div`
-  font-size: 100px;
-  width: 400px;
-  text-align: right;
+const Icon = styled.img`
+  width: ${(props) => (props.logo ? "1.5rem" : "3rem")};
+  height: ${(props) => (props.logo ? "1.5rem" : "3rem")};
+  position: relative;
+  top: ${(props) => (props.logo ? "-0.9rem" : "-2rem")};
+  left: ${(props) => (props.logo ? "10.5rem" : "22rem")};
 `;
