@@ -33,4 +33,5 @@ const ButtonS = styled.div`
   color: ${palette.white};
   border-radius: 30px;
   font-weight: 600;
+  cursor: pointer;
 `;
