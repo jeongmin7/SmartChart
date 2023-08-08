@@ -1,5 +1,6 @@
 import React from "react";
 import { styled } from "styled-components";
+import { palette } from "../styles/GlobalStyles";
 
 const Button = ({
   type = "button",
@@ -27,9 +28,9 @@ export default Button;
 const ButtonS = styled.div`
   display: flex;
   justify-content: center;
-  background-color: #97a6e0;
+  background-color: ${palette.primary.blue};
   padding: 1rem;
-  color: white;
+  color: ${palette.white};
   border-radius: 30px;
   font-weight: 600;
 `;
