@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import Navbar from "./layout/Navbar";
 import RoutesCollection from "./routesCollection";
 import Routes from "./routesCollection";
-import GlobalStyles from "./styles/GlobalStyles";
 import { useRecoilValue } from "recoil";
 import { sizeStore } from "./stores/sizeStore";
 import { useSetRecoilState } from "recoil";
+import { GlobalStyle } from "./styles/GlobalStyles";
 
 function App() {
   // const isToggle = useRecoilValue(sizeStore);
@@ -25,7 +25,7 @@ function App() {
   return (
     <>
       <Navbar />
-      <GlobalStyles />
+      <GlobalStyle />
       <Routes>
         <RoutesCollection />
       </Routes>

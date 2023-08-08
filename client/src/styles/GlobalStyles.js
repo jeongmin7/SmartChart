@@ -1,7 +1,47 @@
 import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 
-const GlobalStyle = createGlobalStyle`
+export const zIndex = {
+  // example
+  // popupDialog: 100,
+  modal: 2000,
+};
+
+export const palette = {
+  // example
+  //   gray: {
+  //     0: "#F4F4F4",
+  //     1: "#6f6f6f",
+  //     2: "#393939",
+  //     3: "#C4C4C4",
+  //     4: "#353535",
+  //     5: "#525252",
+  //     6: "#C6C6C6",
+  //     7: "rgba(141, 141, 141, 0.24)",
+  //     8: "#8d8d8d41",
+  //     light: "#dfdfdf",
+  //     middle: "#f7f7f7",
+  //     border: "#c8c8c8",
+  //     dark: "#979797",
+  //   },
+
+  white: "#fff",
+  primary: {
+    blue: "#1798e1",
+    black: "#000",
+  },
+  text: "#3c3c3b",
+};
+
+export const size = {
+  // example
+  //   header: 48,
+  //   minHeight: 700,
+  //   minWidth: 1100,
+  //   modalWidth: 705,
+};
+
+export const GlobalStyle = createGlobalStyle`
     ${reset};
     * {
         box-sizing: border-box;
@@ -31,5 +71,3 @@ const GlobalStyle = createGlobalStyle`
         font-weight: 400;
     }
 `;
-
-export default GlobalStyle;
