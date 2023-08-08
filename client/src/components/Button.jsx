@@ -8,6 +8,7 @@ const Button = ({
   fgColor,
   width,
   height,
+  marginBottom,
   ...restProps
 }) => {
   const style = {
@@ -15,6 +16,7 @@ const Button = ({
     color: fgColor || "",
     width: width || "",
     height: height || "",
+    marginBottom: marginBottom || "",
   };
 
   return <ButtonS type={type} style={style} {...restProps} />;

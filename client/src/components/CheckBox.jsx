@@ -9,7 +9,7 @@ const Checkbox = ({
   ...restProps
 }) => {
   return (
-    <Label style={{ fontSize: "1rem" }}>
+    <Label style={{ fontSize: "1rem", marginBottom: "5px" }}>
       <input
         type="checkbox"
         checked={checked}
@@ -25,5 +25,5 @@ const Checkbox = ({
 export default Checkbox;
 const Label = styled.label`
   display: flex;
-  margin-left: 2rem;
+  /* margin-left: 2rem; */
 `;

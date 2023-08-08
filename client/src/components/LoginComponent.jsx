@@ -26,9 +26,9 @@ const LoginComponent = () => {
       <LoginWrapper>
         <Logo />
 
-        {inputGroup.map((inputEl) => (
+        {inputGroup.map((inputEl, index) => (
           <Input
-            width="60%"
+            width="100%"
             autoComplete="off"
             id={inputEl}
             placeholder={inputEl}
@@ -38,21 +38,23 @@ const LoginComponent = () => {
                 ? setEmail(e.target.value)
                 : setPassword(e.target.value)
             }
+            style={index === 0 ? { marginTop: "30px" } : {}}
           />
         ))}
-        <div>
+        <CheckBoxContainer>
           <SaveIdCheckbox
             checked={isAutoLogin}
             onChange={(e) => setIsAutoLogin(e.target.checked)}
           />
-        </div>
-        <div>
-          <Button onClick={loginUser} width="80%">
-            로그인
-          </Button>
-        </div>
-
-        <Link to="/finduserinfo">아이디- 비밀번호 찾기</Link>
+        </CheckBoxContainer>
+        <Button onClick={loginUser} width="100%" marginBottom="30px">
+          로그인
+        </Button>
+        <LinkWrapper>
+          <LinkTag to="/finduserinfo">아이디- 비밀번호 찾기</LinkTag>
+          <span style={{ margin: "0 10px" }}>|</span>
+          <LinkTag to="/finduserinfo">회원가입</LinkTag>
+        </LinkWrapper>
       </LoginWrapper>
     </LoginContainer>
   );
@@ -64,7 +66,7 @@ const LoginContainer = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: yellow;
+  /* background-color: yellow; */
   width: 100vw;
   height: 100vh;
 `;
@@ -72,15 +74,30 @@ const LoginContainer = styled.section`
 const LoginWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 40%;
-  height: 70%;
-  min-width: 650px;
-  min-height: 750px;
+  /* align-items: center; */
+  width: 20%;
+  height: 40%;
+  min-width: 550px;
+  min-height: 550px;
   background-color: white;
+  padding: 30px;
+  /* & > input {
+    transform: translateX(-30px);
+  } */
 `;
 
-const inputContainer = styled.div`
+const CheckBoxContainer = styled.div`
   width: 100%;
-  height: 100%;
+  height: 100px;
+`;
+
+const LinkWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
+
+const LinkTag = styled(Link)`
+  text-decoration: none; /* 밑줄 제거 */
+  color: inherit; /* 부모 요소의 색상 상속 */
 `;

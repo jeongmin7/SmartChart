@@ -12,7 +12,7 @@ const SaveIdCheckbox = ({
   ...restProps
 }) => {
   return (
-    <div>
+    <>
       <Checkbox
         label={label}
         checked={checked}
@@ -28,7 +28,7 @@ const SaveIdCheckbox = ({
           message={message}
         />
       )}
-    </div>
+    </>
   );
 };
 
