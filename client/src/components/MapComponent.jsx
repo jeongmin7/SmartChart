@@ -1,7 +1,38 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import Loader from "./Loader";
+import { BiCurrentLocation } from "react-icons/bi";
+
 const { kakao } = window;
 
 const MapComponent = () => {
+  const [userLocation, setUserLocation] = useState({
+    lat: 37.5658091,
+    lng: 126.9729574,
+  });
+  const [map, setMap] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    // 사용자 위치 가져오기
+    const getUserLocation = () => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setUserLocation({ lat: latitude, lng: longitude });
+          },
+          (error) => {
+            console.error("Error getting user location:", error);
+          },
+        );
+      } else {
+        console.error("Geolocation is not available.");
+      }
+    };
+
+    getUserLocation();
+  }, []);
+
   useEffect(() => {
     // 카카오 맵 API 스크립트 로드
     const script = document.createElement("script");
@@ -11,36 +42,47 @@ const MapComponent = () => {
   }, []);
 
   const initializeMap = () => {
-    // 마커 생성
-    const markerPosition = new kakao.maps.LatLng(33.450701, 126.570667);
+    const markerPosition = new kakao.maps.LatLng(
+      userLocation.lat,
+      userLocation.lng,
+    );
+
     const marker = new kakao.maps.Marker({
       position: markerPosition,
     });
-    // 지도 생성
+
     const mapContainer = document.getElementById("map");
     const mapOption = {
-      center: new kakao.maps.LatLng(33.450701, 126.570667),
-      // 여기가 검색된 영역?
-      level: 3,
+      center: markerPosition, // 사용자의 위치로 지도 중심 설정
+      level: 7,
     };
     const map = new kakao.maps.Map(mapContainer, mapOption);
-
-    // 마커가 지도 위에 표시되도록 설정
     marker.setMap(map);
+    setMap(map);
+  };
 
-    const infowindow = new kakao.maps.InfoWindow({
-      content: `<div style="width:150px;text-align:center;padding:6px 0;"></div>`,
-    });
-    infowindow.open(map, marker);
+  const moveToUserLocation = () => {
+    if (map && userLocation.lat && userLocation.lng) {
+      setIsLoading(true);
+      const newCenter = new kakao.maps.LatLng(
+        userLocation.lat,
+        userLocation.lng,
+      );
 
-    // 지도와 마커를 컴포넌트의 상태로 관리하거나 다른 함수에서 접근할 수 있도록 설정할 수도 있습니다.
-    // this.setState({ map, marker });
+      map.panTo(newCenter);
+      setTimeout(() => {
+        setIsLoading(false); // 로딩 상태 종료 (이동 완료 후)
+      }, 1000); //
+    }
   };
 
   return (
     <div>
-      {/* 지도가 표시될 div */}
+      {isLoading && <Loader />}
       <div id="map" style={{ width: "500px", height: "400px" }}></div>
+      <button onClick={moveToUserLocation}>
+        <BiCurrentLocation />
+      </button>
     </div>
   );
 };
