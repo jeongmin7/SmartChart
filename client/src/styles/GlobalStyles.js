@@ -9,21 +9,21 @@ export const zIndex = {
 
 export const palette = {
   // example
-  //   gray: {
-  //     0: "#F4F4F4",
-  //     1: "#6f6f6f",
-  //     2: "#393939",
-  //     3: "#C4C4C4",
-  //     4: "#353535",
-  //     5: "#525252",
-  //     6: "#C6C6C6",
-  //     7: "rgba(141, 141, 141, 0.24)",
-  //     8: "#8d8d8d41",
-  //     light: "#dfdfdf",
-  //     middle: "#f7f7f7",
-  //     border: "#c8c8c8",
-  //     dark: "#979797",
-  //   },
+  gray: {
+    // 0: "#F4F4F4",
+    // 1: "#6f6f6f",
+    // 2: "#393939",
+    // 3: "#C4C4C4",
+    // 4: "#353535",
+    // 5: "#525252",
+    // 6: "#C6C6C6",
+    // 7: "rgba(141, 141, 141, 0.24)",
+    // 8: "#8d8d8d41",
+    // light: "#dfdfdf",
+    // middle: "#f7f7f7",
+    border: "#CBC5C5",
+    // dark: "#979797",
+  },
 
   white: "#fff",
   primary: {
@@ -45,11 +45,12 @@ export const GlobalStyle = createGlobalStyle`
     ${reset};
     * {
         box-sizing: border-box;
+        
     }
     body{
         padding: 0;
         margin: 0;
-        font-family: 'Noto Sans KR', sans-serif;
+        font-family: 'IBM Plex Sans', sans-serif;
     };
     button{
         display: flex;
@@ -61,6 +62,7 @@ export const GlobalStyle = createGlobalStyle`
         display: flex;
         outline: none;
         padding-left: 10px;
+        
     }
     h1{
         font-size: 3rem;
