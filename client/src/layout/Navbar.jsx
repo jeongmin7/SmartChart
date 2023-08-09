@@ -5,7 +5,7 @@ import { styled } from "styled-components";
 
 const Navbar = () => {
   const pathname = useLocation().pathname;
-  if (pathname === "/" || pathname === "/signup" || pathname === " ") {
+  if (pathname === "/" || pathname === "/signUp" || pathname === " ") {
     return null;
   }
   return (
