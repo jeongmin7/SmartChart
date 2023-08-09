@@ -9,7 +9,9 @@ const Button = ({
   fgColor,
   width,
   height,
+  padding,
   marginBottom,
+  fontSize,
   ...restProps
 }) => {
   const style = {
@@ -18,6 +20,8 @@ const Button = ({
     width: width || "",
     height: height || "",
     marginBottom: marginBottom || "",
+    padding: padding || "",
+    fontSize: fontSize || "",
   };
 
   return <ButtonS type={type} style={style} {...restProps} />;
@@ -28,6 +32,7 @@ export default Button;
 const ButtonS = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   background-color: ${palette.primary.blue};
   padding: 1rem;
   color: ${palette.white};
