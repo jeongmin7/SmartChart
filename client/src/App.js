@@ -6,6 +6,7 @@ import { useRecoilValue } from "recoil";
 import { sizeStore } from "./stores/sizeStore";
 import { useSetRecoilState } from "recoil";
 import { GlobalStyle } from "./styles/GlobalStyles";
+import ChatIcon from "./assets/ChatIcon";
 
 function App() {
   // const isToggle = useRecoilValue(sizeStore);
@@ -25,6 +26,7 @@ function App() {
   return (
     <>
       <Navbar />
+      <ChatIcon />
       <GlobalStyle />
       <Routes>
         <RoutesCollection />
