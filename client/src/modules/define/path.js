@@ -6,4 +6,5 @@ export const path = {
   map: "/map",
   pay: "/pay",
   mypage: "/mypage",
+  chat: "/chat",
 };

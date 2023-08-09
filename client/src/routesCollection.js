@@ -9,6 +9,7 @@ import MapComponent from "./components/MapComponent";
 import Appointment from "./pages/Appointment";
 import Pay from "./pages/Pay";
 import MyPage from "./pages/MyPage";
+import Chat from "./pages/Chat";
 
 const RoutesCollection = () => {
   return (
@@ -20,6 +21,7 @@ const RoutesCollection = () => {
       <Route path={path.appointment} element={<Appointment />} />
       <Route path={path.pay} element={<Pay />} />
       <Route path={path.mypage} element={<MyPage />} />
+      <Route path={path.chat} element={<Chat />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
