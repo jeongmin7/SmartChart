@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
+import { palette } from "../styles/GlobalStyles";
 
 const Input = ({
   id,
@@ -14,10 +15,10 @@ const Input = ({
   error: errorProp,
   className = "",
   onChange,
+  marginBottom,
   ...restProps
 }) => {
   const [inputValue, setInputValue] = useState(value ? value : "");
-
   const handleChange = (e) => {
     setInputValue(e.target.value);
     onChange(e);
@@ -33,6 +34,7 @@ const Input = ({
         disabled={disabled}
         value={inputValue}
         onChange={handleChange}
+        marginBottom={marginBottom}
         {...restProps}
       />
       {errorProp && <span role="alert">{errorProp.message}</span>}
@@ -50,5 +52,7 @@ const InputStyle = styled.input`
   display: flex;
   width: ${(props) => props.width || "100%"};
   height: 2.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: ${(props) => props.marginBottom || "1rem"};
+  border: 1px solid ${palette.gray.border};
+  border-radius: 6px;
 `;
