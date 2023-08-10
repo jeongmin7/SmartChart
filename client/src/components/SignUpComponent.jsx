@@ -2,30 +2,43 @@ import React, { useState } from "react";
 import Input from "./Input";
 import { styled } from "styled-components";
 import Button from "./Button";
-import SearchHospital from "./SearchHospital";
 import { palette } from "../styles/GlobalStyles";
+import SearchHospital from "./SearchHospital";
 
 const SignUpForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
-  const [gender, setGender] = useState("");
-  const [age, setAge] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [userInfo, setUserInfo] = useState({
+    isDoctor: false,
+    email: "",
+    password: "",
+    username: "",
+    gender: "",
+    age: "",
+    phoneNumber: "",
+  });
+  // 의사냐 환자냐
 
-  const handleGenderChange = (event) => {
-    setGender(event.target.value);
-  };
-  const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value);
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+
+    setUserInfo((prevUserInfo) => ({
+      ...prevUserInfo,
+      [name]: value,
+    }));
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("userInfo", userInfo);
+  };
   return (
     <SignUpContainer>
       <SignUpWrapper>
         <span
-          style={{ fontWeight: "bold", marginBottom: "20px", fontSize: "25px" }}
+          style={{
+            fontWeight: "bold",
+            marginBottom: "20px",
+            fontSize: "25px",
+          }}
         >
           회원가입
         </span>
@@ -35,6 +48,28 @@ const SignUpForm = () => {
           아래 정보를 입력해 주세요.
         </span>
         {/* <span>계정정보</span> */}
+        <SelectWrapper>
+          <label>
+            환자
+            <input
+              type="radio"
+              value="patient"
+              name="isDoctor"
+              checked={!userInfo.isDoctor}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            의사
+            <input
+              type="radio"
+              value="doctor"
+              name="isDoctor"
+              checked={userInfo.isDoctor}
+              onChange={handleInputChange}
+            />
+          </label>
+        </SelectWrapper>
         <ContentWrapper>
           Email
           <Input
@@ -43,9 +78,9 @@ const SignUpForm = () => {
             name="email"
             placeholder="email"
             width="100%"
-            value={email}
-            marginBottom="0"
-            onChange={(e) => setEmail(e.target.value)}
+            value={userInfo.email}
+            marginbottom="0"
+            onChange={handleInputChange}
           />
           <ButtonWrapper>
             <Button width="80px" height="20px" padding="0" fontSize="12px">
@@ -60,9 +95,9 @@ const SignUpForm = () => {
             id="password"
             name="password"
             placeholder="password"
-            value={password}
-            marginBottom="0"
-            onChange={(e) => setPassword(e.target.value)}
+            value={userInfo.password}
+            marginbottom="0"
+            onChange={handleInputChange}
           />
         </ContentWrapper>
         <ContentWrapper>
@@ -71,9 +106,9 @@ const SignUpForm = () => {
             name="username"
             id="username"
             placeholder="username"
-            value={username}
-            marginBottom="0"
-            onChange={(e) => setUsername(e.target.value)}
+            value={userInfo.username}
+            marginbottom="0"
+            onChange={handleInputChange}
           />
         </ContentWrapper>
         <ContentWrapper>
@@ -82,9 +117,9 @@ const SignUpForm = () => {
             name="age"
             id="age"
             placeholder="age"
-            value={age}
+            value={userInfo.age}
             marginBottom="0"
-            onChange={(e) => setAge(e.target.value)}
+            onChange={handleInputChange}
           />
         </ContentWrapper>
         <ContentWrapper>
@@ -93,16 +128,17 @@ const SignUpForm = () => {
             name="phoneNumber"
             id="phoneNumber"
             placeholder="phoneNumber"
-            value={phoneNumber}
-            marginBottom="0"
-            onChange={(e) => setPhoneNumber(e.target.value)}
+            value={userInfo.phoneNumber}
+            marginbottom="0"
+            onChange={handleInputChange}
           />
         </ContentWrapper>
         <GenderWrapper>
           Gender
           <select
-            value={gender}
-            onChange={handleGenderChange}
+            name="gender"
+            value={userInfo.gender}
+            onChange={handleInputChange}
             style={{
               marginLeft: "10px",
               border: `1px solid ${palette.gray.border}`,
@@ -114,9 +150,9 @@ const SignUpForm = () => {
             <option value="남성">남성</option>
           </select>
         </GenderWrapper>
-        {selectedOption === "doctor" && <SearchHospital />}
+        {userInfo.isDoctor && <SearchHospital />}
 
-        <Button type="submit" width="40%" height="40px">
+        <Button onClick={handleSubmit} width="40%" height="40px">
           회원가입
         </Button>
       </SignUpWrapper>
@@ -162,11 +198,16 @@ const ContentWrapper = styled.div`
   font-weight: bold;
   font-size: 14px;
 `;
+const SelectWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+`;
 
 const ButtonWrapper = styled.div`
   position: absolute;
   right: -70px;
-  top: 180px;
+  top: 220px;
 `;
 
 const GenderWrapper = styled.div`

@@ -10,6 +10,7 @@ import Appointment from "./pages/Appointment";
 import Pay from "./pages/Pay";
 import MyPage from "./pages/MyPage";
 import Chat from "./pages/Chat";
+import HospitalPage from "./pages/HospitalPage";
 
 const RoutesCollection = () => {
   return (
@@ -22,6 +23,7 @@ const RoutesCollection = () => {
       <Route path={path.pay} element={<Pay />} />
       <Route path={path.mypage} element={<MyPage />} />
       <Route path={path.chat} element={<Chat />} />
+      <Route path={path.hospitalPage} element={<HospitalPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

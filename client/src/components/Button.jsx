@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 
 const Button = ({
-  type = "button",
+  type,
   secondary = false,
   bgColor,
   fgColor,
