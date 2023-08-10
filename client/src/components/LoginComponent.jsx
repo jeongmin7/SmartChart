@@ -28,6 +28,7 @@ const LoginComponent = () => {
 
         {inputGroup.map((inputEl, index) => (
           <Input
+            key={index}
             width="100%"
             autoComplete="off"
             id={inputEl}
@@ -47,13 +48,13 @@ const LoginComponent = () => {
             onChange={(e) => setIsAutoLogin(e.target.checked)}
           />
         </CheckBoxContainer>
-        <Button onClick={loginUser} width="100%" marginBottom="30px">
+        <Button onClick={loginUser} width="100%" marginbottom="30px">
           로그인
         </Button>
         <LinkWrapper>
           <LinkTag to="/finduserinfo">아이디- 비밀번호 찾기</LinkTag>
           <span style={{ margin: "0 10px" }}>|</span>
-          <LinkTag to="/finduserinfo">회원가입</LinkTag>
+          <LinkTag to="/signup">회원가입</LinkTag>
         </LinkWrapper>
       </LoginWrapper>
     </LoginContainer>
