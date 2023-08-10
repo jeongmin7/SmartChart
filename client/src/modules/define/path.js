@@ -7,4 +7,5 @@ export const path = {
   pay: "/pay",
   mypage: "/mypage",
   chat: "/chat",
+  hospitalPage: "/hospitalPage",
 };
