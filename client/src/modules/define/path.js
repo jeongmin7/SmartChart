@@ -8,4 +8,8 @@ export const path = {
   mypage: "/mypage",
   chat: "/chat",
   hospitalPage: "/hospitalPage",
+  adminAppointment: "/adminAppointment",
+  adminWaitingList: "/adminWaitingList",
+  accounting: "/accounting",
+  teleConsult: "/teleConsult",
 };

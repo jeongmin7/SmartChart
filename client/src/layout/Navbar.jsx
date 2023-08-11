@@ -2,9 +2,13 @@ import React from "react";
 import styled from "styled-components";
 import Logo from "../components/Logo";
 import { Link, useLocation } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { userInfoAtom } from "../stores/userInfo";
 
 const NavBar = () => {
   const pathname = useLocation().pathname;
+  const userInfo = useRecoilValue(userInfoAtom);
+
   if (pathname === "/" || pathname === "/signUp" || pathname === " ") {
     return null;
   }
@@ -15,16 +19,32 @@ const NavBar = () => {
       </NavLink>
       <NavItems>
         <NavItem>
-          <NavLink to="/appointment">병원예약</NavLink>
+          {userInfo.isDoctor ? (
+            <NavLink to="/adminAppointment">예약/진료관리</NavLink>
+          ) : (
+            <NavLink to="/appointment">병원예약</NavLink>
+          )}
         </NavItem>
         <NavItem>
-          <NavLink to="/selfdiagnosis">스마트 문진</NavLink>
+          {userInfo.isDoctor ? (
+            <NavLink to="/adminWaitingList">환자 대기 관리</NavLink>
+          ) : (
+            <NavLink to="/selfdiagnosis">스마트 문진</NavLink>
+          )}
         </NavItem>
         <NavItem>
-          <NavLink to="/pay">진료비 내기</NavLink>
+          {userInfo.isDoctor ? (
+            <NavLink to="/accounting">매출관리</NavLink>
+          ) : (
+            <NavLink to="/pay">진료비 내기</NavLink>
+          )}
         </NavItem>
         <NavItem>
-          <NavLink to="/mypage">마이페이지 </NavLink>
+          {userInfo.isDoctor ? (
+            <NavLink to="/teleConsult">실시간 진료 상담</NavLink>
+          ) : (
+            <NavLink to="/mypage">마이페이지 </NavLink>
+          )}
         </NavItem>
       </NavItems>
     </NavBarContainer>
