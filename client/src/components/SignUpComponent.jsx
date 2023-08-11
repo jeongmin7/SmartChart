@@ -26,9 +26,21 @@ const SignUpForm = () => {
     }));
   };
 
+  // const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  // TODO:유효성검사, 비밀번호 중복 확인
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("userInfo", userInfo);
+
+    // if (
+    //   !userInfo.email ||
+    //   !userInfo.password ||
+    //   !userInfo.username ||
+    //   !userInfo.age ||
+    //   !userInfo.phoneNumber
+    // ) {
+    //   alert("모든 값을 입력해주세요.");
+    //   return;
+    // }
   };
   return (
     <SignUpContainer>
