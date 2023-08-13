@@ -9,6 +9,13 @@ const appointment = [
   { username: "정", date: "2023-08-19", time: "15:00 - 16:00" },
 ];
 
+// 날짜와 시간 비교 함수
+function compareDates(a, b) {
+  const dateA = new Date(`${a.date} ${a.time.split(" - ")[0]}`);
+  const dateB = new Date(`${b.date} ${b.time.split(" - ")[0]}`);
+  return dateA - dateB;
+}
+
 const AdminWaitingListComponent = () => {
   const currentTime = new Date();
   const year = currentTime.getFullYear();
@@ -17,13 +24,15 @@ const AdminWaitingListComponent = () => {
 
   const today = `${year}-${month}-${day}`;
 
+  // appointment 배열을 날짜 순으로 정렬
+  const sortedAppointments = appointment.sort(compareDates);
   const columns = {
     대기중: [],
     진료중: [],
     완료: [],
   };
 
-  appointment.forEach((appointment) => {
+  sortedAppointments.forEach((appointment) => {
     const { username, date, time } = appointment;
     const appointmentTime = new Date(`${date} ${time.split(" - ")[0]}`);
     const status =
@@ -62,6 +71,7 @@ const AdminWaitingListComponent = () => {
 };
 
 export default AdminWaitingListComponent;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -79,16 +89,19 @@ const Today = styled.div`
   border-radius: 5px 5px 0 0;
   height: 3rem;
 `;
+
 const ColumnContainer = styled.div`
   display: flex;
   justify-content: space-between;
 `;
+
 const Column = styled.div`
   flex: 1;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   margin-left: 1rem;
   padding: 20px;
   border-radius: 5px;
+
   &:first-child {
     margin-left: 0;
   }
@@ -113,6 +126,7 @@ const Appointment = styled.div`
   border: 1px solid #ddd;
   border-radius: 5px;
 `;
+
 const DateText = styled.p`
   font-weight: bold;
   font-size: 1rem;
@@ -120,6 +134,7 @@ const DateText = styled.p`
   background-color: gray;
   margin-bottom: 5px;
 `;
+
 const Info = styled.div`
   background-color: #fff;
   border-radius: 5px;
@@ -127,6 +142,7 @@ const Info = styled.div`
 
 const StyledP = styled.p`
   margin-bottom: 0.5rem;
+
   &:last-child {
     margin-bottom: 0;
   }
