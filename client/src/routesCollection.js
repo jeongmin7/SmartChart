@@ -11,6 +11,10 @@ import Pay from "./pages/Pay";
 import MyPage from "./pages/MyPage";
 import Chat from "./pages/Chat";
 import HospitalPage from "./pages/HospitalPage";
+import AdminAppointment from "./pages/AdminAppointment";
+import AdminWaitingList from "./pages/AdminWaitingList";
+import TeleConsult from "./pages/TeleConsult";
+import Accounting from "./pages/Accounting";
 
 const RoutesCollection = () => {
   return (
@@ -24,6 +28,11 @@ const RoutesCollection = () => {
       <Route path={path.mypage} element={<MyPage />} />
       <Route path={path.chat} element={<Chat />} />
       <Route path={path.hospitalPage} element={<HospitalPage />} />
+      <Route path={path.adminAppointment} element={<AdminAppointment />} />
+      <Route path={path.adminWaitingList} element={<AdminWaitingList />} />
+      <Route path={path.teleConsult} element={<TeleConsult />} />
+      <Route path={path.accounting} element={<Accounting />} />
+
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
