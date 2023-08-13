@@ -68,6 +68,7 @@ const NavItems = styled.ul`
   align-items: center;
   margin: 0;
   padding: 0;
+  flex-direction: row;
 `;
 
 const NavItem = styled.li`
@@ -79,4 +80,8 @@ const NavLink = styled(Link)`
   text-decoration: none;
   font-weight: 700;
   font-size: 1.5rem;
+  white-space: nowrap; /* 줄 바꿈 방지 */
+  @media (max-width: 768px) {
+    font-size: 0.5rem; // 원하는 크기로 조절
+  }
 `;
