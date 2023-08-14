@@ -162,7 +162,7 @@ const SignUpForm = () => {
             <option value="남성">남성</option>
           </select>
         </GenderWrapper>
-        {userInfo.isDoctor && <SearchHospital />}
+        {userInfo.isDoctor === "doctor" && <SearchHospital />}
 
         <Button onClick={handleSubmit} width="40%" height="40px">
           회원가입
@@ -219,7 +219,7 @@ const SelectWrapper = styled.div`
 const ButtonWrapper = styled.div`
   position: absolute;
   right: -70px;
-  top: 220px;
+  top: 232px;
 `;
 
 const GenderWrapper = styled.div`
