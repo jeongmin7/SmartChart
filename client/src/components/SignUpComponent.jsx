@@ -7,7 +7,7 @@ import SearchHospital from "./SearchHospital";
 
 const SignUpForm = () => {
   const [userInfo, setUserInfo] = useState({
-    isDoctor: false,
+    isDoctor: "patient",
     email: "",
     password: "",
     username: "",
@@ -67,7 +67,7 @@ const SignUpForm = () => {
               type="radio"
               value="patient"
               name="isDoctor"
-              checked={!userInfo.isDoctor}
+              checked={userInfo.isDoctor === "patient"}
               onChange={handleInputChange}
             />
           </label>
@@ -77,7 +77,7 @@ const SignUpForm = () => {
               type="radio"
               value="doctor"
               name="isDoctor"
-              checked={userInfo.isDoctor}
+              checked={userInfo.isDoctor === "doctor"}
               onChange={handleInputChange}
             />
           </label>
