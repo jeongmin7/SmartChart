@@ -7,7 +7,7 @@ import SearchHospital from "./SearchHospital";
 
 const SignUpForm = () => {
   const [userInfo, setUserInfo] = useState({
-    isDoctor: false,
+    isDoctor: "patient",
     email: "",
     password: "",
     username: "",
@@ -61,26 +61,26 @@ const SignUpForm = () => {
         </span>
         {/* <span>계정정보</span> */}
         <SelectWrapper>
-          <label>
+          <LabelWrapper>
             환자
             <input
               type="radio"
               value="patient"
               name="isDoctor"
-              checked={!userInfo.isDoctor}
+              checked={userInfo.isDoctor === "patient"}
               onChange={handleInputChange}
             />
-          </label>
-          <label>
+          </LabelWrapper>
+          <LabelWrapper>
             의사
             <input
               type="radio"
               value="doctor"
               name="isDoctor"
-              checked={userInfo.isDoctor}
+              checked={userInfo.isDoctor === "doctor"}
               onChange={handleInputChange}
             />
-          </label>
+          </LabelWrapper>
         </SelectWrapper>
         <ContentWrapper>
           Email
@@ -162,7 +162,7 @@ const SignUpForm = () => {
             <option value="남성">남성</option>
           </select>
         </GenderWrapper>
-        {userInfo.isDoctor && <SearchHospital />}
+        {userInfo.isDoctor === "doctor" && <SearchHospital />}
 
         <Button onClick={handleSubmit} width="40%" height="40px">
           회원가입
@@ -184,6 +184,7 @@ const SignUpContainer = styled.section`
 `;
 
 const SignUpWrapper = styled.div`
+  /* background-color: yellow; */
   display: flex;
   position: relative;
   flex-direction: column;
@@ -192,14 +193,10 @@ const SignUpWrapper = styled.div`
   height: 55%;
   min-width: 550px;
   min-height: 550px;
-  background-color: white;
   padding: 30px;
   div + div {
     margin-top: 20px;
   }
-  /* & > input {
-    transform: translateX(-30px);
-  } */
 `;
 
 const ContentWrapper = styled.div`
@@ -219,7 +216,7 @@ const SelectWrapper = styled.div`
 const ButtonWrapper = styled.div`
   position: absolute;
   right: -70px;
-  top: 220px;
+  top: 232px;
 `;
 
 const GenderWrapper = styled.div`
@@ -228,4 +225,12 @@ const GenderWrapper = styled.div`
   font-weight: bold;
   width: 100%;
   /* justify-content: start; */
+`;
+
+const LabelWrapper = styled.label`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 `;

@@ -48,7 +48,7 @@ const LoginComponent = () => {
             onChange={(e) => setIsAutoLogin(e.target.checked)}
           />
         </CheckBoxContainer>
-        <Button onClick={loginUser} width="100%" marginbottom="30px">
+        <Button onClick={loginUser} width="100%" marginBottom="20px">
           로그인
         </Button>
         <LinkWrapper>
