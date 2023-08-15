@@ -61,7 +61,7 @@ const SignUpForm = () => {
         </span>
         {/* <span>계정정보</span> */}
         <SelectWrapper>
-          <label>
+          <LabelWrapper>
             환자
             <input
               type="radio"
@@ -70,8 +70,8 @@ const SignUpForm = () => {
               checked={userInfo.isDoctor === "patient"}
               onChange={handleInputChange}
             />
-          </label>
-          <label>
+          </LabelWrapper>
+          <LabelWrapper>
             의사
             <input
               type="radio"
@@ -80,7 +80,7 @@ const SignUpForm = () => {
               checked={userInfo.isDoctor === "doctor"}
               onChange={handleInputChange}
             />
-          </label>
+          </LabelWrapper>
         </SelectWrapper>
         <ContentWrapper>
           Email
@@ -184,6 +184,7 @@ const SignUpContainer = styled.section`
 `;
 
 const SignUpWrapper = styled.div`
+  /* background-color: yellow; */
   display: flex;
   position: relative;
   flex-direction: column;
@@ -192,14 +193,10 @@ const SignUpWrapper = styled.div`
   height: 55%;
   min-width: 550px;
   min-height: 550px;
-  background-color: white;
   padding: 30px;
   div + div {
     margin-top: 20px;
   }
-  /* & > input {
-    transform: translateX(-30px);
-  } */
 `;
 
 const ContentWrapper = styled.div`
@@ -228,4 +225,12 @@ const GenderWrapper = styled.div`
   font-weight: bold;
   width: 100%;
   /* justify-content: start; */
+`;
+
+const LabelWrapper = styled.label`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 `;

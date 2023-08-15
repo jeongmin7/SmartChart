@@ -17,10 +17,10 @@ const Input = ({
   onChange,
   marginBottom,
   height,
-  position,
   ...restProps
 }) => {
   const [inputValue, setInputValue] = useState(value ? value : "");
+  console.log(inputValue, "inputValue");
   const handleChange = (e) => {
     setInputValue(e.target.value);
     onChange(e);
@@ -38,7 +38,6 @@ const Input = ({
         onChange={handleChange}
         marginBottom={marginBottom}
         height={height}
-        position={position}
         {...restProps}
       />
       {errorProp && <span role="alert">{errorProp.message}</span>}
@@ -53,7 +52,6 @@ export default Input;
 // `;
 
 const InputStyle = styled.input`
-  position: ${(props) => props.position && props.position};
   display: flex;
   width: ${(props) => props.width || "100%"};
   height: ${(props) => props.height || "2.5rem"};

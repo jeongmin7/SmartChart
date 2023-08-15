@@ -2,45 +2,37 @@ import React, { useState } from "react";
 import Input from "./Input";
 import { styled } from "styled-components";
 import Button from "./Button";
-import DaumPostcode from "react-daum-postcode";
+import { useDaumPostcodePopup } from "react-daum-postcode";
 
 const SearchHospital = () => {
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchKeyword, setSearchKeyword] = useState({
+    name: "",
+    postalCode: "",
+    address: "",
+    detailAddress: "",
+    medicalSubject: "",
+  });
+
+  console.log(searchKeyword, "searchKeyword");
+
   const handleSearchKeyword = (event) => {
     setSearchKeyword(event);
   };
+  const addressModalopen = useDaumPostcodePopup();
+  const searchAddress = (data) => {
+    console.log(JSON.stringify(data), data.buildingName);
 
-  const [openPostcode, setOpenPostcode] = useState(false);
-
-  const searchAddress = {
-    // 버튼 클릭 이벤트
-    openSearchAddressModal: () => {
-      setOpenPostcode((current) => !current);
-    },
-
-    // 주소 선택 이벤트
-    selectAddress: (data) => {
-      console.log(`
-              주소: ${data.address},
-              우편번호: ${data.zonecode},
-              data: ${JSON.stringify(data)}
-          `);
-      setOpenPostcode(false);
-    },
+    setSearchKeyword({
+      ...searchKeyword,
+      name: data.buildingName,
+      postalCode: data.zonecode,
+      address: data.address,
+    });
   };
-  // <div>
-  //   <button onClick={searchAddress.openSearchAddressModal}>
-  //     우편번호 검색
-  //   </button>
 
-  //   {openPostcode && (
-  //     <DaumPostcode
-  //       onComplete={searchAddress.selectAddress} // 값을 선택할 경우 실행되는 이벤트
-  //       autoClose={false} // 값을 선택할 경우 사용되는 DOM을 제거하여 자동 닫힘 설정
-  //       defaultQuery="판교역로 235" // 팝업을 열때 기본적으로 입력되는 검색어
-  //     />
-  //   )}
-  // </div>
+  const handleClick = () => {
+    addressModalopen({ onComplete: searchAddress });
+  };
 
   return (
     <Container>
@@ -54,8 +46,7 @@ const SearchHospital = () => {
         <Input
           name="searchKeyword"
           id="searchKeyword"
-          value={searchKeyword}
-          onChange={handleSearchKeyword}
+          value={searchKeyword.name}
           marginBottom="0"
           width="80%"
           height="2rem"
@@ -65,25 +56,22 @@ const SearchHospital = () => {
         <ContentName>주소 :</ContentName>
         <ContentInput>
           <Input
-            position="relative"
             name="searchKeyword"
             id="searchKeyword"
-            value={searchKeyword}
-            onChange={handleSearchKeyword}
+            value={searchKeyword.postalCode}
             height="2rem"
           />
           <Input
             name="searchKeyword"
             id="searchKeyword"
-            value={searchKeyword}
-            onChange={handleSearchKeyword}
+            value={searchKeyword.address}
             height="2rem"
           />
           <Input
             name="searchKeyword"
             id="searchKeyword"
-            value={searchKeyword}
-            onChange={handleSearchKeyword}
+            // value={searchKeyword}
+            // onChange={handleSearchKeyword}
             height="2rem"
           />
         </ContentInput>
@@ -93,16 +81,24 @@ const SearchHospital = () => {
         <Input
           name="searchKeyword"
           id="searchKeyword"
-          value={searchKeyword}
-          onChange={handleSearchKeyword}
+          // value={searchKeyword}
+          // onChange={handleSearchKeyword}
           marginBottom="0"
           width="80%"
           height="2rem"
         />
       </Content>
-      <Button width="3%" height="1rem">
-        검색하기
-      </Button>
+      <ButtonWrapper>
+        <Button
+          width="80px"
+          height="20px"
+          padding="0"
+          fontSize="12px"
+          onClick={handleClick}
+        >
+          주소 검색
+        </Button>
+      </ButtonWrapper>
     </Container>
   );
 };
@@ -110,9 +106,11 @@ const SearchHospital = () => {
 export default SearchHospital;
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
 `;
 
 const Content = styled.div`
@@ -131,4 +129,10 @@ const ContentInput = styled.div`
   display: flex;
   flex-direction: column;
   width: 80%;
+`;
+
+const ButtonWrapper = styled.div`
+  position: absolute;
+  right: -95px;
+  top: 105px;
 `;
