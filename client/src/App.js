@@ -28,9 +28,7 @@ function App() {
       <Navbar />
       <ChatIcon />
       <GlobalStyle />
-      <Routes>
-        <RoutesCollection />
-      </Routes>
+      <RoutesCollection />
     </>
   );
 }
