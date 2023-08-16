@@ -6,6 +6,7 @@ import Input from "./Input";
 import Loader from "./Loader";
 import Logo from "./Logo";
 import { styled } from "styled-components";
+import { path } from "../modules/define/path";
 
 const LoginComponent = () => {
   const [email, setEmail] = useState("");
@@ -52,9 +53,10 @@ const LoginComponent = () => {
           로그인
         </Button>
         <LinkWrapper>
+          {/* TODO: not find page */}
           <LinkTag to="/finduserinfo">아이디- 비밀번호 찾기</LinkTag>
           <span style={{ margin: "0 10px" }}>|</span>
-          <LinkTag to="/signup">회원가입</LinkTag>
+          <LinkTag to={path.signUp}>회원가입</LinkTag>
         </LinkWrapper>
       </LoginWrapper>
     </LoginContainer>
