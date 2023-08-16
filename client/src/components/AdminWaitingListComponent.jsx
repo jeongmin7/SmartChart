@@ -1,15 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
 const appointment = [
   { username: "김", date: "2023-08-12", time: "12:00 - 13:00" },
-  { username: "이", date: "2023-09-23", time: "09:00 - 10:00" },
-  { username: "박", date: "2023-07-02", time: "11:00 - 12:00" },
-  { username: "홍", date: "2023-08-10", time: "13:00 - 14:00" },
-  { username: "정", date: "2023-08-19", time: "15:00 - 16:00" },
+  { username: "이", date: "2023-08-12", time: "09:00 - 10:00" },
+  { username: "박", date: "2023-08-12", time: "11:00 - 12:00" },
+  { username: "홍", date: "2023-08-12", time: "13:00 - 14:00" },
+  { username: "정", date: "2023-08-12", time: "15:00 - 16:00" },
 ];
 
-// 날짜와 시간 비교 함수
 function compareDates(a, b) {
   const dateA = new Date(`${a.date} ${a.time.split(" - ")[0]}`);
   const dateB = new Date(`${b.date} ${b.time.split(" - ")[0]}`);
@@ -24,53 +23,80 @@ const AdminWaitingListComponent = () => {
 
   const today = `${year}-${month}-${day}`;
 
-  // appointment 배열을 날짜 순으로 정렬
   const sortedAppointments = appointment.sort(compareDates);
-  const columns = {
-    대기중: [],
+
+  const [tasks, setTasks] = useState({
+    대기중: sortedAppointments,
     진료중: [],
     완료: [],
+  });
+
+  const handleDragStart = (e, appointment, status) => {
+    e.dataTransfer.setData(
+      "text/plain",
+      JSON.stringify({ appointment, status }),
+    );
   };
 
-  sortedAppointments.forEach((appointment) => {
-    const { username, date, time } = appointment;
-    const appointmentTime = new Date(`${date} ${time.split(" - ")[0]}`);
-    const status =
-      currentTime < appointmentTime
-        ? "대기중"
-        : currentTime > appointmentTime
-        ? "완료"
-        : "진료중";
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
 
-    const task = (
-      <Appointment key={username}>
-        <DateText>{date}</DateText>
-        <Info>
-          <StyledP>{username}</StyledP>
-          <StyledP>{time}</StyledP>
-        </Info>
-      </Appointment>
-    );
+  const handleDrop = (e, targetStatus) => {
+    e.preventDefault();
+    const data = e.dataTransfer.getData("text/plain");
+    const { appointment, status } = JSON.parse(data);
 
-    columns[status].push(task);
-  });
+    if (status !== targetStatus) {
+      const updatedTasks = {
+        ...tasks,
+        [status]: tasks[status].filter(
+          (apt) => apt.username !== appointment.username,
+        ),
+        [targetStatus]: [...tasks[targetStatus], appointment],
+      };
+
+      setTasks(updatedTasks);
+      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+    }
+  };
+  useEffect(() => {
+    const storedTasks = localStorage.getItem("tasks");
+    if (storedTasks) {
+      setTasks(JSON.parse(storedTasks)); // 읽어온 값 tasks초기화
+    }
+  }, []);
 
   return (
     <Container>
       <Today>{today}</Today>
       <ColumnContainer>
-        {Object.keys(columns).map((status) => (
-          <Column key={status}>
+        {Object.keys(tasks).map((status) => (
+          <Column
+            key={status}
+            onDragOver={handleDragOver}
+            onDrop={(e) => handleDrop(e, status)}
+          >
             <Title>{status}</Title>
-            {columns[status]}
+            {tasks[status].map((appointment) => (
+              <Appointment
+                key={appointment.username}
+                draggable
+                onDragStart={(e) => handleDragStart(e, appointment, status)}
+              >
+                <DateText>{appointment.date}</DateText>
+                <Info>
+                  <StyledP>{appointment.username}</StyledP>
+                  <StyledP>{appointment.time}</StyledP>
+                </Info>
+              </Appointment>
+            ))}
           </Column>
         ))}
       </ColumnContainer>
     </Container>
   );
 };
-
-export default AdminWaitingListComponent;
 
 const Container = styled.div`
   display: flex;
@@ -147,3 +173,5 @@ const StyledP = styled.p`
     margin-bottom: 0;
   }
 `;
+
+export default AdminWaitingListComponent;
