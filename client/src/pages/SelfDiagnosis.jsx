@@ -3,9 +3,9 @@ import SelfDiagnosisContainer from "../Container/SelfDiagnosisContainer";
 
 const SelfDiagnosis = () => {
   return (
-    <div>
+    <>
       <SelfDiagnosisContainer />
-    </div>
+    </>
   );
 };
 
