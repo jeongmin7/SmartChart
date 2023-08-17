@@ -8,6 +8,7 @@ import patientIcon from "../assets/patient.png";
 import femaleDoctor from "../assets/doctor_female.png";
 import maleDoctor from "../assets/doctor_male.png";
 import { CiSquareChevDown } from "react-icons/ci";
+import { path } from "../modules/define/path";
 const NavBar = () => {
   const pathname = useLocation().pathname;
   const userInfo = useRecoilValue(userInfoAtom);
@@ -22,8 +23,8 @@ const NavBar = () => {
     return null;
   }
   return (
-    <NavBarContainer>
-      <NavLink to="/">
+    <NavBarContainer className="navbar-container">
+      <NavLink to={path.home}>
         <Logo nav="true" />
       </NavLink>
       <NavItems>
@@ -105,6 +106,7 @@ export default NavBar;
 const NavBarContainer = styled.nav`
   background-color: #fff;
   padding: 1rem;
+  height: 100px;
   display: flex;
   justify-content: space-between;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
