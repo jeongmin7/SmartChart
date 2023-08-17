@@ -7,6 +7,10 @@ export const zIndex = {
   modal: 2000,
 };
 
+export const sizes = {
+  header: "100px",
+};
+
 export const palette = {
   // example
   gray: {
@@ -19,10 +23,14 @@ export const palette = {
     // 6: "#C6C6C6",
     // 7: "rgba(141, 141, 141, 0.24)",
     // 8: "#8d8d8d41",
-    // light: "#dfdfdf",
+    light: "#dfdfdf",
     // middle: "#f7f7f7",
     border: "#CBC5C5",
     // dark: "#979797",
+  },
+
+  blue: {
+    light: "#e7f1f5",
   },
 
   white: "#fff",
