@@ -2,11 +2,7 @@ import React from "react";
 import SignUpContainer from "../Container/SignUpContainer";
 
 const SignUp = () => {
-  return (
-    <>
-      <SignUpContainer />
-    </>
-  );
+  return <SignUpContainer />;
 };
 
 export default SignUp;

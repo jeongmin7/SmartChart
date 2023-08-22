@@ -3,11 +3,7 @@ import React from "react";
 import LoginFormContainer from "../Container/LoginFormContainer";
 
 const Login = () => {
-  return (
-    <>
-      <LoginFormContainer />
-    </>
-  );
+  return <LoginFormContainer />;
 };
 
 export default Login;
