@@ -3,11 +3,7 @@ import SignUpForm from "../components/SignUpComponent";
 import Button from "../components/Button";
 
 const SignUpContainer = () => {
-  return (
-    <>
-      <SignUpForm />
-    </>
-  );
+  return <SignUpForm />;
 };
 
 export default SignUpContainer;
