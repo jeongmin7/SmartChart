@@ -3,6 +3,7 @@ import SelectData from "../components/SelectData";
 import DatePicker from "../components/DatePickerComponent";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
+import Button from "../components/Button";
 
 const Appointment = () => {
   const availableTimes = [
@@ -22,29 +23,55 @@ const Appointment = () => {
       <AppointmentWrapper>
         <Header>병원 예약하기</Header>
         {/* <InfoWrapper> */}
-        <ColumnDivideWrapper>
-          <RowDivideWrapper>환자이름: </RowDivideWrapper>
-          <RowDivideWrapper>성별:</RowDivideWrapper>
-        </ColumnDivideWrapper>
-        <ColumnDivideWrapper>
-          <RowDivideWrapper>나이</RowDivideWrapper>
-          <RowDivideWrapper>전화번호</RowDivideWrapper>
-        </ColumnDivideWrapper>
-        <ColumnDivideWrapper>
-          <RowDivideWrapper>병원이름</RowDivideWrapper>
-          {/* 환자이름부터 병원이름까지는 저장된 데이터 리코일로 불러와야함 */}
+        <FirstColumnHalfWrapper>
+          <ColumnDivideWrapper>
+            <RowDivideWrapper>
+              <InfoTitle>환자이름:</InfoTitle>
+              <InfoValue>Test</InfoValue>
+            </RowDivideWrapper>
+            <RowDivideWrapper>
+              <InfoTitle>성별:</InfoTitle>
+              <InfoValue>Test</InfoValue>
+            </RowDivideWrapper>
+          </ColumnDivideWrapper>
+          <ColumnDivideWrapper>
+            <RowDivideWrapper>
+              <InfoTitle>나이:</InfoTitle>
+              <InfoValue>Test</InfoValue>
+            </RowDivideWrapper>
+            <RowDivideWrapper>
+              <InfoTitle>전화번호:</InfoTitle>
+              <InfoValue>Test</InfoValue>
+            </RowDivideWrapper>
+          </ColumnDivideWrapper>
+        </FirstColumnHalfWrapper>
+        <ColumnHalfWrapper>
+          <ColumnDivideWrapper>
+            <RowDivideWrapper>
+              <InfoTitle>병원이름:</InfoTitle>
+              <InfoValue>Test</InfoValue>
+            </RowDivideWrapper>
+            {/* 환자이름부터 병원이름까지는 저장된 데이터 리코일로 불러와야함 */}
 
-          <RowDivideWrapper>
-            예약날짜1
-            <DatePicker />
-          </RowDivideWrapper>
-        </ColumnDivideWrapper>
-        <ColumnDivideWrapper>
-          <RowDivideWrapper>
-            <SelectData availableOption={availableTimes} title="예약시간" />
-          </RowDivideWrapper>
-        </ColumnDivideWrapper>
-        {/* </InfoWrapper> */}
+            <RowDivideWrapper>
+              <InfoTitle>예약날짜:</InfoTitle>
+              <DatePicker />
+            </RowDivideWrapper>
+          </ColumnDivideWrapper>
+          <ColumnDivideWrapper>
+            <RowDivideWrapper style={{ paddingRight: "20px" }}>
+              <SelectData availableOption={availableTimes} title="예약시간" />
+            </RowDivideWrapper>
+            <RowDivideWrapper>
+              <Button width="100px" height="30px" padding="0" fontSize="12px">
+                예약 가능 조회
+              </Button>
+            </RowDivideWrapper>
+          </ColumnDivideWrapper>
+        </ColumnHalfWrapper>
+        <Button width="100px" height="100px" padding="0" fontSize="15px">
+          SAVE
+        </Button>
       </AppointmentWrapper>
     </AppointmentContainer>
   );
@@ -60,7 +87,7 @@ const AppointmentContainer = styled.section`
   /* background-color: yellow; */
   width: 100vw;
   height: calc(100vh - 100px);
-  min-width: 900px;
+  min-width: 950px;
   min-height: 800px;
 `;
 
@@ -72,7 +99,7 @@ const AppointmentWrapper = styled.div`
   align-items: center;
   width: 40%;
   height: 80%;
-  min-width: 900px;
+  min-width: 950px;
   min-height: 800px;
   padding: 100px 200px 100px;
   border: 1px solid ${palette.gray.border};
@@ -89,29 +116,40 @@ const Header = styled.div`
   font-size: 25px;
 `;
 
-const InfoWrapper = styled.div`
+const ColumnHalfWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background-color: blue;
+  padding: 80px 0%;
 `;
 
 const ColumnDivideWrapper = styled.div`
   display: flex;
   width: 100%;
-  height: 100%;
+  height: 40%;
   /* background-color: purple; */
 `;
 
+const FirstColumnHalfWrapper = styled(ColumnHalfWrapper)`
+  border-bottom: 1px solid ${palette.gray.border};
+`;
+
 const RowDivideWrapper = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   width: 100%;
   height: 100%;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 16px;
   /* background-color: purple; */
 `;
 
-// const
+const InfoTitle = styled.div`
+  width: 30%;
+`;
+
+const InfoValue = styled.div`
+  width: 70%;
+`;
