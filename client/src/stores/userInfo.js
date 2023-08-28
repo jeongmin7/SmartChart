@@ -3,7 +3,7 @@ import { atom } from "recoil";
 export const userInfoAtom = atom({
   key: "userInfo",
   default: {
-    isDoctor: false,
+    isDoctor: true,
     email: "qwerty@naver.com  ",
     password: "qwerty",
     username: "이정민",
