@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { palette } from "../styles/GlobalStyles";
 import Button from "./Button";
 
 const AdminAppointmentComponent = () => {
@@ -60,6 +59,10 @@ const AdminAppointmentComponent = () => {
     setFilteredAppointments(filtered);
   };
 
+  useEffect(() => {
+    filterAppointments(searchUsername, searchDate);
+  }, [searchUsername, searchDate]);
+
   return (
     <Container>
       <Wrapper>
@@ -68,7 +71,7 @@ const AdminAppointmentComponent = () => {
           <LabelContainer>
             <LabelWrapper>
               <label>날짜 검색:</label>
-              <input
+              <Input
                 type="date"
                 value={searchDate}
                 onChange={handleDateChange}
@@ -76,7 +79,7 @@ const AdminAppointmentComponent = () => {
             </LabelWrapper>
             <LabelWrapper>
               <label>환자명 검색:</label>
-              <input
+              <Input
                 type="text"
                 value={searchUsername}
                 onChange={handleUsernameChange}
@@ -84,7 +87,7 @@ const AdminAppointmentComponent = () => {
             </LabelWrapper>
           </LabelContainer>
         </Search>
-        {filteredAppointments.length > 0 && (
+        {filteredAppointments.length > 0 ? (
           <Table>
             <thead>
               <tr>
@@ -154,12 +157,11 @@ const AdminAppointmentComponent = () => {
               ))}
             </tbody>
           </Table>
+        ) : (
+          <div>
+            <h4>검색 결과가 없습니다.</h4>
+          </div>
         )}
-        <Nothing>
-          {searchDate && filteredAppointments.length === 0 && (
-            <p>검색 결과가 없습니다.</p>
-          )}
-        </Nothing>
       </Wrapper>
     </Container>
   );
@@ -199,16 +201,21 @@ const LabelContainer = styled.div`
   padding: 1.5rem;
   justify-content: space-between;
   margin-right: 5rem;
-  width: 120%;
+  width: 100%;
   &:last-child {
-    margin-right: 0; /* 첫 번째 요소에만 마진 제거 */
+    margin-right: 0;
   }
 `;
+
 const LabelWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  width: 80%;
+  width: 100%;
+`;
+
+const Input = styled.input`
+  width: 60%; /* 입력 필드 너비 설정 */
 `;
 const Table = styled.table`
   border: 1px solid gray;
@@ -227,9 +234,6 @@ const Td = styled.td`
   border: 1px solid gray;
   padding: 8px;
   text-align: center;
-`;
-const Nothing = styled.div`
-  margin-top: 10rem;
 `;
 
 export default AdminAppointmentComponent;
