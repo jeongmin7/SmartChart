@@ -68,36 +68,48 @@ const AdminWaitingListComponent = () => {
   }, []);
 
   return (
-    <Container>
-      <Today>{today}</Today>
-      <ColumnContainer>
-        {Object.keys(tasks).map((status) => (
-          <Column
-            key={status}
-            onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, status)}
-          >
-            <Title>{status}</Title>
-            {tasks[status].map((appointment) => (
-              <Appointment
-                key={appointment.username}
-                draggable
-                onDragStart={(e) => handleDragStart(e, appointment, status)}
-              >
-                <DateText>{appointment.date}</DateText>
-                <Info>
-                  <StyledP>{appointment.username}</StyledP>
-                  <StyledP>{appointment.time}</StyledP>
-                </Info>
-              </Appointment>
-            ))}
-          </Column>
-        ))}
-      </ColumnContainer>
-    </Container>
+    <>
+      <Header>환자 대기 관리</Header>
+      <Container>
+        <Today>{today}</Today>
+        <ColumnContainer>
+          {Object.keys(tasks).map((status) => (
+            <Column
+              key={status}
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, status)}
+            >
+              <Title>{status}</Title>
+              {tasks[status].map((appointment) => (
+                <Appointment
+                  key={appointment.username}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, appointment, status)}
+                >
+                  <DateText>{appointment.date}</DateText>
+                  <Info>
+                    <StyledP>{appointment.username}</StyledP>
+                    <StyledP>{appointment.time}</StyledP>
+                  </Info>
+                </Appointment>
+              ))}
+            </Column>
+          ))}
+        </ColumnContainer>
+      </Container>
+    </>
   );
 };
 
+const Header = styled.div`
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+`;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
