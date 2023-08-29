@@ -2,11 +2,7 @@ import React from "react";
 import AdminAppointmentComponent from "../components/AdminAppointmentComponent";
 
 const AdminAppointmentContainer = () => {
-  return (
-    <div>
-      <AdminAppointmentComponent />
-    </div>
-  );
+  return <AdminAppointmentComponent />;
 };
 
 export default AdminAppointmentContainer;
