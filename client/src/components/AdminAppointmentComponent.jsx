@@ -40,7 +40,6 @@ const AdminAppointmentComponent = () => {
 
   const handleUsernameChange = (event) => {
     setSearchUsername(event.target.value);
-
     filterAppointments(event.target.value, searchDate);
   };
 
@@ -171,7 +170,8 @@ const Container = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-width: 900px;
+  width: 100%;
+  min-width: 1300px;
   min-height: calc(100vh - 100px);
 `;
 
@@ -180,8 +180,10 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 100px);
-  padding: 100px 200px 100px;
+  width: 100%;
+  height: 100%;
+  max-width: 1500px;
+  padding: 100px 200px;
   border-radius: 20px;
 `;
 const Header = styled.div`
