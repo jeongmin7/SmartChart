@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import Button from "./Button";
 
 const AdminAppointmentComponent = () => {
   const appointments = [
@@ -58,109 +59,181 @@ const AdminAppointmentComponent = () => {
     setFilteredAppointments(filtered);
   };
 
+  useEffect(() => {
+    filterAppointments(searchUsername, searchDate);
+  }, [searchUsername, searchDate]);
+
   return (
     <Container>
-      <h1>예약관리</h1>
-      <Search>
-        <div>
-          <label>날짜 검색:</label>
-          <input type="date" value={searchDate} onChange={handleDateChange} />
-        </div>
-        <div>
-          <label>환자명 검색:</label>
-          <input
-            type="text"
-            value={searchUsername}
-            onChange={handleUsernameChange}
-          />
-        </div>
-      </Search>
-      {filteredAppointments.length > 0 && (
-        <Table>
-          <thead>
-            <tr>
-              <Th>예약번호</Th>
-              <Th>환자명</Th>
-              <Th>날짜</Th>
-              <Th>시간</Th>
-              <Th>전화번호</Th>
-              <Th>예약확정 체크하기</Th>
-              <Th>진료비 청구 체크하기</Th>
-              <Th></Th>
-              <Th></Th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredAppointments.map((appointment) => (
-              <tr key={appointment.id}>
-                <Td>{appointment.id}</Td>
-                <Td>{appointment.username}</Td>
-                <Td>{appointment.date}</Td>
-                <Td>{appointment.time}</Td>
-                <Td>{appointment.tel}</Td>
-                <Td>
-                  <button
-                    onClick={() =>
-                      alert(`${appointment.tel}번으로 문자를 보냈습니다.`)
-                    }
-                  >
-                    예약 확정 문자
-                  </button>
-                </Td>
-                <Td>
-                  <button>진료비 청구하기</button>
-                </Td>
-                <Td>
-                  <button>진료관리 가기</button>
-                </Td>
-                <Td>
-                  <button>환자 기본 건강체크 확인</button>
-                </Td>
+      <Wrapper>
+        <Header>예약관리</Header>
+        <Search>
+          <LabelContainer>
+            <LabelWrapper>
+              <label>날짜 검색:</label>
+              <Input
+                type="date"
+                value={searchDate}
+                onChange={handleDateChange}
+              />
+            </LabelWrapper>
+            <LabelWrapper>
+              <label>환자명 검색:</label>
+              <Input
+                type="text"
+                value={searchUsername}
+                onChange={handleUsernameChange}
+              />
+            </LabelWrapper>
+          </LabelContainer>
+        </Search>
+        {filteredAppointments.length > 0 ? (
+          <Table>
+            <thead>
+              <tr>
+                <Th>예약번호</Th>
+                <Th>환자명</Th>
+                <Th>날짜</Th>
+                <Th>시간</Th>
+                <Th>전화번호</Th>
+                <Th>예약확정 체크하기</Th>
+                <Th>진료비 청구 체크하기</Th>
+                <Th></Th>
+                <Th></Th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
-      )}
-      <Nothing>
-        {searchDate && filteredAppointments.length === 0 && (
-          <p>검색 결과가 없습니다.</p>
+            </thead>
+            <tbody>
+              {filteredAppointments.map((appointment) => (
+                <tr key={appointment.id}>
+                  <Td>{appointment.id}</Td>
+                  <Td>{appointment.username}</Td>
+                  <Td>{appointment.date}</Td>
+                  <Td>{appointment.time}</Td>
+                  <Td>{appointment.tel}</Td>
+                  <Td>
+                    <Button
+                      width="100px"
+                      height="30px"
+                      padding="0"
+                      fontSize="12px"
+                      onClick={() =>
+                        alert(`${appointment.tel}번으로 문자를 보냈습니다.`)
+                      }
+                    >
+                      예약 확정 문자
+                    </Button>
+                  </Td>
+                  <Td>
+                    <Button
+                      width="100px"
+                      height="30px"
+                      padding="0"
+                      fontSize="12px"
+                    >
+                      진료비 청구하기
+                    </Button>
+                  </Td>
+                  <Td>
+                    <Button
+                      width="100px"
+                      height="30px"
+                      padding="0"
+                      fontSize="12px"
+                    >
+                      진료관리 가기
+                    </Button>
+                  </Td>
+                  <Td>
+                    <Button
+                      width="100px"
+                      height="30px"
+                      padding="0"
+                      fontSize="12px"
+                    >
+                      건강체크 확인
+                    </Button>
+                  </Td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        ) : (
+          <div>
+            <h4>검색 결과가 없습니다.</h4>
+          </div>
         )}
-      </Nothing>
+      </Wrapper>
     </Container>
   );
 };
-const Container = styled.div`
+const Container = styled.section`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-flow: column;
-  padding: 2rem;
+  min-width: 900px;
+  min-height: calc(100vh - 100px);
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 100px);
+  padding: 100px 200px 100px;
+  border-radius: 20px;
+`;
+const Header = styled.div`
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-size: 25px;
 `;
 const Search = styled.div`
   display: flex;
-  width: 40%;
+  width: 80%;
   justify-content: space-between;
-  flex-direction: row;
   padding: 2rem;
-  margin-top: 9rem;
+  margin-top: 4rem;
+`;
+const LabelContainer = styled.div`
+  display: flex;
+  padding: 1.5rem;
+  justify-content: space-between;
+  margin-right: 5rem;
+  width: 100%;
+  &:last-child {
+    margin-right: 0;
+  }
+`;
+
+const LabelWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+`;
+
+const Input = styled.input`
+  width: 60%; /* 입력 필드 너비 설정 */
 `;
 const Table = styled.table`
   border: 1px solid gray;
   width: 80%;
-  margin-top: 10rem;
+  margin-top: 5rem;
+  white-space: nowrap;
 `;
 
 const Th = styled.th`
   border: 1px solid gray;
   padding: 8px;
+  background-color: #f5f5f5;
 `;
 
 const Td = styled.td`
   border: 1px solid gray;
   padding: 8px;
-`;
-const Nothing = styled.div`
-  margin-top: 10rem;
+  text-align: center;
 `;
 
 export default AdminAppointmentComponent;
