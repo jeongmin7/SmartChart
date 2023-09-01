@@ -8,7 +8,15 @@ import { palette } from "../styles/GlobalStyles";
 
 const MypageComponent = () => {
   const userInfo = useRecoilValue(userInfoAtom);
-  const columns = ["", "병원명", "예약 날짜", "예약시간", "예약 상태", "취소"];
+  const columns = [
+    { name: "", width: "5%" },
+    { name: "병원명", width: "15%" },
+    { name: "예약 날짜", width: "25%" },
+    { name: "예약 시간", width: "12%" },
+    { name: "예약 상태", width: "10%" },
+    { name: "", width: "10%" },
+    { name: "", width: "23%" },
+  ];
   const gender = ["남자", "여자"];
   const appointmentInfo = [
     {
@@ -50,20 +58,35 @@ const MypageComponent = () => {
         {/* //! 예약리스트 border 겹치는 것 해결하고 다시 수정 */}
         <ColumnHalfWrapper>
           <Header>예약리스트</Header>
-
-          <ColumnDivideWrapper>
-            {columns.map((column) => (
-              <ListRowDivideWrapper>{column}</ListRowDivideWrapper>
+          <AppointmentListTitle>
+            {columns.map((column, index) => (
+              <ListRowDivideWrapper width={column.width} index={index}>
+                {column.name}
+              </ListRowDivideWrapper>
             ))}
-            {/* <RowDivideWrapper>
-              <Button width="100px" height="30px" padding="0" fontSize="12px">
-                예약 가능 조회
-              </Button>
-            </RowDivideWrapper> */}
-          </ColumnDivideWrapper>
+          </AppointmentListTitle>
+          <AppointmentListBody>
+            {columns.map((column, index) => (
+              <ListRowDivideWrapper width={column.width} index={index}>
+                {index === 0 ? (
+                  String(index + 1)
+                ) : index === 5 ? (
+                  <Button width="80%" height="60%" padding="0" fontSize="15px">
+                    예약 취소
+                  </Button>
+                ) : index === 6 ? (
+                  <Button width="80%" height="60%" padding="0" fontSize="15px">
+                    기본 건강체크하러 가기
+                  </Button>
+                ) : (
+                  column.name
+                )}
+              </ListRowDivideWrapper>
+            ))}
+          </AppointmentListBody>
         </ColumnHalfWrapper>
         <Button width="100px" height="100px" padding="0" fontSize="15px">
-          SAVE
+          Update
         </Button>
       </MypageWrapper>
     </MypageContainer>
@@ -144,8 +167,22 @@ const ColumnHalfWrapper = styled.div`
 const ColumnDivideWrapper = styled.div`
   display: flex;
   width: 100%;
-  height: 30%;
+  height: 100%;
   /* background-color: purple; */
+`;
+const AppointmentListTitle = styled.div`
+  display: flex;
+  width: 100%;
+  height: 20%;
+  background-color: ${palette.gray.light};
+  border-top: 1px solid ${palette.gray.border};
+  border-bottom: 1px solid ${palette.gray.border};
+`;
+const AppointmentListBody = styled.div`
+  display: flex;
+  width: 100%;
+  height: 20%;
+  border-bottom: 1px solid ${palette.gray.border};
 `;
 
 const FirstColumnHalfWrapper = styled(ColumnHalfWrapper)`
@@ -167,13 +204,18 @@ const ListRowDivideWrapper = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  width: 100%;
+  justify-content: ${(props) =>
+    (props.index === 0 || props.index === 5 || props.index === 6) && "center"};
+  width: ${(props) => (props.width ? props.width : "100%")};
   height: 100%;
   font-weight: bold;
   font-size: 16px;
-  border: 1px solid ${palette.gray.border};
-
-  /* background-color: purple; */
+  border-left: ${(props) =>
+    props.index !== 0 && `1px solid ${palette.gray.border}`};
+  padding-left: ${(props) =>
+    props.index !== 0 && props.index !== 5 && props.index !== 6 && "10px"};
+  background-color: ${(props) =>
+    props.index === 0 ? palette.gray.light : "transparent"};
 `;
 
 const InfoTitle = styled.div`
