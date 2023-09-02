@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Button from "./Button";
+import { useNavigate } from "react-router-dom";
 
 const AdminAppointmentComponent = () => {
   const appointments = [
@@ -37,6 +38,7 @@ const AdminAppointmentComponent = () => {
   const [searchUsername, setSearchUsername] = useState("");
   const [searchDate, setSearchDate] = useState("");
   const [filteredAppointments, setFilteredAppointments] = useState([]);
+  const navigate = useNavigate();
 
   const handleUsernameChange = (event) => {
     setSearchUsername(event.target.value);
@@ -56,6 +58,13 @@ const AdminAppointmentComponent = () => {
     });
 
     setFilteredAppointments(filtered);
+  };
+
+  const handleClickBillingButton = (appointment) => {
+    // 이거 대신 axios로 데이터 받아와서 navigate로 넘겨주기
+    navigate(`/billing?id=${appointment.id}`, {
+      state: appointment,
+    });
   };
 
   useEffect(() => {
@@ -128,6 +137,7 @@ const AdminAppointmentComponent = () => {
                       height="30px"
                       padding="0"
                       fontSize="12px"
+                      onClick={() => handleClickBillingButton(appointment)}
                     >
                       진료비 청구하기
                     </Button>
