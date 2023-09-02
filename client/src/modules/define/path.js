@@ -12,4 +12,5 @@ export const path = {
   adminWaitingList: "/adminWaitingList",
   accounting: "/accounting",
   teleConsult: "/teleConsult",
+  billing: "billing",
 };

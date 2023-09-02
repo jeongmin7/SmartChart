@@ -15,6 +15,7 @@ import AdminAppointment from "./pages/AdminAppointment";
 import AdminWaitingList from "./pages/AdminWaitingList";
 import TeleConsult from "./pages/TeleConsult";
 import Accounting from "./pages/Accounting";
+import Billing from "./pages/Billing";
 
 const RoutesCollection = () => {
   return (
@@ -32,6 +33,7 @@ const RoutesCollection = () => {
       <Route path={path.adminWaitingList} element={<AdminWaitingList />} />
       <Route path={path.teleConsult} element={<TeleConsult />} />
       <Route path={path.accounting} element={<Accounting />} />
+      <Route path={path.billing} element={<Billing />} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>
