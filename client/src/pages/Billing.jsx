@@ -1,70 +1,69 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { styled } from "styled-components";
+import { palette } from "../styles/GlobalStyles";
 
 const Billing = () => {
   const { state } = useLocation();
 
   return (
     <Container>
+      <Header>의료비 청구</Header>
       <Wrapper>
-        <Header>의료비 청구</Header>
-        <div>
-          <GridItem Header={true}>
-            <Section>진료비</Section>
+        <GridItem Header={true}>
+          <Section>진료비</Section>
+        </GridItem>
+        <GridContainer>
+          <GridItem>
+            <Title>예약번호</Title>
+            <Content>{state.id}</Content>
           </GridItem>
-          <GridContainer>
-            <GridItem>
-              <Title>예약번호</Title>
-              <Content>{state.id}</Content>
-            </GridItem>
-            <GridItem>
-              <Title>병원명</Title>
-              <Content>test</Content>
-            </GridItem>
-            <GridItem>
-              <Title>진료날짜</Title>
-              <Content>test</Content>
-            </GridItem>
-            <GridItem>
-              <Title>환자 성명</Title>
-              <Content>{state.username}</Content>
-            </GridItem>
-            <GridItem>
-              <Title>환자 번호</Title>
-              <Content>test</Content>
-            </GridItem>
-            <GridItem>
-              <Title>환자 성별</Title>
-              <Content>test</Content>
-            </GridItem>
-            <GridItem>
-              <Title>환자 나이</Title>
-              <Content>test</Content>
-            </GridItem>
-            <GridItem>
-              <Title>111</Title>
-              <Content>test</Content>
-            </GridItem>
-          </GridContainer>
-          <GridItem Header>
-            <Section>치료 내역서</Section>
+          <GridItem>
+            <Title>병원명</Title>
+            <Content>test</Content>
           </GridItem>
-          <GridContainer detail>
-            <GridItem>
-              <StyledInput title type="text" value="text" />
-              <StyledInput type="text" />
-            </GridItem>
-            <GridItem>
-              <StyledInput title type="text" value="text" />
-              <StyledInput type="text" />
-            </GridItem>
-            <GridItem>
-              <Title>총금액</Title>
-              <Content>test</Content>
-            </GridItem>
-          </GridContainer>
-        </div>
+          <GridItem>
+            <Title>진료날짜</Title>
+            <Content>test</Content>
+          </GridItem>
+          <GridItem>
+            <Title>환자 성명</Title>
+            <Content>{state.username}</Content>
+          </GridItem>
+          <GridItem className="noneBorderLeft secondRow">
+            <Title>환자 번호</Title>
+            <Content>test</Content>
+          </GridItem>
+          <GridItem className="secondRow">
+            <Title>환자 성별</Title>
+            <Content>test</Content>
+          </GridItem>
+          <GridItem className="secondRow">
+            <Title>환자 나이</Title>
+            <Content>test</Content>
+          </GridItem>
+          <GridItem className="secondRow">
+            <Title>111</Title>
+            <Content>test</Content>
+          </GridItem>
+        </GridContainer>
+        <GridItem Header className="noneBorderLeft">
+          <Section>치료 내역서</Section>
+        </GridItem>
+        <GridContainer detail>
+          <GridItem>
+            <Title>111</Title>
+            <Content>test</Content>
+          </GridItem>
+          <GridItem className="noneBorderLeft">
+            <Title>111</Title>
+            <Content>test</Content>
+          </GridItem>
+          <GridItem className="noneBorderLeft">
+            <Title>총금액</Title>
+            <Content>test</Content>
+          </GridItem>
+        </GridContainer>
       </Wrapper>
     </Container>
   );
@@ -89,8 +88,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   max-width: 1500px;
-  padding: 100px 200px;
-  border-radius: 20px;
+  border: 2px solid ${palette.primary.black};
 `;
 const Header = styled.div`
   font-weight: bold;
@@ -102,7 +100,7 @@ const GridContainer = styled.div`
   grid-template-columns: ${(props) =>
     props.detail ? "none" : "repeat(4, 1fr)"}; // 4개의 열
   width: 100%;
-  max-width: 800px;
+  /* max-width: 800px; */
   margin: 0 auto;
 `;
 const GridItem = styled.div`
@@ -112,7 +110,20 @@ const GridItem = styled.div`
   font-weight: ${(props) => (props.Header ? "700" : "400")};
   grid-template-columns: ${(props) => (props.Header ? "" : "6fr 4fr")};
   padding: 0;
-  border: 1px solid black;
+  width: 100%;
+  border-bottom: ${(props) =>
+    props.Header
+      ? `2px solid ${palette.primary.black}`
+      : `1px solid ${palette.primary.black}`};
+  &:not(:first-child) {
+    border-left: 1px solid ${palette.primary.black};
+  }
+  &.noneBorderLeft {
+    border-left: none;
+  }
+  &.secondRow {
+    border-bottom: 2px solid ${palette.primary.black};
+  }
 `;
 const Section = styled.div`
   padding: 20px;
@@ -123,6 +134,7 @@ const Section = styled.div`
 const Title = styled.div`
   background-color: #d9d9d9;
   padding: 16px;
+  border-right: 1px solid #000;
 `;
 
 const Content = styled.div`
@@ -130,7 +142,7 @@ const Content = styled.div`
   padding: 16px;
   width: 100%;
 `;
-const StyledInput = styled.input`
+const StyledInput = styled.div`
   border: none;
   outline: none;
   font-size: 20px;
