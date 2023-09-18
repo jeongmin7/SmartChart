@@ -49,6 +49,7 @@ const MapComponent = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedSpecialty, setSelectedSpecialty] = useState("");
   const [markers, setMarkers] = useState([]);
+  const [infoWindow, setInfoWindow] = useState(null);
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -103,11 +104,48 @@ const MapComponent = () => {
         map: map,
       });
 
+      // 마커 클릭 이벤트 처리
+      kakao.maps.event.addListener(marker, "click", () => {
+        openInfoWindow(marker, hospital.name);
+      });
+
       return marker;
     });
 
     setMarkers(newMarkers);
   };
+
+  // InfoWindow 열기
+  const openInfoWindow = (marker, content) => {
+    // 기존 InfoWindow 닫기
+    if (infoWindow) {
+      infoWindow.close();
+      setInfoWindow(null); // 상태 초기화
+    }
+
+    // InfoWindow에 포함될 HTML 요소 생성
+    const infoWindowContent = document.createElement("div");
+    infoWindowContent.innerHTML = `
+      <div>
+        <p>${content}</p>
+        <button id="infoWindowButton">예약하기</button>
+      </div>
+    `;
+
+    const button = infoWindowContent.querySelector("#infoWindowButton");
+    button.addEventListener("click", handleButtonClick);
+
+    const infowindow = new kakao.maps.InfoWindow({
+      content: infoWindowContent, // HTML 문자열 또는 DOM 요소
+    });
+
+    infowindow.open(map, marker);
+    setInfoWindow(infowindow);
+  };
+
+  // InfoWindow 내 버튼 클릭 핸들러
+  //  TODO: 여기에 예약하기 누르면 수행할 내역추가
+  const handleButtonClick = () => {};
 
   // 선택된 진료과에 따라 필터링된 병원 데이터를 가져오는 함수
   const getFilteredHospitals = () => {
