@@ -4,6 +4,7 @@ import DatePicker from "../components/DatePickerComponent";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import Button from "../components/Button";
+import MapComponent from "../components/MapComponent";
 
 const Appointment = () => {
   const availableTimes = [
@@ -22,6 +23,7 @@ const Appointment = () => {
     <AppointmentContainer>
       <AppointmentWrapper>
         <Header>병원 예약하기</Header>
+        <MapComponent />
         {/* <InfoWrapper> */}
         <FirstColumnHalfWrapper>
           <ColumnDivideWrapper>
