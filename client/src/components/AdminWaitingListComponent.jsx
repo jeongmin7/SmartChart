@@ -2,17 +2,47 @@ import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
 const appointment = [
-  { username: "김", date: "2023-08-12", time: "12:00 - 13:00" },
-  { username: "이", date: "2023-08-12", time: "09:00 - 10:00" },
-  { username: "박", date: "2023-08-12", time: "11:00 - 12:00" },
-  { username: "홍", date: "2023-08-12", time: "13:00 - 14:00" },
-  { username: "정", date: "2023-08-12", time: "15:00 - 16:00" },
+  {
+    id: 31,
+    reservationTime: "09:00:00",
+    reservationDate: "2023-09-01",
+    patientName: "watch",
+  },
+  {
+    id: 13,
+    reservationTime: "10:00:00",
+    reservationDate: "2023-09-02",
+    patientName: "watch",
+  },
+  {
+    id: 19,
+    reservationTime: "15:00:00",
+    reservationDate: "2023-08-14",
+    patientName: "watch",
+  },
+  {
+    id: 21,
+    reservationTime: "18:00:00",
+    reservationDate: "2023-08-26",
+    patientName: "watch",
+  },
 ];
 
-function compareDates(a, b) {
-  const dateA = new Date(`${a.date} ${a.time.split(" - ")[0]}`);
-  const dateB = new Date(`${b.date} ${b.time.split(" - ")[0]}`);
-  return dateA - dateB;
+function compareAppointments(appointment1, appointment2) {
+  // 먼저 reservationDate를 비교합니다.
+  const dateComparison = appointment1.reservationDate.localeCompare(
+    appointment2.reservationDate,
+  );
+
+  // reservationDate가 같은 경우 reservationTime을 비교합니다.
+  if (dateComparison === 0) {
+    return appointment1.reservationTime.localeCompare(
+      appointment2.reservationTime,
+    );
+  }
+
+  // reservationDate가 다른 경우 dateComparison 값을 반환합니다.
+  return dateComparison;
 }
 
 const AdminWaitingListComponent = () => {
@@ -23,13 +53,13 @@ const AdminWaitingListComponent = () => {
 
   const today = `${year}-${month}-${day}`;
 
-  const sortedAppointments = appointment.sort(compareDates);
-
+  const sortedAppointments = appointment.sort(compareAppointments);
   const [tasks, setTasks] = useState({
     대기중: sortedAppointments,
     진료중: [],
     완료: [],
   });
+  console.log(tasks);
 
   const handleDragStart = (e, appointment, status) => {
     e.dataTransfer.setData(
@@ -50,9 +80,7 @@ const AdminWaitingListComponent = () => {
     if (status !== targetStatus) {
       const updatedTasks = {
         ...tasks,
-        [status]: tasks[status].filter(
-          (apt) => apt.username !== appointment.username,
-        ),
+        [status]: tasks[status].filter((apt) => apt.id !== appointment.id), // 기존 상태에서 해당 약속 제거
         [targetStatus]: [...tasks[targetStatus], appointment],
       };
 
@@ -60,6 +88,7 @@ const AdminWaitingListComponent = () => {
       localStorage.setItem("tasks", JSON.stringify(updatedTasks));
     }
   };
+
   useEffect(() => {
     const storedTasks = localStorage.getItem("tasks");
     if (storedTasks) {
@@ -82,14 +111,14 @@ const AdminWaitingListComponent = () => {
               <Title>{status}</Title>
               {tasks[status].map((appointment) => (
                 <Appointment
-                  key={appointment.username}
+                  key={appointment.patientName}
                   draggable
                   onDragStart={(e) => handleDragStart(e, appointment, status)}
                 >
-                  <DateText>{appointment.date}</DateText>
+                  <DateText>{appointment.reservationDate}</DateText>
                   <Info>
-                    <StyledP>{appointment.username}</StyledP>
-                    <StyledP>{appointment.time}</StyledP>
+                    <StyledP>{appointment.patientName}</StyledP>
+                    <StyledP>{appointment.reservationTime}</StyledP>
                   </Info>
                 </Appointment>
               ))}

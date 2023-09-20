@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 
 const Billing = () => {
-  const { state } = useLocation();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const id = searchParams.get("id");
+
+  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedFields, setSelectedFields] = useState([]);
+
+  const handleSelectChange = (event) => {
+    setSelectedValue(event.target.value);
+  };
+  const addInputField = () => {
+    setSelectedFields([...selectedFields, selectedValue]);
+  };
 
   return (
     <Container>
@@ -13,57 +25,68 @@ const Billing = () => {
         <GridItem Header={true}>
           <Section>진료비</Section>
         </GridItem>
-        <GridContainer>
-          <GridItem>
-            <Title>예약번호</Title>
-            <Content>{state.id}</Content>
+     
+          <GridContainer>
+            <GridItem>
+              <Title>예약번호</Title>
+              <Content>{id}</Content>
+            </GridItem>
+            <GridItem>
+              <Title>병원명</Title>
+              <Content>test</Content>
+            </GridItem>
+            <GridItem>
+              <Title>진료날짜</Title>
+              <Content>test</Content>
+            </GridItem>
+            <GridItem>
+              <Title>환자 성명</Title>
+              <Content>{}</Content>
+            </GridItem>
+            <GridItem>
+              <Title>환자 번호</Title>
+              <Content>test</Content>
+            </GridItem>
+            <GridItem>
+              <Title>환자 성별</Title>
+              <Content>test</Content>
+            </GridItem>
+            <GridItem>
+              <Title>환자 나이</Title>
+              <Content>test</Content>
+            </GridItem>
+            <GridItem>
+              <Title>111</Title>
+              <Content>test</Content>
+            </GridItem>
+          </GridContainer>
+          <GridItem Header>
+            <Section>
+              치료 내역서
+              <select value={selectedValue} onChange={handleSelectChange}>
+                <option value="">선택하세요</option>
+                <option value="CT">CT진단비</option>
+                <option value="anesthesia">마취비</option>
+                <option value="hospitalization">입원비</option>
+                <option value="injection">주사비</option>
+              </select>
+              <button onClick={addInputField}>추가</button>
+            </Section>
           </GridItem>
-          <GridItem>
-            <Title>병원명</Title>
-            <Content>test</Content>
-          </GridItem>
-          <GridItem>
-            <Title>진료날짜</Title>
-            <Content>test</Content>
-          </GridItem>
-          <GridItem>
-            <Title>환자 성명</Title>
-            <Content>{state.username}</Content>
-          </GridItem>
-          <GridItem className="noneBorderLeft secondRow">
-            <Title>환자 번호</Title>
-            <Content>test</Content>
-          </GridItem>
-          <GridItem className="secondRow">
-            <Title>환자 성별</Title>
-            <Content>test</Content>
-          </GridItem>
-          <GridItem className="secondRow">
-            <Title>환자 나이</Title>
-            <Content>test</Content>
-          </GridItem>
-          <GridItem className="secondRow">
-            <Title>111</Title>
-            <Content>test</Content>
-          </GridItem>
-        </GridContainer>
-        <GridItem Header className="noneBorderLeft">
-          <Section>치료 내역서</Section>
-        </GridItem>
-        <GridContainer detail>
-          <GridItem>
-            <Title>111</Title>
-            <Content>test</Content>
-          </GridItem>
-          <GridItem className="noneBorderLeft">
-            <Title>111</Title>
-            <Content>test</Content>
-          </GridItem>
-          <GridItem className="noneBorderLeft">
-            <Title>총금액</Title>
-            <Content>test</Content>
-          </GridItem>
-        </GridContainer>
+          <GridContainer detail>
+            {selectedFields.map((field, index) => (
+              <GridItem key={index}>
+                <StyledInput title type="text" value={field} />
+                <StyledInput type="text" />
+              </GridItem>
+            ))}
+            <GridItem>
+              <Title>총금액</Title>
+              <Content>test</Content>
+            </GridItem>
+          </GridContainer>
+        </div>
+
       </Wrapper>
     </Container>
   );
