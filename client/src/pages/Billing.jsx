@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { styled } from "styled-components";
+import { palette } from "../styles/GlobalStyles";
 
 const Billing = () => {
   const location = useLocation();
@@ -19,12 +20,12 @@ const Billing = () => {
 
   return (
     <Container>
+      <Header>의료비 청구</Header>
       <Wrapper>
-        <Header>의료비 청구</Header>
-        <div>
-          <GridItem Header={true}>
-            <Section>진료비</Section>
-          </GridItem>
+        <GridItem Header={true}>
+          <Section>진료비</Section>
+        </GridItem>
+     
           <GridContainer>
             <GridItem>
               <Title>예약번호</Title>
@@ -85,6 +86,7 @@ const Billing = () => {
             </GridItem>
           </GridContainer>
         </div>
+
       </Wrapper>
     </Container>
   );
@@ -109,8 +111,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   max-width: 1500px;
-  padding: 100px 200px;
-  border-radius: 20px;
+  border: 2px solid ${palette.primary.black};
 `;
 const Header = styled.div`
   font-weight: bold;
@@ -122,7 +123,7 @@ const GridContainer = styled.div`
   grid-template-columns: ${(props) =>
     props.detail ? "none" : "repeat(4, 1fr)"}; // 4개의 열
   width: 100%;
-  max-width: 800px;
+  /* max-width: 800px; */
   margin: 0 auto;
 `;
 const GridItem = styled.div`
@@ -132,7 +133,20 @@ const GridItem = styled.div`
   font-weight: ${(props) => (props.Header ? "700" : "400")};
   grid-template-columns: ${(props) => (props.Header ? "" : "6fr 4fr")};
   padding: 0;
-  border: 1px solid black;
+  width: 100%;
+  border-bottom: ${(props) =>
+    props.Header
+      ? `2px solid ${palette.primary.black}`
+      : `1px solid ${palette.primary.black}`};
+  &:not(:first-child) {
+    border-left: 1px solid ${palette.primary.black};
+  }
+  &.noneBorderLeft {
+    border-left: none;
+  }
+  &.secondRow {
+    border-bottom: 2px solid ${palette.primary.black};
+  }
 `;
 const Section = styled.div`
   padding: 20px;
@@ -143,6 +157,7 @@ const Section = styled.div`
 const Title = styled.div`
   background-color: #d9d9d9;
   padding: 16px;
+  border-right: 1px solid #000;
 `;
 
 const Content = styled.div`
@@ -150,7 +165,7 @@ const Content = styled.div`
   padding: 16px;
   width: 100%;
 `;
-const StyledInput = styled.input`
+const StyledInput = styled.div`
   border: none;
   outline: none;
   font-size: 20px;
