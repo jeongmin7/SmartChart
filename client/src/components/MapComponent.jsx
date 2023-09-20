@@ -2,75 +2,93 @@ import React, { useEffect, useState } from "react";
 import Loader from "./Loader";
 import { BiCurrentLocation } from "react-icons/bi";
 import { styled } from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const { kakao } = window;
 
 const MapComponent = () => {
-  const hospitalData = [
-    {
-      name: "피부과",
-      specialty: "피부과",
-      lat: 37.5344053,
-      lng: 127.1213749,
-    },
-    {
-      name: "안과",
-      specialty: "안과",
-      lat: 37.5244053,
-      lng: 127.1413749,
-    },
-    {
-      name: "이비인후과",
-      specialty: "이비인후과",
-      lat: 37.4844053,
-      lng: 127.1213749,
-    },
-    {
-      name: "치과",
-      specialty: "치과",
-      lat: 37.4744053,
-      lng: 127.1213749,
-    },
-    {
-      name: "정형외과",
-      specialty: "정형외과",
-      lat: 37.5244053,
-      lng: 127.1213749,
-    },
-    {
-      name: "기타",
-      specialty: "내과",
-      lat: 37.5344053,
-      lng: 127.1213749,
-    },
-  ];
+  const hospitalData = {
+    피부과: [
+      {
+        id: 4,
+        hospitalName: "차앤박 피부과",
+        hospitalAddress: "서울시 강남구 신사동",
+        category: "피부과",
+        hospitalPhoneNumber: 1022222222,
+        hospitalIntroduce: null,
+        hospitalProfileURL: null,
+        mapx: "127.0280007",
+        mapy: "37.5266292",
+      },
+      {
+        id: 5,
+        hospitalName: "연세에스웰 피부과",
+        hospitalAddress: "서울특별시 종로구 종로1가 24 404호",
+        category: "피부과",
+        hospitalPhoneNumber: 1022222222,
+        hospitalIntroduce: null,
+        hospitalProfileURL: null,
+        mapx: "126.9798606",
+        mapy: "37.5708345",
+      },
+    ],
+    정형외과: [],
+    기타: [],
+    안과: [
+      {
+        id: 6,
+        hospitalName: "공 안과 의원",
+        hospitalAddress: "서울특별시 종로구 서린동 111-1 인주빌딩4층",
+        category: "안과",
+        hospitalPhoneNumber: 1022222222,
+        hospitalIntroduce: null,
+        hospitalProfileURL: null,
+        mapx: "126.9797107",
+        mapy: "37.5698831",
+      },
+      {
+        id: 7,
+        hospitalName: "명동성모 안과 의원",
+        hospitalAddress:
+          "서울특별시 중구 을지로2가 199-4 (한국전력공사) 별관 3층",
+        category: "안과",
+        hospitalPhoneNumber: 1022222222,
+        hospitalIntroduce: null,
+        hospitalProfileURL: null,
+        mapx: "126.9833724",
+        mapy: "37.5653281",
+      },
+    ],
+    이비인후과: [],
+    치과: [],
+    내과: [],
+  };
 
+  const navigate = useNavigate();
   const [map, setMap] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedSpecialty, setSelectedSpecialty] = useState("");
   const [markers, setMarkers] = useState([]);
   const [infoWindow, setInfoWindow] = useState(null);
-
+  const [selectedHospital, setSelectedHospital] = useState(null);
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_MAP_API_KEY}`;
-    script.async = true;
-    script.onload = initializeMap;
-    document.body.appendChild(script);
-  }, []);
-
-  useEffect(() => {
-    // 초기 렌더링 시 모든 병원 데이터의 마커 생성
     if (map) {
       createMarkers(hospitalData);
     }
   }, [map]);
 
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_MAP_API_KEY}`;
+    script.onload = initializeMap;
+    document.body.appendChild(script);
+  }, []);
+
   const initializeMap = () => {
     const mapContainer = document.getElementById("map");
     const mapOption = {
       center: new kakao.maps.LatLng(0, 0),
-      level: 9,
+      level: 10,
     };
 
     const map = new kakao.maps.Map(mapContainer, mapOption);
@@ -89,85 +107,84 @@ const MapComponent = () => {
           setIsLoading(false);
         },
       );
+    } else {
+      console.error("지리적 위치 정보를 사용할 수 없습니다.");
+      setIsLoading(false);
     }
 
     setMap(map);
+    createMarkers(hospitalData);
   };
 
-  // 병원 데이터로부터 마커를 생성하고 지도에 표시하는 함수
   const createMarkers = (data) => {
-    const newMarkers = data.map((hospital) => {
-      const markerPosition = new kakao.maps.LatLng(hospital.lat, hospital.lng);
+    const newMarkers = [];
 
-      const marker = new kakao.maps.Marker({
-        position: markerPosition,
-        map: map,
+    for (const specialty in data) {
+      const hospitals = data[specialty];
+      hospitals.forEach((hospital) => {
+        const markerPosition = new kakao.maps.LatLng(
+          parseFloat(hospital.mapy),
+          parseFloat(hospital.mapx),
+        );
+
+        const marker = new kakao.maps.Marker({
+          position: markerPosition,
+          title: hospital.hospitalName,
+          map: map,
+        });
+
+        kakao.maps.event.addListener(marker, "click", function () {
+          openInfoWindow(marker, hospital);
+        });
+
+        newMarkers.push(marker);
       });
-
-      // 마커 클릭 이벤트 처리
-      kakao.maps.event.addListener(marker, "click", () => {
-        openInfoWindow(marker, hospital.name);
-      });
-
-      return marker;
-    });
+    }
 
     setMarkers(newMarkers);
   };
 
-  // InfoWindow 열기
-  const openInfoWindow = (marker, content) => {
-    // 기존 InfoWindow 닫기
-    if (infoWindow) {
-      infoWindow.close();
-      setInfoWindow(null); // 상태 초기화
-    }
-
-    // InfoWindow에 포함될 HTML 요소 생성
+  const openInfoWindow = (marker, hospital) => {
+    const { id, hospitalName } = hospital;
     const infoWindowContent = document.createElement("div");
     infoWindowContent.innerHTML = `
       <div>
-        <p>${content}</p>
+        <p>${hospitalName}</p>
         <button id="infoWindowButton">예약하기</button>
       </div>
     `;
 
     const button = infoWindowContent.querySelector("#infoWindowButton");
-    button.addEventListener("click", handleButtonClick);
+    button.addEventListener("click", handleButtonClick(id));
 
     const infowindow = new kakao.maps.InfoWindow({
-      content: infoWindowContent, // HTML 문자열 또는 DOM 요소
+      content: infoWindowContent,
     });
 
     infowindow.open(map, marker);
     setInfoWindow(infowindow);
   };
 
-  // InfoWindow 내 버튼 클릭 핸들러
-  //  TODO: 여기에 예약하기 누르면 수행할 내역추가
-  const handleButtonClick = () => {};
+  const handleButtonClick = (id) => {
+    navigate(`/appointment/${id}`);
+  };
 
-  // 선택된 진료과에 따라 필터링된 병원 데이터를 가져오는 함수
   const getFilteredHospitals = () => {
     if (selectedSpecialty === "") {
       return hospitalData;
     } else {
-      return hospitalData.filter(
-        (hospital) => hospital.specialty === selectedSpecialty,
-      );
+      const filteredData = {};
+      filteredData[selectedSpecialty] = hospitalData[selectedSpecialty];
+      return filteredData;
     }
   };
-
-  // 지도와 마커 업데이트 함수
   const updateMap = () => {
     const filteredHospitals = getFilteredHospitals();
 
-    // 모든 마커 숨기기
     markers.forEach((marker) => {
       marker.setMap(null);
     });
 
-    // 필터링된 병원 데이터로 새로운 마커 생성 및 지도에 표시
     createMarkers(filteredHospitals);
   };
 
@@ -238,7 +255,10 @@ export default MapComponent;
 const Options = styled.div`
   display: flex;
   flex-direction: row;
+  padding: 2rem;
+  justify-content: space-between;
 `;
+
 const Option = styled.label`
   display: flex;
 `;
