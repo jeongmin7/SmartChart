@@ -1,9 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { styled } from "styled-components";
 
 const Billing = () => {
-  const { state } = useLocation();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const id = searchParams.get("id");
+
+  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedFields, setSelectedFields] = useState([]);
+
+  const handleSelectChange = (event) => {
+    setSelectedValue(event.target.value);
+  };
+  const addInputField = () => {
+    setSelectedFields([...selectedFields, selectedValue]);
+  };
 
   return (
     <Container>
@@ -16,7 +28,7 @@ const Billing = () => {
           <GridContainer>
             <GridItem>
               <Title>예약번호</Title>
-              <Content>{state.id}</Content>
+              <Content>{id}</Content>
             </GridItem>
             <GridItem>
               <Title>병원명</Title>
@@ -28,7 +40,7 @@ const Billing = () => {
             </GridItem>
             <GridItem>
               <Title>환자 성명</Title>
-              <Content>{state.username}</Content>
+              <Content>{}</Content>
             </GridItem>
             <GridItem>
               <Title>환자 번호</Title>
@@ -48,17 +60,25 @@ const Billing = () => {
             </GridItem>
           </GridContainer>
           <GridItem Header>
-            <Section>치료 내역서</Section>
+            <Section>
+              치료 내역서
+              <select value={selectedValue} onChange={handleSelectChange}>
+                <option value="">선택하세요</option>
+                <option value="CT">CT진단비</option>
+                <option value="anesthesia">마취비</option>
+                <option value="hospitalization">입원비</option>
+                <option value="injection">주사비</option>
+              </select>
+              <button onClick={addInputField}>추가</button>
+            </Section>
           </GridItem>
           <GridContainer detail>
-            <GridItem>
-              <StyledInput title type="text" value="text" />
-              <StyledInput type="text" />
-            </GridItem>
-            <GridItem>
-              <StyledInput title type="text" value="text" />
-              <StyledInput type="text" />
-            </GridItem>
+            {selectedFields.map((field, index) => (
+              <GridItem key={index}>
+                <StyledInput title type="text" value={field} />
+                <StyledInput type="text" />
+              </GridItem>
+            ))}
             <GridItem>
               <Title>총금액</Title>
               <Content>test</Content>
