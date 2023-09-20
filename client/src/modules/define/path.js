@@ -2,7 +2,7 @@ export const path = {
   home: "/",
   signUp: "/signUp",
   selfDiagnosis: "/selfDiagnosis",
-  appointment: "/appointment",
+  appointment: "/appointment/:id",
   map: "/map",
   pay: "/pay",
   mypage: "/mypage",
@@ -12,5 +12,6 @@ export const path = {
   adminWaitingList: "/adminWaitingList",
   accounting: "/accounting",
   teleConsult: "/teleConsult",
-  billing: "billing",
+  billing: "/billing",
+  search: "/searchHospital",
 };

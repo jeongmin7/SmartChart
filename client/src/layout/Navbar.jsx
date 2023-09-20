@@ -32,7 +32,7 @@ const NavBar = () => {
           {userInfo.isDoctor ? (
             <NavLink to="/adminAppointment">예약/진료관리</NavLink>
           ) : (
-            <NavLink to="/appointment">병원예약</NavLink>
+            <NavLink to="/searchHospital">병원예약</NavLink>
           )}
         </NavItem>
         <NavItem>

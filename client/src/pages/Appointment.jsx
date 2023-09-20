@@ -23,7 +23,7 @@ const Appointment = () => {
     <AppointmentContainer>
       <AppointmentWrapper>
         <Header>병원 예약하기</Header>
-        <MapComponent />
+
         {/* <InfoWrapper> */}
         <FirstColumnHalfWrapper>
           <ColumnDivideWrapper>
