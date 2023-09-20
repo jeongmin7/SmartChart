@@ -70,7 +70,6 @@ const MapComponent = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState("");
   const [markers, setMarkers] = useState([]);
   const [infoWindow, setInfoWindow] = useState(null);
-  const [selectedHospital, setSelectedHospital] = useState(null);
   useEffect(() => {
     if (map) {
       createMarkers(hospitalData);
@@ -155,7 +154,7 @@ const MapComponent = () => {
     `;
 
     const button = infoWindowContent.querySelector("#infoWindowButton");
-    button.addEventListener("click", handleButtonClick(id));
+    button.addEventListener("click", () => handleButtonClick(id));
 
     const infowindow = new kakao.maps.InfoWindow({
       content: infoWindowContent,
