@@ -14,4 +14,5 @@ export const path = {
   teleConsult: "/teleConsult",
   billing: "/billing",
   search: "/searchHospital",
+  medicalcaremanagement: "/medicalcaremanagement/:id",
 };

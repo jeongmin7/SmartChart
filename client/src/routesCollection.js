@@ -17,6 +17,7 @@ import TeleConsult from "./pages/TeleConsult";
 import Accounting from "./pages/Accounting";
 import Billing from "./pages/Billing";
 import SearchHospital from "./pages/SearchHospital";
+import MedicalCareManagement from "./pages/MedicalCareManagement";
 
 const RoutesCollection = () => {
   return (
@@ -36,6 +37,10 @@ const RoutesCollection = () => {
       <Route path={path.accounting} element={<Accounting />} />
       <Route path={path.billing} element={<Billing />} />
       <Route path={path.search} element={<SearchHospital />} />
+      <Route
+        path={path.medicalcaremanagement}
+        element={<MedicalCareManagement />}
+      />
 
       <Route path="*" element={<NotFound />} />
     </Routes>
