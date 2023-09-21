@@ -22,10 +22,11 @@ const Billing = () => {
     <Container>
       <Header>의료비 청구</Header>
       <Wrapper>
-        <GridItem Header={true}>
-          <Section>진료비</Section>
-        </GridItem>
-     
+        <div>
+          <GridItem Header={true}>
+            <Section>진료비</Section>
+          </GridItem>
+
           <GridContainer>
             <GridItem>
               <Title>예약번호</Title>
@@ -86,7 +87,6 @@ const Billing = () => {
             </GridItem>
           </GridContainer>
         </div>
-
       </Wrapper>
     </Container>
   );
