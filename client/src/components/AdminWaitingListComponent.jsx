@@ -29,19 +29,16 @@ const appointment = [
 ];
 
 function compareAppointments(appointment1, appointment2) {
-  // 먼저 reservationDate를 비교합니다.
   const dateComparison = appointment1.reservationDate.localeCompare(
     appointment2.reservationDate,
   );
 
-  // reservationDate가 같은 경우 reservationTime을 비교합니다.
   if (dateComparison === 0) {
     return appointment1.reservationTime.localeCompare(
       appointment2.reservationTime,
     );
   }
 
-  // reservationDate가 다른 경우 dateComparison 값을 반환합니다.
   return dateComparison;
 }
 
