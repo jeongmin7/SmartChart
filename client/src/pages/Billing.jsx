@@ -8,22 +8,39 @@ const Billing = () => {
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
 
+  const data = [
+    {
+      treatment: "CT진단비",
+      cost: "10000",
+    },
+    { treatment: "마취비", cost: "1000" },
+    { treatment: "입원비", cost: "100" },
+    { treatment: "주사비", cost: "10" },
+  ];
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedFields, setSelectedFields] = useState([]);
-
+  const totalCost = selectedFields.reduce(
+    (total, item) => total + parseInt(item.cost),
+    0,
+  );
   const handleSelectChange = (event) => {
     setSelectedValue(event.target.value);
   };
   const addInputField = () => {
-    setSelectedFields([...selectedFields, selectedValue]);
+    const treatmentCost = data.find(
+      (item) => item.treatment === selectedValue,
+    ).cost;
+    setSelectedFields([
+      ...selectedFields,
+      { treatment: selectedValue, cost: treatmentCost },
+    ]);
   };
-
   return (
     <Container>
       <Header>의료비 청구</Header>
       <Wrapper>
         <div>
-          <GridItem Header={true}>
+          <GridItem header="true">
             <Section>진료비</Section>
           </GridItem>
 
@@ -61,29 +78,31 @@ const Billing = () => {
               <Content>test</Content>
             </GridItem>
           </GridContainer>
-          <GridItem Header>
+          <GridItem header="true">
             <Section>
               치료 내역서
               <select value={selectedValue} onChange={handleSelectChange}>
                 <option value="">선택하세요</option>
-                <option value="CT">CT진단비</option>
-                <option value="anesthesia">마취비</option>
-                <option value="hospitalization">입원비</option>
-                <option value="injection">주사비</option>
+                <option value="CT진단비">CT진단비</option>
+                <option value="마취비">마취비</option>
+                <option value="입원비">입원비</option>
+                <option value="주사비">주사비</option>
               </select>
               <button onClick={addInputField}>추가</button>
             </Section>
           </GridItem>
-          <GridContainer detail>
+          <GridContainer detail="true">
             {selectedFields.map((field, index) => (
               <GridItem key={index}>
-                <StyledInput title type="text" value={field} />
-                <StyledInput type="text" />
+                <StyledInput type="text" title="true">
+                  {field.treatment}
+                </StyledInput>
+                <StyledInput type="text">{field.cost}</StyledInput>
               </GridItem>
             ))}
             <GridItem>
               <Title>총금액</Title>
-              <Content>test</Content>
+              <Content>{totalCost}</Content>
             </GridItem>
           </GridContainer>
         </div>
@@ -121,7 +140,7 @@ const Header = styled.div`
 const GridContainer = styled.div`
   display: grid;
   grid-template-columns: ${(props) =>
-    props.detail ? "none" : "repeat(4, 1fr)"}; // 4개의 열
+    props.detail ? "none" : "repeat(4, 1fr)"};
   width: 100%;
   /* max-width: 800px; */
   margin: 0 auto;
@@ -130,12 +149,12 @@ const GridItem = styled.div`
   text-align: center;
   font-size: 18px;
   display: grid;
-  font-weight: ${(props) => (props.Header ? "700" : "400")};
-  grid-template-columns: ${(props) => (props.Header ? "" : "6fr 4fr")};
+  font-weight: ${(props) => (props.header ? "700" : "400")};
+  grid-template-columns: ${(props) => (props.header ? "" : "6fr 4fr")};
   padding: 0;
   width: 100%;
   border-bottom: ${(props) =>
-    props.Header
+    props.header
       ? `2px solid ${palette.primary.black}`
       : `1px solid ${palette.primary.black}`};
   &:not(:first-child) {
