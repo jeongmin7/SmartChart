@@ -2,43 +2,78 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Button from "./Button";
 import { useNavigate } from "react-router-dom";
+import Modal from "./Modal";
+import SelfDiagnosisComponent from "./SelfDiagnosisComponent";
 
 const AdminAppointmentComponent = () => {
   const appointments = [
     {
-      id: 1,
-      username: "김",
-      date: "2023-08-20",
-      time: "09:00-10:00",
-      tel: "010-0000-0000",
+      name: "watch",
+      id: 32,
+      paymentStatus: "미완료",
+      reservationStatus: "미완료",
+      reservationTime: "10:00:00",
+      reservationDate: "2023-09-01",
+      phoneNumber: 1111111,
+      patientId: 6,
     },
     {
-      id: 2,
-      username: "이",
-      date: "2023-08-21",
-      time: "15:00-16:00",
-      tel: "010-1111-1111",
+      name: "watch",
+      id: 31,
+      paymentStatus: "미완료",
+      reservationStatus: "미완료",
+      reservationTime: "09:00:00",
+      reservationDate: "2023-09-01",
+      phoneNumber: 1111111,
+      patientId: 6,
     },
     {
-      id: 3,
-      username: "박",
-      date: "2023-08-11",
-      time: "11:00-12:00",
-      tel: "010-1111-1111",
+      name: "watch",
+      id: 30,
+      paymentStatus: "미완료",
+      reservationStatus: "미완료",
+      reservationTime: "09:00:00",
+      reservationDate: "2029-08-31",
+      phoneNumber: 1111111,
+      patientId: 6,
     },
     {
-      id: 4,
-      username: "홍",
-      date: "2023-08-16",
-      time: "14:00-15:00",
-      tel: "010-1111-1111",
+      name: "watch",
+      id: 29,
+      paymentStatus: "미완료",
+      reservationStatus: "미완료",
+      reservationTime: "09:00:00",
+      reservationDate: "2023-08-31",
+      phoneNumber: 1111111,
+      patientId: 6,
+    },
+    {
+      name: "watch",
+      id: 28,
+      paymentStatus: "미완료",
+      reservationStatus: "미완료",
+      reservationTime: "18:00:00",
+      reservationDate: "2023-08-31",
+      phoneNumber: 1111111,
+      patientId: 6,
+    },
+    {
+      name: "watch",
+      id: 27,
+      paymentStatus: "미완료",
+      reservationStatus: "미완료",
+      reservationTime: "17:00:00",
+      reservationDate: "2023-08-31",
+      phoneNumber: 1111111,
+      patientId: 6,
     },
   ];
+  const navigate = useNavigate();
 
   const [searchUsername, setSearchUsername] = useState("");
   const [searchDate, setSearchDate] = useState("");
   const [filteredAppointments, setFilteredAppointments] = useState([]);
-  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleUsernameChange = (event) => {
     setSearchUsername(event.target.value);
@@ -52,8 +87,8 @@ const AdminAppointmentComponent = () => {
 
   const filterAppointments = (username, date) => {
     const filtered = appointments.filter((appointment) => {
-      const nameMatch = appointment.username.includes(username);
-      const dateMatch = appointment.date.includes(date);
+      const nameMatch = appointment.name.includes(username);
+      const dateMatch = appointment.reservationDate.includes(date);
       return nameMatch && dateMatch;
     });
 
@@ -65,6 +100,10 @@ const AdminAppointmentComponent = () => {
     navigate(`/billing?id=${appointment.id}`, {
       state: appointment,
     });
+  };
+
+  const handleModal = () => {
+    setIsModalOpen(!isModalOpen);
   };
 
   useEffect(() => {
@@ -114,10 +153,10 @@ const AdminAppointmentComponent = () => {
               {filteredAppointments.map((appointment) => (
                 <tr key={appointment.id}>
                   <Td>{appointment.id}</Td>
-                  <Td>{appointment.username}</Td>
-                  <Td>{appointment.date}</Td>
-                  <Td>{appointment.time}</Td>
-                  <Td>{appointment.tel}</Td>
+                  <Td>{appointment.name}</Td>
+                  <Td>{appointment.reservationDate}</Td>
+                  <Td>{appointment.reservationTime}</Td>
+                  <Td>{appointment.phoneNumber}</Td>
                   <Td>
                     <Button
                       width="100px"
@@ -148,6 +187,9 @@ const AdminAppointmentComponent = () => {
                       height="30px"
                       padding="0"
                       fontSize="12px"
+                      onClick={() =>
+                        navigate(`/medicalcaremanagement/${appointment.id}`)
+                      }
                     >
                       진료관리 가기
                     </Button>
@@ -158,9 +200,13 @@ const AdminAppointmentComponent = () => {
                       height="30px"
                       padding="0"
                       fontSize="12px"
+                      onClick={handleModal}
                     >
                       건강체크 확인
                     </Button>
+                    <Modal isOpen={isModalOpen} handleModal={handleModal}>
+                      <SelfDiagnosisComponent />
+                    </Modal>
                   </Td>
                 </tr>
               ))}

@@ -23,7 +23,7 @@ const SelfDiagnosisComponent = () => {
       unawareness: "모름",
       yes: "예",
       no: "아니오",
-      answer: "예",
+      answer: "아니오",
     },
     {
       name: "watch",
@@ -222,48 +222,80 @@ const SelfDiagnosisComponent = () => {
       <Subject>
         <Title>기본 건강 체크</Title>
         <Body>
-          {data.map(({ question, questionId }) => (
+          {data.map(({ question, questionId, answer }) => (
             <>
               <SubTitle>
                 {questionId}. {question}
               </SubTitle>
-              <Label>
-                <input
-                  type="radio"
-                  value="네"
-                  checked={answers[questionId] === "Y"}
-                  onChange={() => handleAnswer(questionId, "Y")}
-                  style={{ marginRight: "30px" }}
-                />
-                네
-              </Label>
-              <Label>
-                <input
-                  type="radio"
-                  value="아니요"
-                  checked={answers[questionId] === "N"}
-                  onChange={() => handleAnswer(questionId, "N")}
-                  style={{ marginRight: "30px" }}
-                />
-                아니요
-              </Label>
-              <Label>
-                <input
-                  type="radio"
-                  value="모름"
-                  checked={answers[questionId] === "unawareness"}
-                  onChange={() => handleAnswer(questionId, "unawareness")}
-                  style={{ marginRight: "30px" }}
-                />
-                모름
-              </Label>
+
+              {answer ? (
+                <div>
+                  <Label>
+                    <input
+                      type="radio"
+                      value="예"
+                      checked={answer === "예"}
+                      style={{ marginRight: "30px" }}
+                    />
+                    네
+                  </Label>
+                  <Label>
+                    <input
+                      type="radio"
+                      value="아니오"
+                      checked={answer === "아니오"}
+                      style={{ marginRight: "30px" }}
+                    />
+                    아니요
+                  </Label>
+                  <Label>
+                    <input
+                      type="radio"
+                      value="모름"
+                      checked={answer === "모름"}
+                      style={{ marginRight: "30px" }}
+                    />
+                    모름
+                  </Label>
+                </div>
+              ) : (
+                <div>
+                  <Label>
+                    <input
+                      type="radio"
+                      value="네"
+                      checked={answers[questionId] === "Y"}
+                      onChange={() => handleAnswer(questionId, "Y")}
+                      style={{ marginRight: "30px" }}
+                    />
+                    네
+                  </Label>
+                  <Label>
+                    <input
+                      type="radio"
+                      value="아니오"
+                      checked={answers[questionId] === "N"}
+                      onChange={() => handleAnswer(questionId, "N")}
+                      style={{ marginRight: "30px" }}
+                    />
+                    아니요
+                  </Label>
+                  <Label>
+                    <input
+                      type="radio"
+                      value="모름"
+                      checked={answers[questionId] === "unawareness"}
+                      onChange={() => handleAnswer(questionId, "unawareness")}
+                      style={{ marginRight: "30px" }}
+                    />
+                    모름
+                  </Label>
+                </div>
+              )}
             </>
           ))}
         </Body>
       </Subject>
-      <Button width="100px" height="30px" padding="0" fontSize="15px">
-        SAVE
-      </Button>
     </Table>
   );
 };
