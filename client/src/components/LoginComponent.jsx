@@ -15,6 +15,19 @@ const LoginComponent = () => {
   const [isAutoLogin, setIsAutoLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [findPassword, setFindPassword] = useState(false);
+
+  const [isValidEmail, setIsValidEmail] = useState(true);
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+  const checkPasswordValidity = (e) => {
+    if (!emailRegex.test(e.target.value)) {
+      setIsValidEmail(false);
+      return;
+    } else {
+      setIsValidEmail(true);
+    }
+  };
+
   const handlePassord = () => {
     setFindPassword(!findPassword);
   };
@@ -60,16 +73,33 @@ const LoginComponent = () => {
         <LinkWrapper>
           {/* TODO: not find page */}
           <div onClick={handlePassord}>아이디- 비밀번호 찾기</div>
-          {console.log(findPassword)}
           {findPassword === true && (
             <Modal isOpen={findPassword} handleModal={handlePassord}>
               <PContainer>
                 <PasswordTitle>
-                  <div>비밀번호 찾기</div>
+                  <div
+                    style={{
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    비밀번호 찾기
+                  </div>
                 </PasswordTitle>
-                <span>입력한 이메일로 임시 비밀번호가 전송됩니다.</span>
-                <PInput type="email" />
-                <PButton>비밀번호 전송</PButton>
+                <PContent>
+                  <span style={{ color: "#555" }}>
+                    입력한 이메일로 임시 비밀번호가 전송됩니다.
+                  </span>
+                  <PInput
+                    type="email"
+                    placeholder="qwerty@email.com"
+                    onChange={checkPasswordValidity}
+                  />
+                  <Error>
+                    {!isValidEmail && "이메일 주소가 유효하지 않습니다."}
+                  </Error>
+                  <PButton>비밀번호 전송</PButton>
+                </PContent>
               </PContainer>
             </Modal>
           )}
@@ -129,15 +159,34 @@ const PContainer = styled.div`
   justify-content: center;
   align-items: center;
   color: #333;
+  padding-top: 20px;
 `;
 const PasswordTitle = styled.div`
   font-size: 20px;
-  margin-bottom: 30px;
+  padding: 10px;
+  background-color: #1798e1;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: 600;
+  width: 50%;
+  position: absolute;
+  top: 10px;
+  text-align: center;
+  z-index: 1;
+`;
+const PContent = styled.div`
+  border: 1px solid #333;
+  border-radius: 5px;
+  padding: 20px;
+  padding-top: 40px;
 `;
 const PInput = styled.input`
   width: 100%;
   margin-top: 10px;
   margin-bottom: 10px;
+  line-height: 1.5;
+  border-color: #1798e1;
+  border-radius: 3px;
 `;
 
 const PButton = styled.button`
@@ -146,4 +195,9 @@ const PButton = styled.button`
   color: #fff;
   font-weight: 600;
   padding: 5px 10px;
+`;
+const Error = styled.div`
+  color: red;
+  margin-bottom: 10px;
+  font-size: 14px;
 `;
