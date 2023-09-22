@@ -22,15 +22,16 @@ const ModalWrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(245, 245, 245, 0.1);
+  background-color: rgba(107, 108, 114, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
 const ModalContent = styled.div`
-  background-color: white;
-  padding: 20px;
+  background-color: #fff;
+  position: relative;
+  padding: 10px;
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -44,9 +45,12 @@ const ModalScrollableContent = styled.div`
 `;
 
 const CloseButton = styled.button`
+  position: absolute;
+  top: 3px;
+  right: 3px;
   align-self: flex-end;
   background-color: transparent;
   border: none;
-  font-size: 24px;
+  font-size: 16px;
   cursor: pointer;
 `;
