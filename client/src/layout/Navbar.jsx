@@ -66,7 +66,9 @@ const MobileS = styled.div`
   }
 `;
 const MobileButton = styled.button`
-  background-color: none;
+  background-color: transparent;
+  border: none;
+  font-size: 30px;
 `;
 
 const Desktop = styled.div`
