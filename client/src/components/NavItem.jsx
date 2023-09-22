@@ -165,4 +165,5 @@ const SignoutButton = styled.div`
   &:hover {
     cursor: pointer;
   }
+  color: #333;
 `;
