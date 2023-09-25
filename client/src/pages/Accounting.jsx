@@ -7,7 +7,7 @@ import SalesTable from "../components/SalesTable";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import PeriodChart from "../components/chart/PeriodChart";
-import SalesChart from "../components/chart/SalesChart";
+// import SalesChart from "../components/chart/SalesChart";
 
 const Accounting = () => {
   const [selectedChart, setSelectedChart] = useState(null);
@@ -36,7 +36,7 @@ const Accounting = () => {
         setSelectedChart(<MonthlyChart />);
         break;
       case "매출순":
-        setSelectedChart(<SalesChart />);
+        // setSelectedChart(<SalesChart />);
         break;
       case "기간별":
         setSelectedChart(<PeriodChart />);
