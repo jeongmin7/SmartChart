@@ -6,9 +6,12 @@ import MonthlyChart from "../components/chart/MonthlyChart";
 import SalesTable from "../components/SalesTable";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
+import PeriodChart from "../components/chart/PeriodChart";
+import SalesChart from "../components/chart/SalesChart";
 
 const Accounting = () => {
   const [selectedChart, setSelectedChart] = useState(null);
+
   const handleChartSelection = (chartType) => {
     switch (chartType) {
       case "주간 매출":
@@ -22,6 +25,21 @@ const Accounting = () => {
         break;
       case "월별 매출":
         setSelectedChart(<MonthlyChart />);
+        break;
+      case "월별 성별 매출":
+        setSelectedChart(<MonthlyChart />);
+        break;
+      case "월별 평균나이":
+        setSelectedChart(<MonthlyChart />);
+        break;
+      case "최신순":
+        setSelectedChart(<MonthlyChart />);
+        break;
+      case "매출순":
+        setSelectedChart(<SalesChart />);
+        break;
+      case "기간별":
+        setSelectedChart(<PeriodChart />);
         break;
       default:
         setSelectedChart(null);
@@ -39,6 +57,16 @@ const Accounting = () => {
         </Button>
         <Button onClick={() => handleChartSelection("연 매출")}>연 매출</Button>
         <Button onClick={() => handleChartSelection("일 매출")}>일 매출</Button>
+        <Button onClick={() => handleChartSelection("월별 성별 매출")}>
+          월별 성별 매출
+        </Button>
+        <Button onClick={() => handleChartSelection("월별 평균나이 매출")}>
+          월별 평균나이 매출
+        </Button>
+        <Button onClick={() => handleChartSelection("최신순")}>최신순</Button>
+        <Button onClick={() => handleChartSelection("매출순")}>매출순</Button>
+        <input type="date" /> ~<input type="date" />
+        <Button onClick={() => handleChartSelection("기간별")}>검색</Button>
       </Buttons>
       {selectedChart}
       <SalesTable />
@@ -61,15 +89,16 @@ const Header = styled.div`
   font-size: 25px;
 `;
 const Buttons = styled.div`
-  display: flex;
+  display: grid;
   width: 60%;
   padding: 2rem;
-  justify-content: space-around;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
 `;
 const Button = styled.button`
   background-color: #1798e1;
   border: none;
   padding: 0.5rem 1rem;
   color: ${palette.white};
-  font-weight: 600;
+  font-weight: 700;
 `;
