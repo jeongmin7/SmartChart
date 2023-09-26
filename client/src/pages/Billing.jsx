@@ -22,26 +22,27 @@ const Billing = () => {
   const [selectedFields, setSelectedFields] = useState([]);
   const totalCost = selectedFields.reduce(
     (total, item) => total + parseInt(item.cost),
-    0
+    0,
   );
   const handleSelectChange = (event) => {
     setSelectedValue(event.target.value);
   };
   const addInputField = (type, index) => {
-    const treatmentCost = data.find(
-      (item) => item.treatment === selectedValue
-    ).cost;
+    const selectedItem = data.find((item) => item.treatment === selectedValue);
+
     if (type === "delete") {
       const newSelectedFields = selectedFields.filter(
-        (item, idx) => idx !== index
+        (item, idx) => idx !== index,
       );
       setSelectedFields(newSelectedFields);
       return;
     }
-    setSelectedFields([
-      ...selectedFields,
-      { treatment: selectedValue, cost: treatmentCost },
-    ]);
+    if (selectedItem) {
+      setSelectedFields([
+        ...selectedFields,
+        { treatment: selectedValue, cost: selectedItem.cost },
+      ]);
+    }
   };
   return (
     <Container>
@@ -60,30 +61,7 @@ const Billing = () => {
             <Title>병원명</Title>
             <Content>test</Content>
           </GridItem>
-          <GridItem>
-            <Title>진료날짜</Title>
-            <Content>test</Content>
-          </GridItem>
-          <GridItem>
-            <Title>환자 성명</Title>
-            <Content>{}</Content>
-          </GridItem>
-          <GridItem>
-            <Title>환자 번호</Title>
-            <Content>test</Content>
-          </GridItem>
-          <GridItem>
-            <Title>환자 성별</Title>
-            <Content>test</Content>
-          </GridItem>
-          <GridItem>
-            <Title>환자 나이</Title>
-            <Content>test</Content>
-          </GridItem>
-          <GridItem>
-            <Title>111</Title>
-            <Content>test</Content>
-          </GridItem>
+          {/* 나머지 GridItem들을 추가하십시오 */}
         </GridContainer>
         <GridItem header="true" className="borderTop">
           <Section>치료 내역서</Section>
@@ -147,6 +125,7 @@ const Billing = () => {
                   fontSize="15px"
                   padding="0"
                   onClick={addInputField}
+                  disabled={!selectedValue}
                 >
                   등록
                 </Button>
@@ -166,6 +145,7 @@ const Billing = () => {
 };
 
 export default Billing;
+
 const Container = styled.section`
   display: flex;
   flex-direction: column;

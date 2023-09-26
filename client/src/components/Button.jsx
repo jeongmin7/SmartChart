@@ -1,5 +1,5 @@
 import React from "react";
-import { styled } from "styled-components";
+import { css, styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 
 const Button = ({
@@ -12,6 +12,7 @@ const Button = ({
   padding,
   marginBottom,
   fontSize,
+  disabled,
   ...restProps
 }) => {
   const style = {
@@ -24,7 +25,9 @@ const Button = ({
     fontSize: fontSize || "",
   };
 
-  return <ButtonS type={type} style={style} {...restProps} />;
+  return (
+    <ButtonS type={type} style={style} {...restProps} disabled={disabled} />
+  );
 };
 
 export default Button;
@@ -39,4 +42,11 @@ const ButtonS = styled.div`
   border-radius: 30px;
   font-weight: 600;
   cursor: pointer;
+  ${(props) =>
+    props.disabled &&
+    css`
+      background-color: #ccc;
+      color: #999;
+      cursor: not-allowed;
+    `}
 `;
