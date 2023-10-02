@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Loader from "./Loader";
 import { BiCurrentLocation } from "react-icons/bi";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 const { kakao } = window;
 
-const MapComponent = () => {
+const MapComponent = ({ setIsLoading }) => {
   const hospitalData = {
     피부과: [
       {
@@ -66,10 +65,9 @@ const MapComponent = () => {
 
   const navigate = useNavigate();
   const [map, setMap] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedSpecialty, setSelectedSpecialty] = useState("");
   const [markers, setMarkers] = useState([]);
-  const [infoWindow, setInfoWindow] = useState(null);
+
   useEffect(() => {
     if (map) {
       createMarkers(hospitalData);
@@ -87,7 +85,7 @@ const MapComponent = () => {
     const mapContainer = document.getElementById("map");
     const mapOption = {
       center: new kakao.maps.LatLng(0, 0),
-      level: 10,
+      level: 8,
     };
 
     const map = new kakao.maps.Map(mapContainer, mapOption);
@@ -145,23 +143,27 @@ const MapComponent = () => {
 
   const openInfoWindow = (marker, hospital) => {
     const { id, hospitalName } = hospital;
-    const infoWindowContent = document.createElement("div");
-    infoWindowContent.innerHTML = `
-      <div>
-        <p>${hospitalName}</p>
-        <button id="infoWindowButton">예약하기</button>
-      </div>
-    `;
 
-    const button = infoWindowContent.querySelector("#infoWindowButton");
-    button.addEventListener("click", () => handleButtonClick(id));
-
-    const infowindow = new kakao.maps.InfoWindow({
-      content: infoWindowContent,
+    const content = `
+    <div style="padding: 10px; background-color: #fff; border: 1px solid #ccc;">
+      <p style="font-weight: bold; margin-bottom: 5px;">${hospitalName}</p>
+      <p style="font-size: 12px">${hospital.hospitalAddress}</p>
+      <button id="infoWindowButton" style="background-color: #1798e1; color: #fff; border: none; padding: 5px 10px; cursor: pointer; margin-top: 5px;">예약하기</button>
+    </div>`;
+    // 커스텀 오버레이가 표시될 위치입니다
+    var position = new kakao.maps.LatLng(hospital.mapy, hospital.mapx);
+    // 커스텀 오버레이를 생성합니다
+    var customOverlay = new kakao.maps.CustomOverlay({
+      position: position,
+      content: content,
+      xAnchor: 0.3,
+      yAnchor: 0.91,
     });
 
-    infowindow.open(map, marker);
-    setInfoWindow(infowindow);
+    // 커스텀 오버레이를 지도에 표시합니다
+    customOverlay.setMap(map);
+    const button = document.getElementById("infoWindowButton");
+    button.addEventListener("click", () => handleButtonClick(id));
   };
 
   const handleButtonClick = (id) => {
@@ -192,8 +194,7 @@ const MapComponent = () => {
   }, [selectedSpecialty]);
 
   return (
-    <div>
-      {isLoading && <Loader />}
+    <Container>
       <Options>
         <Option>
           <input
@@ -240,22 +241,50 @@ const MapComponent = () => {
           />
           이비인후과
         </Option>
+        <Option>
+          <input
+            type="radio"
+            value="치과"
+            checked={selectedSpecialty === "치과"}
+            onChange={() => setSelectedSpecialty("치과")}
+          />
+          치과
+        </Option>
+        <Option>
+          <input
+            type="radio"
+            value="내과"
+            checked={selectedSpecialty === "내과"}
+            onChange={() => setSelectedSpecialty("내과")}
+          />
+          내과
+        </Option>
       </Options>
-      <div id="map" style={{ width: "500px", height: "400px" }}></div>
+      <div id="map" style={{ width: "600px", height: "500px" }}></div>
       <button onClick={() => window.location.reload()}>
         <BiCurrentLocation />
       </button>
-    </div>
+    </Container>
   );
 };
 
 export default MapComponent;
 
+const Container = styled.div`
+  padding: 3rem;
+  width: 80%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 const Options = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 2rem;
+  padding: 0rem 1.5rem 1.5rem;
   justify-content: space-between;
+  width: 100%;
 `;
 
 const Option = styled.label`

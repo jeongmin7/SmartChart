@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import MapComponent from "../components/MapComponent";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
+import Loader from "../components/Loader";
 
 const SearchHospital = () => {
+  const [isLoading, setIsLoading] = useState(true);
   return (
     <Container>
+      {isLoading && <Loader />}
       <Wrapper>
         <Header>병원 검색하기</Header>
-        <MapComponent />
+        <MapComponent setIsLoading={setIsLoading} />
       </Wrapper>
     </Container>
   );
@@ -24,6 +27,7 @@ const Container = styled.section`
   height: calc(100vh - 100px);
   min-width: 950px;
   min-height: 800px;
+  padding-top: 50px;
 `;
 
 const Wrapper = styled.div`
@@ -35,7 +39,8 @@ const Wrapper = styled.div`
   height: 80%;
   min-width: 950px;
   min-height: 800px;
-  padding: 100px 200px 100px;
+  padding: 40px 10px 10px 10px;
+
   border: 1px solid ${palette.gray.border};
   border-radius: 20px;
   /* div + div {

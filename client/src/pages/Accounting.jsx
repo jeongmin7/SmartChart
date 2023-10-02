@@ -7,11 +7,24 @@ import SalesTable from "../components/SalesTable";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import PeriodChart from "../components/chart/PeriodChart";
-// import SalesChart from "../components/chart/SalesChart";
+import AverageAgeChart from "../components/chart/AverageAgeChart";
+import SalesChart from "../components/chart/SalesChart";
 
 const Accounting = () => {
   const [selectedChart, setSelectedChart] = useState(null);
+  const [duration, setDuration] = useState({
+    startDate: "",
+    endDate: "",
+  });
+  console.log(duration);
+  const handleDateChange = (e) => {
+    const { name, value } = e.target;
 
+    setDuration((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
   const handleChartSelection = (chartType) => {
     switch (chartType) {
       case "주간 매출":
@@ -26,17 +39,17 @@ const Accounting = () => {
       case "월별 매출":
         setSelectedChart(<MonthlyChart />);
         break;
-      case "월별 성별 매출":
+      case "월별 방문자 성별":
         setSelectedChart(<MonthlyChart />);
         break;
       case "월별 평균나이":
-        setSelectedChart(<MonthlyChart />);
+        setSelectedChart(<AverageAgeChart />);
         break;
       case "최신순":
         setSelectedChart(<MonthlyChart />);
         break;
       case "매출순":
-        // setSelectedChart(<SalesChart />);
+        setSelectedChart(<SalesChart />);
         break;
       case "기간별":
         setSelectedChart(<PeriodChart />);
@@ -57,15 +70,27 @@ const Accounting = () => {
         </Button>
         <Button onClick={() => handleChartSelection("연 매출")}>연 매출</Button>
         <Button onClick={() => handleChartSelection("일 매출")}>일 매출</Button>
-        <Button onClick={() => handleChartSelection("월별 성별 매출")}>
-          월별 성별 매출
+        <Button onClick={() => handleChartSelection("월별 방문자 성별")}>
+          월별 방문자 성별
         </Button>
-        <Button onClick={() => handleChartSelection("월별 평균나이 매출")}>
-          월별 평균나이 매출
+        <Button onClick={() => handleChartSelection("월별 평균나이")}>
+          월별 평균나이
         </Button>
         <Button onClick={() => handleChartSelection("최신순")}>최신순</Button>
         <Button onClick={() => handleChartSelection("매출순")}>매출순</Button>
-        <input type="date" /> ~<input type="date" />
+        <input
+          type="date"
+          name="startDate"
+          value={duration.startDate}
+          onChange={handleDateChange}
+        />
+        ~
+        <input
+          type="date"
+          name="endDate"
+          value={duration.endDate}
+          onChange={handleDateChange}
+        />
         <Button onClick={() => handleChartSelection("기간별")}>검색</Button>
       </Buttons>
       {selectedChart}
