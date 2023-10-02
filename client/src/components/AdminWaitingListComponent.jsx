@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
+import { palette } from "../styles/GlobalStyles";
 
 const appointment = [
   {
@@ -94,59 +95,79 @@ const AdminWaitingListComponent = () => {
   }, []);
 
   return (
-    <>
-      <Header>환자 대기 관리</Header>
-      <Container>
-        <Today>{today}</Today>
+    <Container>
+      <Wrapper>
+        <Header>환자 대기 관리</Header>
         <ColumnContainer>
-          {Object.keys(tasks).map((status) => (
-            <Column
-              key={status}
-              onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, status)}
-            >
-              <Title>{status}</Title>
-              {tasks[status].map((appointment) => (
-                <Appointment
-                  key={appointment.patientName}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, appointment, status)}
-                >
-                  <DateText>{appointment.reservationDate}</DateText>
-                  <Info>
-                    <StyledP>{appointment.patientName}</StyledP>
-                    <StyledP>{appointment.reservationTime}</StyledP>
-                  </Info>
-                </Appointment>
-              ))}
-            </Column>
-          ))}
+          <Today>{today}</Today>
+          <Columns>
+            {Object.keys(tasks).map((status) => (
+              <Column
+                key={status}
+                onDragOver={handleDragOver}
+                onDrop={(e) => handleDrop(e, status)}
+              >
+                <Title>{status}</Title>
+                {tasks[status].map((appointment) => (
+                  <Appointment
+                    key={appointment.patientName}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, appointment, status)}
+                  >
+                    <DateText>{appointment.reservationDate}</DateText>
+                    <Info>
+                      <StyledP>{appointment.patientName}</StyledP>
+                      <StyledP>{appointment.reservationTime}</StyledP>
+                    </Info>
+                  </Appointment>
+                ))}
+              </Column>
+            ))}
+          </Columns>
         </ColumnContainer>
-      </Container>
-    </>
+      </Wrapper>
+    </Container>
   );
 };
+const Container = styled.section`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-width: 1300px;
+  min-height: calc(100vh - 100px);
+`;
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  max-width: 1500px;
+  padding: 100px 200px;
+  border-radius: 20px;
+`;
 
 const Header = styled.div`
   font-weight: bold;
   margin-bottom: 20px;
   font-size: 25px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1rem;
 `;
-const Container = styled.div`
+const ColumnContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
+  min-width: 1200px;
+  min-height: 500px;
 `;
 
 const Today = styled.div`
   display: flex;
   align-items: center;
   padding: 1rem;
-  background-color: gray;
+  background-color: ${palette.gray.dark};
   color: #fff;
   font-weight: 700;
   font-size: 1.5rem;
@@ -154,7 +175,7 @@ const Today = styled.div`
   height: 3rem;
 `;
 
-const ColumnContainer = styled.div`
+const Columns = styled.div`
   display: flex;
   justify-content: space-between;
 `;
@@ -165,7 +186,7 @@ const Column = styled.div`
   margin-left: 1rem;
   padding: 20px;
   border-radius: 5px;
-
+  min-height: 400px;
   &:first-child {
     margin-left: 0;
   }
@@ -174,7 +195,7 @@ const Column = styled.div`
 const Title = styled.h2`
   font-size: 18px;
   margin-bottom: 2rem;
-  background-color: #f5f5f5;
+  background-color: ${palette.gray.light};
   width: 100%;
   height: 3rem;
   display: flex;
@@ -186,8 +207,8 @@ const Title = styled.h2`
 const Appointment = styled.div`
   margin: 10px 0;
   padding: 5px;
-  background-color: gray;
-  border: 1px solid #ddd;
+  background-color: ${palette.gray.dark};
+  border: 1px solid ${palette.gray.border};
   border-radius: 5px;
 `;
 
@@ -195,7 +216,7 @@ const DateText = styled.p`
   font-weight: bold;
   font-size: 1rem;
   color: #fff;
-  background-color: gray;
+  background-color: ${palette.gray.dark};
   margin-bottom: 5px;
 `;
 
