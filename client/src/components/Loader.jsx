@@ -31,7 +31,7 @@ const Loader = ({ basic }) => {
 export default Loader;
 
 const LoaderContainer = styled.div`
-  position: absolute;
+  position: fixed; /* 스크롤을 움직여도 전체 영역을 감쌀 수 있도록 */
   top: 0;
   left: 0;
   display: flex;
