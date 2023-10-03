@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import Button from "../components/Button";
+import Modal from "../components/Modal";
+import TreatmentAndCost from "../components/TreatmentAndCost";
 
 const Billing = () => {
   const location = useLocation();
@@ -20,6 +22,12 @@ const Billing = () => {
   ];
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedFields, setSelectedFields] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   const totalCost = selectedFields.reduce(
     (total, item) => total + parseInt(item.cost),
     0,
@@ -61,7 +69,6 @@ const Billing = () => {
             <Title>병원명</Title>
             <Content>test</Content>
           </GridItem>
-          {/* 나머지 GridItem들을 추가하십시오 */}
         </GridContainer>
         <GridItem header="true" className="borderTop">
           <Section>치료 내역서</Section>
@@ -83,10 +90,11 @@ const Billing = () => {
                       <option value="주사비">주사비</option>
                     </PayList>
                     <Button
-                      width="100px"
+                      width="80px"
                       height="25px"
                       fontSize="15px"
                       padding="0"
+                      borderRadius="10px"
                       onClick={addInputField}
                     >
                       하단에 추가
@@ -100,6 +108,7 @@ const Billing = () => {
                     height="25px"
                     fontSize="15px"
                     padding="0"
+                    borderRadius="10px"
                     onClick={() => addInputField("delete", index)}
                   >
                     제거
@@ -140,6 +149,15 @@ const Billing = () => {
           </GridItem>
         </GridContainer>
       </Wrapper>
+      <Buttons>
+        <Button borderRadius="15px" width="100px">
+          저장
+        </Button>
+        <Button onClick={handleModal}>기본 치료비 책정하기</Button>
+        <Modal isOpen={isModalOpen} handleModal={handleModal}>
+          <TreatmentAndCost />
+        </Modal>
+      </Buttons>
     </Container>
   );
 };
@@ -161,7 +179,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 80%;
   height: 100%;
   max-width: 1500px;
   border: 2px solid ${palette.primary.black};
@@ -220,12 +238,16 @@ const Title = styled.div`
   background-color: #d9d9d9;
   padding: 16px;
   border-right: 1px solid #000;
+  font-weight: 600;
+  font-size: 20px;
 `;
 
 const Content = styled.div`
   background-color: #fff;
   padding: 16px;
   width: 100%;
+  font-weight: 600;
+  font-size: 20px;
 `;
 const StyledInput = styled.div`
   display: flex;
@@ -256,4 +278,9 @@ const ListBox = styled.div`
   &.buttonBox {
     left: 90%;
   }
+`;
+const Buttons = styled.div`
+  display: flex;
+  gap: 100px;
+  margin: 30px 0px;
 `;
