@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { palette } from "../styles/GlobalStyles";
+import Button from "../components/Button";
+import Modal from "../components/Modal";
+import BillingComponent from "../components/BillingComponent";
 
 const Pay = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   const columns = [
     { name: "", width: "3%" },
     { name: "예약번호", width: "8%" },
@@ -53,7 +62,7 @@ const Pay = () => {
               alert(error.message);
             });
         } else {
-          alert("결재 실패");
+          alert("결제 실패");
         }
       },
     );
@@ -88,14 +97,33 @@ const Pay = () => {
                 ) : index === 6 ? (
                   <div>미납</div>
                 ) : index === 7 ? (
-                  <button>진료비 보기</button>
+                  <Button
+                    width="80px"
+                    fontSize="12px"
+                    padding="5px"
+                    borderRadius="7px"
+                    onClick={handleModal}
+                  >
+                    진료비 보기
+                  </Button>
                 ) : index === 8 ? (
-                  <button onClick={handlePayment}>진료비 내기1</button>
+                  <Button
+                    width="80px"
+                    fontSize="12px"
+                    padding="5px"
+                    borderRadius="7px"
+                    onClick={handlePayment}
+                  >
+                    진료비 내기
+                  </Button>
                 ) : (
                   column.name
                 )}
               </ListRowDivideWrapper>
             ))}
+            <Modal isOpen={isModalOpen} handleModal={handleModal}>
+              <BillingComponent />
+            </Modal>
           </AppointmentListBody>
         </List>
       </Wrapper>
