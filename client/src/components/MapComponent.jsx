@@ -250,15 +250,6 @@ const MapComponent = ({ setIsLoading }) => {
           />
           치과
         </Option>
-        <Option>
-          <input
-            type="radio"
-            value="내과"
-            checked={selectedSpecialty === "내과"}
-            onChange={() => setSelectedSpecialty("내과")}
-          />
-          내과
-        </Option>
       </Options>
       <div id="map" style={{ width: "600px", height: "500px" }}></div>
       <button onClick={() => window.location.reload()}>
