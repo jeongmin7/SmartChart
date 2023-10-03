@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BiCurrentLocation } from "react-icons/bi";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
+import Button from "./Button";
 
 const { kakao } = window;
 
@@ -251,10 +252,16 @@ const MapComponent = ({ setIsLoading }) => {
           치과
         </Option>
       </Options>
-      <div id="map" style={{ width: "600px", height: "500px" }}></div>
-      <button onClick={() => window.location.reload()}>
+      <div id="map" style={{ width: "550px", height: "500px" }}></div>
+      <Button
+        onClick={() => window.location.reload()}
+        width="100px"
+        bgColor="white"
+        fgColor="#333"
+        alignSelf="flex-end"
+      >
         <BiCurrentLocation />
-      </button>
+      </Button>
     </Container>
   );
 };
@@ -262,7 +269,7 @@ const MapComponent = ({ setIsLoading }) => {
 export default MapComponent;
 
 const Container = styled.div`
-  padding: 3rem;
+  padding: 20px;
   width: 80%;
   height: 90%;
   display: flex;

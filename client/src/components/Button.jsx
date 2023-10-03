@@ -14,6 +14,7 @@ const Button = ({
   fontSize,
   disabled,
   borderRadius,
+  alignSelf,
   ...restProps
 }) => {
   const style = {
@@ -25,6 +26,7 @@ const Button = ({
     padding: padding || "",
     fontSize: fontSize || "",
     borderRadius: borderRadius || "",
+    alignSelf: alignSelf || "",
   };
 
   return (
