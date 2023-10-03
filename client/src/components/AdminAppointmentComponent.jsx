@@ -4,6 +4,7 @@ import Button from "./Button";
 import { useNavigate } from "react-router-dom";
 import Modal from "./Modal";
 import SelfDiagnosisComponent from "./SelfDiagnosisComponent";
+import SendSMS from "./SendSMS";
 
 const AdminAppointmentComponent = () => {
   const appointments = [
@@ -74,6 +75,7 @@ const AdminAppointmentComponent = () => {
   const [searchDate, setSearchDate] = useState("");
   const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSMSModalOpen, setIsSMSModalOpen] = useState(false);
 
   const handleUsernameChange = (event) => {
     setSearchUsername(event.target.value);
@@ -106,6 +108,10 @@ const AdminAppointmentComponent = () => {
     setIsModalOpen(!isModalOpen);
   };
 
+  const handleSMSModal = () => {
+    setIsSMSModalOpen(!isSMSModalOpen);
+  };
+
   useEffect(() => {
     filterAppointments(searchUsername, searchDate);
   }, [searchUsername, searchDate]);
@@ -114,6 +120,11 @@ const AdminAppointmentComponent = () => {
     <Container>
       <Wrapper>
         <Header>예약관리</Header>
+
+        <Modal isOpen={isSMSModalOpen} handleModal={handleSMSModal}>
+          <SendSMS />
+        </Modal>
+
         <Search>
           <LabelContainer>
             <LabelWrapper>
@@ -159,20 +170,18 @@ const AdminAppointmentComponent = () => {
                   <Td>{appointment.phoneNumber}</Td>
                   <Td>
                     <Button
-                      width="100px"
+                      width="120px"
                       height="30px"
                       padding="0"
                       fontSize="12px"
-                      onClick={() =>
-                        alert(`${appointment.tel}번으로 문자를 보냈습니다.`)
-                      }
+                      onClick={handleSMSModal}
                     >
                       예약 확정 문자
                     </Button>
                   </Td>
                   <Td>
                     <Button
-                      width="100px"
+                      width="130px"
                       height="30px"
                       padding="0"
                       fontSize="12px"
@@ -252,7 +261,6 @@ const Search = styled.div`
   width: 80%;
   justify-content: space-between;
   padding: 2rem;
-  margin-top: 4rem;
 `;
 const LabelContainer = styled.div`
   display: flex;
@@ -278,7 +286,7 @@ const Input = styled.input`
 const Table = styled.table`
   border: 1px solid gray;
   width: 80%;
-  margin-top: 5rem;
+  margin-top: 2rem;
   white-space: nowrap;
 `;
 
