@@ -1,13 +1,15 @@
 import React from "react";
 import { styled } from "styled-components";
-
+import { AiOutlineCloseCircle } from "react-icons/ai";
 const Modal = ({ isOpen, children, handleModal }) => {
   if (!isOpen) return null;
 
   return (
     <ModalWrapper>
       <ModalContent>
-        <CloseButton onClick={handleModal}>X</CloseButton>
+        <CloseButton onClick={handleModal}>
+          <AiOutlineCloseCircle size={20} />
+        </CloseButton>
         <ModalScrollableContent>{children}</ModalScrollableContent>
       </ModalContent>
     </ModalWrapper>

@@ -13,6 +13,7 @@ const Button = ({
   marginBottom,
   fontSize,
   disabled,
+  borderRadius,
   ...restProps
 }) => {
   const style = {
@@ -23,6 +24,7 @@ const Button = ({
     marginBottom: marginBottom || "",
     padding: padding || "",
     fontSize: fontSize || "",
+    borderRadius: borderRadius || "",
   };
 
   return (
@@ -39,7 +41,7 @@ const ButtonS = styled.div`
   background-color: ${palette.primary.blue};
   padding: 1rem;
   color: ${palette.white};
-  border-radius: 30px;
+  border-radius: 15px;
   font-weight: 600;
   cursor: pointer;
   ${(props) =>
