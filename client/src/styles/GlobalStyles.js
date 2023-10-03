@@ -26,7 +26,7 @@ export const palette = {
     light: "#dfdfdf",
     // middle: "#f7f7f7",
     border: "#CBC5C5",
-    // dark: "#979797",
+    dark: "#808080",
   },
 
   blue: {
