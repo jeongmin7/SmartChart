@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { styled } from "styled-components";
 import Button from "../components/Button";
 import DaumPostcodeEmbed from "react-daum-postcode";
+import { palette } from "../styles/GlobalStyles";
 
 const HospitalPage = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -87,7 +88,7 @@ const HospitalPage = () => {
                       alt="Uploaded"
                     />
                   ) : (
-                    <Nothing>d</Nothing>
+                    <Nothing>No image</Nothing>
                   )}
                   <FileInput
                     type="file"
@@ -135,19 +136,21 @@ const Header = styled.div`
 const Table = styled.table`
   border-collapse: collapse;
   width: 100%;
-  min-width: 700px;
-  min-height: 300px;
+  height: 300px;
   margin-bottom: 15px;
 `;
 
 const TH = styled.th`
   padding: 5px;
   border: 1px solid black;
+  text-align: center;
+  vertical-align: middle; /* 수직 가운데 정렬 */
 `;
 
 const TD = styled.td`
   border: 1px solid black;
-  padding: 5px;
+  padding: 10px;
+  text-align: center;
 `;
 const TR = styled.tr`
   height: 3rem;
@@ -157,10 +160,7 @@ const TR = styled.tr`
 const UploadWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 20px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 20px;
+  gap: 20px;
 `;
 
 const FileInput = styled.input`
@@ -174,7 +174,7 @@ const ImagePreview = styled.img`
 
 const Input = styled.input`
   width: 100%;
-  line-height: 3;
+  line-height: 2;
   padding: 0;
   font-size: 15px;
 `;
@@ -184,6 +184,8 @@ const Textarea = styled.textarea`
   line-height: 3;
 `;
 const Nothing = styled.div`
-  min-width: 220px;
-  max-height: 100px;
+  width: 100px;
+  height: 100px;
+  padding: 20px;
+  border: 1px solid ${palette.gray.border};
 `;
