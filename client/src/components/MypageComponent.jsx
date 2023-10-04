@@ -1,13 +1,50 @@
-import React from "react";
-import { useRecoilValue } from "recoil";
-import { userInfoAtom } from "../stores/userInfo";
+import React, { useState } from "react";
 import { styled } from "styled-components";
 import Button from "./Button";
-import SelectData from "./SelectData";
 import { palette } from "../styles/GlobalStyles";
+import { useNavigate } from "react-router-dom";
 
+const myInfo = [
+  {
+    name: "홍유",
+    phoneNumber: 1012341234,
+    gender: "여자",
+    age: 31,
+  },
+];
+
+const reservationList = [
+  {
+    id: 39,
+    hospitalName: "연세에스웰 피부과",
+    reservationTime: "17:00:00",
+    reservationDate: "2023-08-09",
+    reservationStatus: "미완료",
+  },
+  {
+    id: 40,
+    hospitalName: "연세에스웰 피부과2",
+    reservationTime: "17:00:00",
+    reservationDate: "2013-08-09",
+    reservationStatus: "미완료",
+  },
+  {
+    id: 41,
+    hospitalName: "연세에스웰 피부과3",
+    reservationTime: "13:00:00",
+    reservationDate: "2013-08-09",
+    reservationStatus: "미완료",
+  },
+];
 const MypageComponent = () => {
-  const userInfo = useRecoilValue(userInfoAtom);
+  const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState({
+    name: myInfo[0].name,
+    phoneNumber: myInfo[0].phoneNumber,
+    gender: myInfo[0].gender,
+    age: myInfo[0].age,
+  });
+
   const columns = [
     { name: "", width: "5%" },
     { name: "병원명", width: "15%" },
@@ -17,17 +54,10 @@ const MypageComponent = () => {
     { name: "", width: "10%" },
     { name: "", width: "23%" },
   ];
-  const gender = ["남자", "여자"];
-  const appointmentInfo = [
-    {
-      n: 1,
-      hospitalName: "차앤박",
-      date: "2023-10-20",
-      time: "17:00",
-      status: "확정",
-      cancel: "false",
-    },
-  ];
+
+  const handleChange = (field, value) => {
+    setUserInfo({ ...userInfo, [field]: value });
+  };
 
   return (
     <MypageContainer>
@@ -37,21 +67,33 @@ const MypageComponent = () => {
           <ColumnDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>환자이름:</InfoTitle>
-              <InfoValue value={"test"} />
+              <InfoValue
+                type="text"
+                value={userInfo.name}
+                onChange={(e) => handleChange("name", e.target.value)}
+              />
             </RowDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>성별:</InfoTitle>
-              <SelectData availableOption={gender} />
+              <select defaultValue={myInfo[0].gender} disabled>
+                <option value="">성별</option>
+                <option value="남자">남성</option>
+                <option value="여자">여성</option>
+              </select>
             </RowDivideWrapper>
           </ColumnDivideWrapper>
           <ColumnDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>나이:</InfoTitle>
-              <InfoValue value={"test"} />
+              <InfoValue value={myInfo[0].age} readOnly />
             </RowDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>전화번호:</InfoTitle>
-              <InfoValue value={"test"} />
+              <InfoValue
+                type="text"
+                value={userInfo.phoneNumber}
+                onChange={(e) => handleChange("phoneNumber", e.target.value)}
+              />
             </RowDivideWrapper>
           </ColumnDivideWrapper>
         </FirstColumnHalfWrapper>
@@ -60,32 +102,51 @@ const MypageComponent = () => {
           <Header>예약리스트</Header>
           <AppointmentListTitle>
             {columns.map((column, index) => (
-              <ListRowDivideWrapper width={column.width} index={index}>
+              <ListRowDivideWrapper
+                width={column.width}
+                index={index}
+                key={index}
+              >
                 {column.name}
               </ListRowDivideWrapper>
             ))}
           </AppointmentListTitle>
           <AppointmentListBody>
-            {columns.map((column, index) => (
-              <ListRowDivideWrapper width={column.width} index={index}>
-                {index === 0 ? (
-                  String(index + 1)
-                ) : index === 5 ? (
-                  <Button width="80%" height="60%" padding="0" fontSize="15px">
+            {reservationList.map((item, index) => (
+              <ListWrapper key={index}>
+                <div style={{ width: "5%" }}>{item.id}</div>
+                <div style={{ width: "15%" }}>{item.hospitalName}</div>
+                <div style={{ width: "25%" }}>{item.reservationDate}</div>
+                <div style={{ width: "12%" }}>{item.reservationTime}</div>
+                <div style={{ width: "10%" }}>{item.reservationStatus}</div>
+                <ButtonContainer>
+                  <Button
+                    width="70%"
+                    height="60%"
+                    padding="5px"
+                    fontSize="15px"
+                    borderRadius="10px"
+                  >
                     예약 취소
                   </Button>
-                ) : index === 6 ? (
-                  <Button width="80%" height="60%" padding="0" fontSize="15px">
+                </ButtonContainer>
+                <ButtonContainer width="23%">
+                  <Button
+                    width="70%"
+                    height="50%"
+                    padding="5px"
+                    fontSize="15px"
+                    borderRadius="10px"
+                    onClick={() => navigate("/selfdiagnosis")}
+                  >
                     기본 건강체크하러 가기
                   </Button>
-                ) : (
-                  column.name
-                )}
-              </ListRowDivideWrapper>
+                </ButtonContainer>
+              </ListWrapper>
             ))}
           </AppointmentListBody>
         </ColumnHalfWrapper>
-        <Button width="100px" height="100px" padding="0" fontSize="15px">
+        <Button width="100px" height="100px" padding="10px" fontSize="15px">
           Update
         </Button>
       </MypageWrapper>
@@ -94,28 +155,6 @@ const MypageComponent = () => {
 };
 
 export default MypageComponent;
-const Table = styled.table`
-  border: 1px solid gray;
-  border-collapse: collapse;
-  width: 80%;
-`;
-const Thead = styled.thead`
-  background-color: #f2f2f2;
-  padding: 8px;
-  border: 1px solid gray;
-`;
-const Th = styled.th`
-  border-left: 1px solid gray;
-  border-bottom: 1px solid gray;
-  &:first-child {
-    background-color: #fff;
-  }
-`;
-
-const Td = styled.td`
-  padding: 8px;
-  border: 1px solid #ccc;
-`;
 
 const MypageContainer = styled.section`
   display: flex;
@@ -149,7 +188,6 @@ const MypageWrapper = styled.div`
 `;
 
 const Header = styled.div`
-  /* background-color: red; */
   font-weight: bold;
   margin-bottom: 20px;
   font-size: 25px;
@@ -168,7 +206,6 @@ const ColumnDivideWrapper = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
-  /* background-color: purple; */
 `;
 const AppointmentListTitle = styled.div`
   display: flex;
@@ -182,7 +219,8 @@ const AppointmentListBody = styled.div`
   display: flex;
   width: 100%;
   height: 20%;
-  border-bottom: 1px solid ${palette.gray.border};
+  flex-direction: column;
+  margin-bottom: 80px;
 `;
 
 const FirstColumnHalfWrapper = styled(ColumnHalfWrapper)`
@@ -197,7 +235,6 @@ const RowDivideWrapper = styled.div`
   height: 100%;
   font-weight: bold;
   font-size: 16px;
-  /* background-color: purple; */
 `;
 
 const ListRowDivideWrapper = styled.div`
@@ -224,4 +261,20 @@ const InfoTitle = styled.div`
 
 const InfoValue = styled.input`
   width: 60%;
+`;
+const ListWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid ${palette.gray.border};
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+`;
+
+const ButtonContainer = styled.div`
+  width: ${(props) => props.width || "10%"};
+  display: flex;
+  justify-content: center;
+  white-space: nowrap;
 `;

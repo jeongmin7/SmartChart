@@ -4,9 +4,16 @@ import DatePicker from "../components/DatePickerComponent";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import Button from "../components/Button";
-import MapComponent from "../components/MapComponent";
 
 const Appointment = () => {
+  const data = {
+    patientName: "watch",
+    patiengGender: "여자",
+    patientgAge: 12,
+    patiengPhoneNumber: 1111111,
+    hospitalName: "연세에스웰 피부과",
+    doctorId: 5,
+  };
   const availableTimes = [
     "09:00 - 10:00",
     "10:00 - 11:00",
@@ -29,21 +36,21 @@ const Appointment = () => {
           <ColumnDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>환자이름:</InfoTitle>
-              <InfoValue>Test</InfoValue>
+              <InfoValue>{data.patientName}</InfoValue>
             </RowDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>성별:</InfoTitle>
-              <InfoValue>Test</InfoValue>
+              <InfoValue>{data.patiengGender}</InfoValue>
             </RowDivideWrapper>
           </ColumnDivideWrapper>
           <ColumnDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>나이:</InfoTitle>
-              <InfoValue>Test</InfoValue>
+              <InfoValue>{data.patientgAge}</InfoValue>
             </RowDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>전화번호:</InfoTitle>
-              <InfoValue>Test</InfoValue>
+              <InfoValue>{data.patiengPhoneNumber}</InfoValue>
             </RowDivideWrapper>
           </ColumnDivideWrapper>
         </FirstColumnHalfWrapper>
@@ -51,9 +58,8 @@ const Appointment = () => {
           <ColumnDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>병원이름:</InfoTitle>
-              <InfoValue>Test</InfoValue>
+              <InfoValue>{data.hospitalName}</InfoValue>
             </RowDivideWrapper>
-            {/* 환자이름부터 병원이름까지는 저장된 데이터 리코일로 불러와야함 */}
 
             <RowDivideWrapper>
               <InfoTitle>예약날짜:</InfoTitle>
