@@ -11,6 +11,12 @@ function useActiveChart() {
       case "latest":
         setActiveChart("latest");
         break;
+      case "gender":
+        setActiveChart("gender");
+        break;
+      case "averageAge":
+        setActiveChart("averageAge");
+        break;
       default:
         setActiveChart(null);
     }

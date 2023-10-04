@@ -8,7 +8,6 @@ import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import PeriodChart from "../components/chart/PeriodChart";
 import AverageAgeChart from "../components/chart/AverageAgeChart";
-import SalesChart from "../components/chart/SalesChart";
 
 const Accounting = () => {
   const [selectedChart, setSelectedChart] = useState(null);
@@ -39,18 +38,7 @@ const Accounting = () => {
       case "월별 매출":
         setSelectedChart(<MonthlyChart />);
         break;
-      case "월별 방문자 성별":
-        setSelectedChart(<MonthlyChart />);
-        break;
-      case "월별 평균나이":
-        setSelectedChart(<AverageAgeChart />);
-        break;
-      case "최신순":
-        setSelectedChart(<MonthlyChart />);
-        break;
-      case "매출순":
-        setSelectedChart(<SalesChart />);
-        break;
+
       case "기간별":
         setSelectedChart(<PeriodChart />);
         break;
@@ -70,28 +58,22 @@ const Accounting = () => {
         </Button>
         <Button onClick={() => handleChartSelection("연 매출")}>연 매출</Button>
         <Button onClick={() => handleChartSelection("일 매출")}>일 매출</Button>
-        <Button onClick={() => handleChartSelection("월별 방문자 성별")}>
-          월별 방문자 성별
-        </Button>
-        <Button onClick={() => handleChartSelection("월별 평균나이")}>
-          월별 평균나이
-        </Button>
-        <Button onClick={() => handleChartSelection("최신순")}>최신순</Button>
-        <Button onClick={() => handleChartSelection("매출순")}>매출순</Button>
-        <input
-          type="date"
-          name="startDate"
-          value={duration.startDate}
-          onChange={handleDateChange}
-        />
-        ~
-        <input
-          type="date"
-          name="endDate"
-          value={duration.endDate}
-          onChange={handleDateChange}
-        />
-        <Button onClick={() => handleChartSelection("기간별")}>검색</Button>
+        <Duration>
+          <input
+            type="date"
+            name="startDate"
+            value={duration.startDate}
+            onChange={handleDateChange}
+          />
+          ~
+          <input
+            type="date"
+            name="endDate"
+            value={duration.endDate}
+            onChange={handleDateChange}
+          />
+          <Button onClick={() => handleChartSelection("기간별")}>검색</Button>
+        </Duration>
       </Buttons>
       {selectedChart}
       <SalesTable />
@@ -117,7 +99,7 @@ const Buttons = styled.div`
   display: grid;
   width: 60%;
   padding: 2rem;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 `;
 const Button = styled.button`
@@ -126,4 +108,9 @@ const Button = styled.button`
   padding: 0.5rem 1rem;
   color: ${palette.white};
   font-weight: 700;
+`;
+const Duration = styled.div`
+  grid-column: 2 span;
+  display: flex;
+  justify-content: space-between;
 `;

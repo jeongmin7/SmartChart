@@ -52,7 +52,7 @@ const data = {
 
   datasets: [
     {
-      label: "Male",
+      label: "남성",
       data: datas.map((item) => item.maleCount),
       borderColor: "rgb(53, 162, 235)",
       backgroundColor: "rgba(53, 162, 235, 0.5)",
@@ -61,7 +61,7 @@ const data = {
     },
 
     {
-      label: "Female",
+      label: "여성",
       data: datas.map((item) => item.femaleCount),
       borderColor: "rgb(255, 99, 132)",
       backgroundColor: "rgba(255, 99, 132, 0.5)",
@@ -78,7 +78,7 @@ const options = {
     },
     title: {
       display: true,
-      text: "Monthly Gender Distribution",
+      text: "월간 성별 추이",
     },
   },
   scales: {
@@ -90,7 +90,7 @@ const options = {
       },
       title: {
         display: true,
-        text: "Male Count",
+        text: "남성 수 ",
       },
     },
     "y-axis-female": {
@@ -101,7 +101,7 @@ const options = {
       },
       title: {
         display: true,
-        text: "Female Count",
+        text: "여성 수",
       },
     },
   },
