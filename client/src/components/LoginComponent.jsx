@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "./Button";
 import SaveIdCheckbox from "./SaveIdCheckbox";
 import Input from "./Input";
@@ -8,18 +8,34 @@ import Logo from "./Logo";
 import { styled } from "styled-components";
 import { path } from "../modules/define/path";
 import Modal from "./Modal";
+import instance from "./api";
 
 const LoginComponent = () => {
-  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+  const [email, setEmail] = useState(localStorage.getItem("savedEmail") || "");
   const [password, setPassword] = useState("");
-  const [isAutoLogin, setIsAutoLogin] = useState(false);
+  const [isRememberMe, setIsRememberMe] = useState(false);
+  const [isDoctor, setIsDoctor] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [findPassword, setFindPassword] = useState(false);
-
   const [isValidEmail, setIsValidEmail] = useState(true);
+  const [emailAddress, setEmailAddress] = useState("");
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("savedEmail") || "";
+    if (savedEmail) {
+      setEmail(savedEmail);
+    }
+  }, []);
+
+  console.log("email", email);
+  const handleRadioChange = (e) => {
+    setIsDoctor(e.target.value === "doctor");
+  };
+
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
-  const checkPasswordValidity = (e) => {
+  const checkEmailValidity = (e) => {
     if (!emailRegex.test(e.target.value)) {
       setIsValidEmail(false);
       return;
@@ -31,12 +47,81 @@ const LoginComponent = () => {
   const handlePassord = () => {
     setFindPassword(!findPassword);
   };
-  const inputGroup = ["email", "password"];
 
-  const loginUser = (e) => {
+  const loginUser = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // console.log("123");
+    if (isDoctor) {
+      await instance
+        .post(
+          "/doctor/login",
+          {
+            email: email,
+            password: password,
+          },
+          {
+            withCredential: true,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        )
+        .then((response) => {
+          localStorage.setItem("token", response.data.token.token);
+          if (isRememberMe) {
+            localStorage.setItem("savedEmail", email);
+          } else {
+            localStorage.removeItem("savedEmail");
+          }
+        });
+    } else {
+      await instance
+        .post(
+          "/patient/login",
+          {
+            email: email,
+            password: password,
+          },
+          {
+            withCredential: true,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        )
+        .then((response) => {
+          localStorage.setItem("token", response.data.token.token);
+          if (isRememberMe) {
+            localStorage.setItem("savedEmail", email);
+          } else {
+            localStorage.removeItem("savedEmail");
+          }
+        })
+
+        .then(setIsLoading(false))
+        .then(() => navigate("/searchHospital"));
+    }
+  };
+  const findPasswordButton = async (e) => {
+    // TODO:실제이메일만 갈 수 있으시 validation 체크 필요
+    e.preventDefault();
+
+    await instance
+      .post(
+        "/patient/sendEmail",
+        {
+          email: emailAddress,
+        },
+        {
+          withCredential: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      )
+      .then(function (response) {
+        console.log(response);
+      });
   };
 
   return (
@@ -44,27 +129,58 @@ const LoginComponent = () => {
       {isLoading && <Loader />}
       <LoginWrapper>
         <Logo />
+        <SelectWrapper>
+          <LabelWrapper>
+            환자
+            <input
+              type="radio"
+              value="patient"
+              name="isDoctor"
+              checked={!isDoctor}
+              onChange={handleRadioChange}
+            />
+          </LabelWrapper>
+          <LabelWrapper>
+            의사
+            <input
+              type="radio"
+              value="doctor"
+              name="isDoctor"
+              checked={isDoctor}
+              onChange={handleRadioChange}
+            />
+          </LabelWrapper>
+        </SelectWrapper>
 
-        {inputGroup.map((inputEl, index) => (
-          <Input
-            key={index}
-            width="100%"
-            autoComplete="off"
-            id={inputEl}
-            placeholder={inputEl}
-            value={inputEl === "email" ? email : password}
-            onChange={(e) =>
-              inputEl === "email"
-                ? setEmail(e.target.value)
-                : setPassword(e.target.value)
-            }
-            style={index === 0 ? { marginTop: "30px" } : {}}
-          />
-        ))}
+        <Input
+          width="100%"
+          autoComplete="off"
+          id="email"
+          placeholder={"이메일을 입력해주세요"}
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+          }}
+          onBlur={(e) => checkEmailValidity(e)}
+          style={{ marginTop: "30px" }}
+        />
+        {!isValidEmail && <Error>이메일주소를 확인해주세요 </Error>}
+        <Input
+          key="password"
+          width="100%"
+          autoComplete="off"
+          id="password"
+          placeholder="비밀번호를 입력해주세요"
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
+        />
+
         <CheckBoxContainer>
           <SaveIdCheckbox
-            checked={isAutoLogin}
-            onChange={(e) => setIsAutoLogin(e.target.checked)}
+            checked={isRememberMe}
+            onChange={() => setIsRememberMe(!isRememberMe)}
           />
         </CheckBoxContainer>
         <Button onClick={loginUser} width="100%" marginBottom="20px">
@@ -93,12 +209,15 @@ const LoginComponent = () => {
                   <PInput
                     type="email"
                     placeholder="qwerty@email.com"
-                    onChange={checkPasswordValidity}
+                    onChange={(e) => {
+                      setEmailAddress(e.target.value);
+                      checkEmailValidity(e);
+                    }}
                   />
                   <Error>
                     {!isValidEmail && "이메일 주소가 유효하지 않습니다."}
                   </Error>
-                  <PButton>비밀번호 전송</PButton>
+                  <PButton onClick={findPasswordButton}>비밀번호 전송</PButton>
                 </PContent>
               </PContainer>
             </Modal>
@@ -117,7 +236,6 @@ const LoginContainer = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background-color: yellow; */
   width: 100vw;
   height: 100vh;
 `;
@@ -125,21 +243,17 @@ const LoginContainer = styled.section`
 const LoginWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
   width: 20%;
   height: 40%;
   min-width: 550px;
   min-height: 550px;
   background-color: white;
   padding: 30px;
-  /* & > input {
-    transform: translateX(-30px);
-  } */
 `;
 
 const CheckBoxContainer = styled.div`
   width: 100%;
-  height: 100px;
+  height: 50px;
 `;
 
 const LinkWrapper = styled.div`
@@ -200,4 +314,18 @@ const Error = styled.div`
   color: red;
   margin-bottom: 10px;
   font-size: 14px;
+`;
+const SelectWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  justify-content: center;
+  margin: 10px 0;
+`;
+const LabelWrapper = styled.label`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 `;
