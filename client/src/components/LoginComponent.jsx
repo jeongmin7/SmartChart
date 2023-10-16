@@ -10,9 +10,15 @@ import { path } from "../modules/define/path";
 import Modal from "./Modal";
 import instance from "./api";
 
+const getCookie = (name) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+};
+
 const LoginComponent = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState(localStorage.getItem("savedEmail") || "");
+  const [email, setEmail] = useState(getCookie("email") || "");
   const [password, setPassword] = useState("");
   const [isRememberMe, setIsRememberMe] = useState(false);
   const [isDoctor, setIsDoctor] = useState(false);
@@ -21,19 +27,11 @@ const LoginComponent = () => {
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [emailAddress, setEmailAddress] = useState("");
 
-  useEffect(() => {
-    const savedEmail = localStorage.getItem("savedEmail") || "";
-    if (savedEmail) {
-      setEmail(savedEmail);
-    }
-  }, []);
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
-  console.log("email", email);
   const handleRadioChange = (e) => {
     setIsDoctor(e.target.value === "doctor");
   };
-
-  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
   const checkEmailValidity = (e) => {
     if (!emailRegex.test(e.target.value)) {
@@ -67,11 +65,21 @@ const LoginComponent = () => {
           },
         )
         .then((response) => {
-          localStorage.setItem("token", response.data.token.token);
+          const token = response.data.token.token;
+
+          // 쿠키 만료 날짜 설정 ( 7일 후로 설정)
+          const expirationDate = new Date();
+          expirationDate.setDate(expirationDate.getDate() + 7);
+
+          // 쿠키 설정
+          document.cookie = `token=${token}; expires=${expirationDate.toUTCString()}; path=/`;
+
           if (isRememberMe) {
-            localStorage.setItem("savedEmail", email);
+            // 이메일을 쿠키로 저장
+            document.cookie = `email=${email}; expires=${expirationDate.toUTCString()}; path=/`;
           } else {
-            localStorage.removeItem("savedEmail");
+            document.cookie =
+              "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           }
         });
     } else {
@@ -90,20 +98,27 @@ const LoginComponent = () => {
           },
         )
         .then((response) => {
-          localStorage.setItem("token", response.data.token.token);
+          const token = response.data.token.token;
+
+          const expirationDate = new Date();
+          expirationDate.setDate(expirationDate.getDate() + 7);
+
+          document.cookie = `token=${token}; expires=${expirationDate.toUTCString()}; path=/`;
+
           if (isRememberMe) {
-            localStorage.setItem("savedEmail", email);
+            document.cookie = `email=${email}; expires=${expirationDate.toUTCString()}; path=/`;
           } else {
-            localStorage.removeItem("savedEmail");
+            document.cookie =
+              "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           }
         })
-
         .then(setIsLoading(false))
         .then(() => navigate("/searchHospital"));
     }
   };
+
   const findPasswordButton = async (e) => {
-    // TODO:실제이메일만 갈 수 있으시 validation 체크 필요
+    // TODO:실제 이메일만 갈 수 있으시 validation 체크 필요
     e.preventDefault();
 
     await instance
