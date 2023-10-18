@@ -4,19 +4,107 @@ import { styled } from "styled-components";
 import Button from "./Button";
 import { palette } from "../styles/GlobalStyles";
 import SearchHospital from "./SearchHospital";
+import instance from "./api";
+import {
+  Error,
+  Form,
+  Label,
+  LabelWrapper,
+  Section,
+  SelectWrapper,
+  SubmitButton,
+} from "../styles/CommonStyle";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { hospitalAtom, userInfoAtom } from "../stores/userInfo";
 
 const SignUpForm = () => {
-  const [userInfo, setUserInfo] = useState({
-    isDoctor: "patient",
-    email: "",
-    password: "",
-    username: "",
-    gender: "",
-    age: "",
-    phoneNumber: "",
-  });
+  const [emailError, setEmailError] = useState("");
+  // const [passwordError, setPasswordError] = useState("");
+  const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
   // 의사냐 환자냐
+  const hospitalInfo = useRecoilValue(hospitalAtom);
+  const fullAddress = `${hospitalInfo.address} ${hospitalInfo.detailAddress}`;
 
+  const emailCheck = async () => {
+    //FIXME: 하나로 합치면 이부분도 하나로합쳐야함
+    if (userInfo.isDoctor) {
+      await instance
+        .post(
+          "/doctor/check-email",
+          { email: userInfo.email },
+          {
+            withCredential: true,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        )
+        .then((response) => {
+          console.log(response);
+        });
+    } else {
+      await instance
+        .post(
+          "/patient/check-email",
+          { email: userInfo.email },
+          {
+            withCredential: true,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        )
+        .then((response) => {
+          console.log(response);
+        });
+    }
+  };
+  const handleRadioChange = (e) => {
+    setUserInfo((prevUserInfo) => ({
+      ...prevUserInfo,
+      isDoctor: e.target.value === "doctor",
+    }));
+  };
+
+  const onChange = (e) => {
+    const {
+      target: { name, value },
+    } = e;
+    console.log(name, value);
+    setUserInfo((prevUserInfo) => ({
+      ...prevUserInfo,
+      [name]: value,
+    }));
+    if (name === "email") {
+      const validRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      if (!value?.match(validRegex)) {
+        setEmailError("이메일 형식이 올바르지 않습니다.");
+      } else {
+        setEmailError("");
+      }
+    }
+    // if (name === "password") {
+    //   if (
+    //     userInfo.passwordConfirm?.length > 0 &&
+    //     value !== userInfo.passwordConfirm
+    //   ) {
+    //     setPasswordError(
+    //       "비밀번호와 비밀번호 확인 값이 다릅니다. 다시 확인해주세요 ",
+    //     );
+    //   } else {
+    //     setPasswordError("");
+    //   }
+    // }
+    // if (name === "passwordConfirm") {
+    //   if (userInfo.password.length > 0 && value !== userInfo.password) {
+    //     setPasswordError(
+    //       "비밀번호와 비밀번호 확인 값이 다릅니다. 다시 확인해주세요 ",
+    //     );
+    //   } else {
+    //     setPasswordError("");
+    //   }
+    // }
+  };
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
@@ -26,211 +114,225 @@ const SignUpForm = () => {
     }));
   };
 
-  // const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-  // TODO:유효성검사, 비밀번호 중복 확인
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // if (
-    //   !userInfo.email ||
-    //   !userInfo.password ||
-    //   !userInfo.username ||
-    //   !userInfo.age ||
-    //   !userInfo.phoneNumber
-    // ) {
-    //   alert("모든 값을 입력해주세요.");
-    //   return;
-    // }
+    try {
+      if (userInfo.isDoctor === false) {
+        instance
+          .post(
+            "/patient/join",
+            {
+              email: userInfo.email,
+              password: userInfo.password,
+              name: userInfo.name,
+              gender: userInfo.gender,
+              age: userInfo.age,
+              phoneNumber: userInfo.phoneNumber,
+            },
+            {
+              withCredential: true,
+              headers: {
+                "Content-Type": "application/json",
+              },
+            },
+          )
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      } else {
+        instance
+          .post(
+            "/doctor/join",
+            {
+              email: userInfo.email,
+              password: userInfo.password,
+              name: userInfo.name,
+              gender: userInfo.gender,
+              age: userInfo.age,
+              phoneNumber: userInfo.phoneNumber,
+              hospitalName: hospitalInfo.name,
+              hospitalAddress: fullAddress,
+              mapx: parseInt(hospitalInfo.mapx),
+              mapy: parseInt(hospitalInfo.mapy),
+              category: hospitalInfo.specialty,
+              hospitalPhoneNumber: hospitalInfo.tel,
+            },
+            {
+              withCredential: true,
+              headers: {
+                "Content-Type": "application/json",
+              },
+            },
+          )
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    } catch (e) {}
   };
   return (
-    <SignUpContainer>
-      <SignUpWrapper>
-        <span
-          style={{
-            fontWeight: "bold",
-            marginBottom: "20px",
-            fontSize: "25px",
-          }}
-        >
-          회원가입
-        </span>
-        <span
-          style={{ color: "gray", fontWeight: "bold", marginBottom: "60px" }}
-        >
-          아래 정보를 입력해 주세요.
-        </span>
-        {/* <span>계정정보</span> */}
-        <SelectWrapper>
-          <LabelWrapper>
-            환자
-            <input
-              type="radio"
-              value="patient"
-              name="isDoctor"
-              checked={userInfo.isDoctor === "patient"}
-              onChange={handleInputChange}
+    <>
+      <Form onSubmit={handleSubmit}>
+        <h1>회원가입</h1>
+        <div>아래 정보를 입력해주세요.</div>
+        <Section>
+          <SelectWrapper>
+            <LabelWrapper>
+              환자
+              <input
+                type="radio"
+                value="patient"
+                name="isDoctor"
+                checked={!userInfo.isDoctor}
+                onChange={handleRadioChange}
+              />
+            </LabelWrapper>
+            <LabelWrapper>
+              의사
+              <input
+                type="radio"
+                value="doctor"
+                name="isDoctor"
+                checked={userInfo.isDoctor}
+                onChange={handleRadioChange}
+              />
+            </LabelWrapper>
+          </SelectWrapper>
+        </Section>
+        <Section email>
+          <div style={{ flex: 1 }}>
+            <Label htmlFor="email">이메일</Label>
+            <Input
+              type="text"
+              name="email"
+              id="email"
+              required
+              value={userInfo.email}
+              onChange={onChange}
+              marginBottom="5px"
+              width="98%"
             />
-          </LabelWrapper>
-          <LabelWrapper>
-            의사
-            <input
-              type="radio"
-              value="doctor"
-              name="isDoctor"
-              checked={userInfo.isDoctor === "doctor"}
-              onChange={handleInputChange}
-            />
-          </LabelWrapper>
-        </SelectWrapper>
-        <ContentWrapper>
-          Email
+          </div>
+          <Button
+            width="10%"
+            height="30px"
+            padding="0"
+            fontSize="12px"
+            borderRadius="5px"
+            marginBottom="10px"
+            fontweight="700"
+            onClick={emailCheck}
+          >
+            중복확인
+          </Button>
+        </Section>
+
+        {emailError && emailError?.length > 0 && <Error>{emailError}</Error>}
+        <Section>
+          <Label htmlFor="password">비밀번호</Label>
           <Input
-            email
-            id="email"
-            name="email"
-            placeholder="email"
-            width="100%"
-            value={userInfo.email}
-            marginbottom="0"
-            onChange={handleInputChange}
-          />
-          <ButtonWrapper>
-            <Button width="80px" height="20px" padding="0" fontSize="12px">
-              중복확인
-            </Button>
-          </ButtonWrapper>
-        </ContentWrapper>
-        <ContentWrapper>
-          Password
-          <Input
-            password
-            id="password"
+            type="password"
             name="password"
-            placeholder="password"
+            id="password"
+            required
             value={userInfo.password}
-            marginbottom="0"
-            onChange={handleInputChange}
+            onChange={onChange}
+            marginBottom="5px"
           />
-        </ContentWrapper>
-        <ContentWrapper>
-          Name
+        </Section>
+        {/* <Section>
+          <Label htmlFor="passwordConfirm">비밀번호 확인</Label>
           <Input
-            name="username"
-            id="username"
-            placeholder="username"
-            value={userInfo.username}
-            marginbottom="0"
-            onChange={handleInputChange}
+            type="password"
+            name="passwordConfirm"
+            id="passwordConfirm"
+            required
+            value={userInfo.passwordConfirm}
+            marginBottom="5px"
+            onChange={onChange}
           />
-        </ContentWrapper>
-        <ContentWrapper>
-          Age
+          {passwordError && passwordError?.length > 0 && (
+            <Error>{passwordError}</Error>
+          )}
+        </Section> */}
+        <Section>
+          <Label htmlFor="name">이름</Label>
           <Input
-            name="age"
-            id="age"
-            placeholder="age"
-            value={userInfo.age}
-            marginBottom="0"
-            onChange={handleInputChange}
+            type="name"
+            name="name"
+            id="name"
+            required
+            // value={userInfo.name}
+            marginBottom="5px"
+            onChange={onChange}
           />
-        </ContentWrapper>
-        <ContentWrapper>
-          Phone Number
-          <Input
-            name="phoneNumber"
-            id="phoneNumber"
-            placeholder="phoneNumber"
-            value={userInfo.phoneNumber}
-            marginbottom="0"
-            onChange={handleInputChange}
-          />
-        </ContentWrapper>
-        <GenderWrapper>
-          Gender
+          {/* {passwordError && passwordError?.length > 0 && (
+            <Error>{passwordError}</Error>
+          )} */}
+        </Section>
+
+        <Section>
+          <Label htmlFor="gender">성별</Label>
+
           <select
             name="gender"
-            value={userInfo.gender}
+            // value={userInfo.gender}
             onChange={handleInputChange}
             style={{
               marginLeft: "10px",
               border: `1px solid ${palette.gray.border}`,
               borderRadius: "4px",
+              width: "50%",
+              height: "2.5rem",
             }}
           >
             <option value="">성별</option>
-            <option value="여성">여성</option>
             <option value="남성">남성</option>
+            <option value="여성">여성</option>
           </select>
-        </GenderWrapper>
-        {userInfo.isDoctor === "doctor" && <SearchHospital />}
-
-        <Button onClick={handleSubmit} width="40%" height="40px">
-          회원가입
-        </Button>
-      </SignUpWrapper>
-    </SignUpContainer>
+        </Section>
+        <Section>
+          <Label htmlFor="age">나이</Label>
+          <Input
+            type="text"
+            name="age"
+            id="age"
+            required
+            // value={userInfo.age}
+            onChange={onChange}
+            marginBottom="5px"
+          />
+        </Section>
+        <Section>
+          <Label htmlFor="phoneNumber">전화번호</Label>
+          <Input
+            type="tel"
+            name="phoneNumber"
+            id="phoneNumber"
+            required
+            // value={userInfo.phoneNumber}
+            onChange={onChange}
+            marginBottom="5px"
+          />
+        </Section>
+        {userInfo.isDoctor === true && <SearchHospital />}
+        <Section>
+          <SubmitButton
+            type="submit"
+            value="회원가입"
+            disabled={emailError?.length > 0}
+          />
+        </Section>
+      </Form>
+    </>
   );
 };
 
 export default SignUpForm;
-
-const SignUpContainer = styled.section`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* background-color: yellow; */
-  width: 100vw;
-  height: 100vh;
-`;
-
-const SignUpWrapper = styled.div`
-  /* background-color: yellow; */
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  align-items: center;
-  width: 20%;
-  height: 55%;
-  min-width: 550px;
-  min-height: 550px;
-  padding: 30px;
-  div + div {
-    margin-top: 20px;
-  }
-`;
-
-const ContentWrapper = styled.div`
-  display: grid;
-  grid-template-rows: 10px 1fr; /* 2개의 열을 가진 그리드를 만듦 */
-  gap: 10px;
-  width: 100%;
-  font-weight: bold;
-  font-size: 14px;
-`;
-const SelectWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 40px;
-`;
-
-const ButtonWrapper = styled.div`
-  position: absolute;
-  right: -70px;
-  top: 232px;
-`;
-
-const GenderWrapper = styled.div`
-  display: flex;
-  font-size: 14px;
-  font-weight: bold;
-  width: 100%;
-  /* justify-content: start; */
-`;
-
-const LabelWrapper = styled.label`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-`;
