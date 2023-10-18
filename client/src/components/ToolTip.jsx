@@ -1,12 +1,13 @@
 import React from "react";
+import { palette } from "../styles/GlobalStyles";
 
 const Tooltip = ({
-  top = 0,
-  right = 0,
-  left = 0,
-  bottom = 0,
-  color = "",
-  bgColor = "",
+  top,
+  right,
+  left,
+  bottom,
+  color,
+  bgColor,
   orientation = "top",
   message,
   ...restProps
@@ -21,7 +22,17 @@ const Tooltip = ({
   };
 
   return (
-    <span role="tooltip" style={style} {...restProps}>
+    <span
+      role="tooltip"
+      style={{
+        ...style,
+        position: "relative",
+        left: `${left}px`,
+        top: `${top}px`,
+        color: `${palette.gray.dark}`,
+      }}
+      {...restProps}
+    >
       {message}
     </span>
   );

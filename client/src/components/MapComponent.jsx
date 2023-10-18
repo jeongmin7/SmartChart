@@ -3,77 +3,37 @@ import { BiCurrentLocation } from "react-icons/bi";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Button from "./Button";
+import instance from "./api";
 
 const { kakao } = window;
 
 const MapComponent = ({ setIsLoading }) => {
-  const hospitalData = {
-    피부과: [
-      {
-        id: 4,
-        hospitalName: "차앤박 피부과",
-        hospitalAddress: "서울시 강남구 신사동",
-        category: "피부과",
-        hospitalPhoneNumber: 1022222222,
-        hospitalIntroduce: null,
-        hospitalProfileURL: null,
-        mapx: "127.0280007",
-        mapy: "37.5266292",
-      },
-      {
-        id: 5,
-        hospitalName: "연세에스웰 피부과",
-        hospitalAddress: "서울특별시 종로구 종로1가 24 404호",
-        category: "피부과",
-        hospitalPhoneNumber: 1022222222,
-        hospitalIntroduce: null,
-        hospitalProfileURL: null,
-        mapx: "126.9798606",
-        mapy: "37.5708345",
-      },
-    ],
-    정형외과: [],
-    기타: [],
-    안과: [
-      {
-        id: 6,
-        hospitalName: "공 안과 의원",
-        hospitalAddress: "서울특별시 종로구 서린동 111-1 인주빌딩4층",
-        category: "안과",
-        hospitalPhoneNumber: 1022222222,
-        hospitalIntroduce: null,
-        hospitalProfileURL: null,
-        mapx: "126.9797107",
-        mapy: "37.5698831",
-      },
-      {
-        id: 7,
-        hospitalName: "명동성모 안과 의원",
-        hospitalAddress:
-          "서울특별시 중구 을지로2가 199-4 (한국전력공사) 별관 3층",
-        category: "안과",
-        hospitalPhoneNumber: 1022222222,
-        hospitalIntroduce: null,
-        hospitalProfileURL: null,
-        mapx: "126.9833724",
-        mapy: "37.5653281",
-      },
-    ],
-    이비인후과: [],
-    치과: [],
-    내과: [],
-  };
-
   const navigate = useNavigate();
   const [map, setMap] = useState(null);
   const [selectedSpecialty, setSelectedSpecialty] = useState("");
   const [markers, setMarkers] = useState([]);
+  const [hospitalData, setHospitalData] = useState({});
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await instance.get("/patient/reservation-map-view");
+        setHospitalData(response.data);
+      } catch (error) {
+        // 에러 처리
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (map) {
-      createMarkers(hospitalData);
+      if (Object.keys(hospitalData).length > 0) {
+        createMarkers(hospitalData);
+      }
     }
-  }, [map]);
+  }, [map, hospitalData]);
+  // 모든 병원 데이터 가져옴
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -82,11 +42,17 @@ const MapComponent = ({ setIsLoading }) => {
     document.body.appendChild(script);
   }, []);
 
+  function addDecimalToString(stringValue) {
+    // 문자열의 앞부분과 뒷부분을 나누어 소수점을 추가
+    const integerPart = stringValue.slice(0, -7); // 소수점 앞부분
+    const decimalPart = stringValue.slice(-7); // 소수점 뒷부분
+    return `${integerPart}.${decimalPart}`;
+  }
   const initializeMap = () => {
     const mapContainer = document.getElementById("map");
     const mapOption = {
       center: new kakao.maps.LatLng(0, 0),
-      level: 8,
+      level: 9,
     };
 
     const map = new kakao.maps.Map(mapContainer, mapOption);
@@ -116,26 +82,31 @@ const MapComponent = ({ setIsLoading }) => {
 
   const createMarkers = (data) => {
     const newMarkers = [];
-
+    markers.forEach((marker) => {
+      marker.setMap(null);
+    });
     for (const specialty in data) {
       const hospitals = data[specialty];
+
       hospitals.forEach((hospital) => {
-        const markerPosition = new kakao.maps.LatLng(
-          parseFloat(hospital.mapy),
-          parseFloat(hospital.mapx),
-        );
+        if (selectedSpecialty === "" || specialty === selectedSpecialty) {
+          const markerPosition = new kakao.maps.LatLng(
+            addDecimalToString(hospital.mapy),
+            addDecimalToString(hospital.mapx),
+          );
 
-        const marker = new kakao.maps.Marker({
-          position: markerPosition,
-          title: hospital.hospitalName,
-          map: map,
-        });
+          const marker = new kakao.maps.Marker({
+            position: markerPosition,
+            title: hospital.hospitalName,
+            map: map,
+          });
 
-        kakao.maps.event.addListener(marker, "click", function () {
-          openInfoWindow(marker, hospital);
-        });
+          kakao.maps.event.addListener(marker, "click", function () {
+            openInfoWindow(marker, hospital);
+          });
 
-        newMarkers.push(marker);
+          newMarkers.push(marker);
+        }
       });
     }
 
@@ -147,12 +118,17 @@ const MapComponent = ({ setIsLoading }) => {
 
     const content = `
     <div style="padding: 10px; background-color: #fff; border: 1px solid #ccc;">
-      <p style="font-weight: bold; margin-bottom: 5px;">${hospitalName}</p>
+ <button id="closeInfoWindowButton" style="position: absolute; top: 5px; right: 5px; color: black; border: none; padding: 5px 10px; cursor: pointer;">X</button>      <p style="font-weight: bold; margin-bottom: 5px;">${hospitalName}</p>
       <p style="font-size: 12px">${hospital.hospitalAddress}</p>
       <button id="infoWindowButton" style="background-color: #1798e1; color: #fff; border: none; padding: 5px 10px; cursor: pointer; margin-top: 5px;">예약하기</button>
-    </div>`;
+
+      </div>`;
+
     // 커스텀 오버레이가 표시될 위치입니다
-    var position = new kakao.maps.LatLng(hospital.mapy, hospital.mapx);
+    var position = new kakao.maps.LatLng(
+      addDecimalToString(hospital.mapy),
+      addDecimalToString(hospital.mapx),
+    );
     // 커스텀 오버레이를 생성합니다
     var customOverlay = new kakao.maps.CustomOverlay({
       position: position,
@@ -165,6 +141,12 @@ const MapComponent = ({ setIsLoading }) => {
     customOverlay.setMap(map);
     const button = document.getElementById("infoWindowButton");
     button.addEventListener("click", () => handleButtonClick(id));
+    const closeInfoWindowButton = document.getElementById(
+      "closeInfoWindowButton",
+    );
+    closeInfoWindowButton.addEventListener("click", () => {
+      customOverlay.setMap(null); // 오버레이를 숨깁니다.
+    });
   };
 
   const handleButtonClick = (id) => {
@@ -211,7 +193,9 @@ const MapComponent = ({ setIsLoading }) => {
             type="radio"
             value="내과"
             checked={selectedSpecialty === "내과"}
-            onChange={() => setSelectedSpecialty("내과")}
+            onChange={() => {
+              setSelectedSpecialty("내과");
+            }}
           />
           내과
         </Option>
@@ -252,7 +236,7 @@ const MapComponent = ({ setIsLoading }) => {
           치과
         </Option>
       </Options>
-      <div id="map" style={{ width: "550px", height: "500px" }}></div>
+      <div id="map" style={{ width: "500px", height: "500px" }}></div>
       <Button
         onClick={() => window.location.reload()}
         width="100px"
@@ -269,13 +253,13 @@ const MapComponent = ({ setIsLoading }) => {
 export default MapComponent;
 
 const Container = styled.div`
-  padding: 20px;
-  width: 80%;
+  width: 100%;
   height: 90%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  min-width: 900px;
 `;
 const Options = styled.div`
   display: flex;

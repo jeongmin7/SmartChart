@@ -20,7 +20,6 @@ const Input = ({
   ...restProps
 }) => {
   const [inputValue, setInputValue] = useState(value ? value : "");
-  console.log(inputValue, "inputValue");
   const handleChange = (e) => {
     setInputValue(e.target.value);
     onChange(e);
