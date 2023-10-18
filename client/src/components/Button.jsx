@@ -16,6 +16,7 @@ const Button = ({
   borderRadius,
   alignSelf,
   whiteSpace,
+  fontweight,
   ...restProps
 }) => {
   const style = {
@@ -29,6 +30,7 @@ const Button = ({
     borderRadius: borderRadius || "",
     alignSelf: alignSelf || "",
     whiteSpace: whiteSpace || "",
+    fontweight: fontweight || "",
   };
 
   return (
