@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Navbar from "./layout/Navbar";
 import RoutesCollection from "./routesCollection";
-import Routes from "./routesCollection";
-import { useRecoilValue } from "recoil";
 import { sizeStore } from "./stores/sizeStore";
 import { useSetRecoilState } from "recoil";
 import { GlobalStyle } from "./styles/GlobalStyles";
 import ChatIcon from "./assets/ChatIcon";
+import { ToastContainer } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   // const isToggle = useRecoilValue(sizeStore);
@@ -25,6 +26,7 @@ function App() {
 
   return (
     <>
+      <ToastContainer />
       <Navbar />
       <ChatIcon />
       <GlobalStyle />

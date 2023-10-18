@@ -6,6 +6,7 @@ import Logo from "./Logo";
 import Modal from "./Modal";
 import instance from "./api";
 import Input from "./Input";
+import { toast } from "react-toastify";
 import {
   CheckBoxContainer,
   Error,
@@ -101,26 +102,36 @@ const LoginComponent = () => {
             },
           },
         )
-        .then((response) => console.log(response))
+        .then((res) => {
+          if (res.status === 200) {
+            toast.success("로그인 되었습니다.");
+          }
+        })
         .then(setIsLoading(false))
-        .then(() => navigate("/mypage"));
+        .then(() => navigate("/hospitalpage"))
+        .catch((error) => {
+          if (error.response && error.response.status === 405) {
+            toast.error("이메일, 비밀번호, 환자구별을 확인해주세요");
+          }
+        });
+
       // .then((response) => {
       //   const token = response.data.token.token;
 
-      //   // 쿠키 만료 날짜 설정 ( 7일 후로 설정)
-      //   const expirationDate = new Date();
-      //   expirationDate.setDate(expirationDate.getDate() + 7);
+      // 쿠키 만료 날짜 설정 ( 7일 후로 설정)
+      const expirationDate = new Date();
+      expirationDate.setDate(expirationDate.getDate() + 7);
 
       //   // 쿠키 설정
       //   document.cookie = `token=${token}; expires=${expirationDate.toUTCString()}; path=/`;
 
-      //   if (isRememberMe) {
-      //     // 이메일을 쿠키로 저장
-      //     document.cookie = `email=${email}; expires=${expirationDate.toUTCString()}; path=/`;
-      //   } else {
-      //     document.cookie =
-      //       "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      //   }
+      if (isRememberMe) {
+        // 이메일을 쿠키로 저장
+        document.cookie = `email=${email}; expires=${expirationDate.toUTCString()}; path=/`;
+      } else {
+        document.cookie =
+          "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      }
       // });
     } else {
       await instance
@@ -137,6 +148,7 @@ const LoginComponent = () => {
             },
           },
         )
+
         .then((response) => {
           const token = response.data.token.token;
 
@@ -152,8 +164,18 @@ const LoginComponent = () => {
               "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           }
         })
+        .then((res) => {
+          if (res.status === 200) {
+            toast.success("로그인 되었습니다.");
+          }
+        })
         .then(setIsLoading(false))
-        .then(() => navigate("/mypage"));
+        .then(() => navigate("/mypage"))
+        .catch((error) => {
+          if (error.response && error.response.status === 405) {
+            toast.error("이메일, 비밀번호, 환자구별을 확인해주세요");
+          }
+        });
     }
   };
 
