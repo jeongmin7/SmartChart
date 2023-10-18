@@ -22,8 +22,8 @@ const SaveIdCheckbox = ({
       />
       {checked && (
         <Tooltip
-          left={-5}
-          top={24}
+          left={20}
+          top={0}
           orientation={orientation}
           message={message}
         />
