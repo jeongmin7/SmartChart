@@ -16,8 +16,10 @@ import {
 import { useRecoilValue } from "recoil";
 import { hospitalAtom } from "../stores/userInfo";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const SignUpForm = () => {
+  const navigate = useNavigate();
   const [emailError, setEmailError] = useState("");
   const [userInfo, setUserInfo] = useState([]);
   const [passwordError, setPasswordError] = useState("");
@@ -28,6 +30,8 @@ const SignUpForm = () => {
   const fullAddress = `${hospitalInfo.address} ${hospitalInfo.detailAddress}`;
 
   const emailCheck = async () => {
+    setIsEmailDuplicate(true);
+
     if (isDoctor) {
       await instance
         .post(
@@ -42,12 +46,18 @@ const SignUpForm = () => {
         )
         .then((response) => {
           if (response.data.code === 200) {
-            setIsEmailDuplicate(false);
+            // 중복되지 않을 때
+            setIsEmailDuplicate(true);
             toast.success(response.data.message);
           } else {
-            setIsEmailDuplicate(true);
+            // 중복될 때
             toast.error(response.data.message);
           }
+        })
+        .catch((error) => {
+          // 오류 처리
+          setIsEmailDuplicate(false);
+          console.error(error);
         });
     } else {
       await instance
@@ -63,12 +73,20 @@ const SignUpForm = () => {
         )
         .then((response) => {
           if (response.data.code === 200) {
-            setIsEmailDuplicate(false);
+            // 중복되지 않을 때
+            setIsEmailDuplicate(true);
             toast.success(response.data.message);
           } else {
-            setIsEmailDuplicate(true);
+            // 중복될 때
+            setIsEmailDuplicate(false);
+
             toast.error(response.data.message);
           }
+        })
+        .catch((error) => {
+          // 오류 처리
+          setIsEmailDuplicate(false);
+          console.error(error);
         });
     }
   };
@@ -123,8 +141,7 @@ const SignUpForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isEmailDuplicate === false) {
-      // 중복 확인을 하지 않았을 때
+    if (!isEmailDuplicate) {
       toast.warn("이메일 중복확인을 진행해주세요");
       return;
     }
@@ -151,7 +168,8 @@ const SignUpForm = () => {
             }
           )
           .then(function (response) {
-            console.log(response);
+            toast.success("회원가입에 성공했습니다.");
+            navigate("/");
           })
           .catch(function (error) {
             console.log(error);
@@ -182,7 +200,8 @@ const SignUpForm = () => {
             }
           )
           .then(function (response) {
-            console.log(response);
+            toast.success("회원가입에 성공했습니다.");
+            navigate("/");
           })
           .catch(function (error) {
             console.log(error);
