@@ -74,8 +74,7 @@ export const Form = styled.form`
   max-width: 680px;
   padding: 20px;
   margin-top: 20px;
-  min-height: 70vh;
-  margin-top: 10vh;
+  min-height: 10vh;
 `;
 export const LogoContainer = styled.div`
   display: flex;
