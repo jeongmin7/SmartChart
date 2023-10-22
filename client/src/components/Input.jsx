@@ -15,7 +15,7 @@ const Input = ({
   error: errorProp,
   className = "",
   onChange,
-  marginBottom,
+  marginB,
   height,
   ...restProps
 }) => {
@@ -35,7 +35,7 @@ const Input = ({
         disabled={disabled}
         value={inputValue}
         onChange={handleChange}
-        marginBottom={marginBottom}
+        marginbottom={marginB}
         height={height}
         {...restProps}
       />
