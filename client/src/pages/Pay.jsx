@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 import BillingComponent from "../components/BillingComponent";
+import instance from "../components/api";
+import PatientBill from "../components/PatientBill";
 
 const Pay = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,7 +66,7 @@ const Pay = () => {
         } else {
           alert("결제 실패");
         }
-      },
+      }
     );
   };
   return (
@@ -122,7 +124,7 @@ const Pay = () => {
               </ListRowDivideWrapper>
             ))}
             <Modal isOpen={isModalOpen} handleModal={handleModal}>
-              <BillingComponent />
+              <PatientBill />
             </Modal>
           </AppointmentListBody>
         </List>
@@ -148,8 +150,8 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  min-width: 950px;
-  min-height: 700px;
+  min-width: 550px;
+  min-height: 550px;
   padding: 100px 0;
 `;
 const Header = styled.div`
