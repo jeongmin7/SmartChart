@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Logo from "../components/Logo";
 import { Link, useLocation } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { userInfoAtom } from "../stores/userInfo";
 
 import { path } from "../modules/define/path";
 import NavItem from "../components/NavItem";
+import instance from "../components/api";
 
 const NavBar = () => {
   const pathname = useLocation().pathname;
@@ -15,7 +14,7 @@ const NavBar = () => {
     setMobileMenu(!mobileMenu);
   };
 
-  if (pathname === "/" || pathname === "/signUp" || pathname === " ") {
+  if (pathname === "/" || pathname === "/signup" || pathname === " ") {
     return null;
   }
   return (
@@ -49,6 +48,7 @@ const NavBarContainer = styled.nav`
   position: relative;
   z-index: 10;
   width: 100%;
+  height: 60px;
   color: white;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 `;
