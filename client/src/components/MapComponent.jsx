@@ -13,10 +13,12 @@ const MapComponent = ({ setIsLoading }) => {
   const [selectedSpecialty, setSelectedSpecialty] = useState("");
   const [markers, setMarkers] = useState([]);
   const [hospitalData, setHospitalData] = useState({});
+
+  // 지도에서 병원 진료과별로 선택하기
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await instance.get("/patient/reservation-map-view");
+        const response = await instance.get("/patient/reservation-map-view/");
         setHospitalData(response.data);
       } catch (error) {
         // 에러 처리
@@ -87,8 +89,8 @@ const MapComponent = ({ setIsLoading }) => {
     });
     for (const specialty in data) {
       const hospitals = data[specialty];
-
       hospitals.forEach((hospital) => {
+        // console.log(hospital);
         if (selectedSpecialty === "" || specialty === selectedSpecialty) {
           const markerPosition = new kakao.maps.LatLng(
             addDecimalToString(hospital.mapy),
@@ -237,15 +239,6 @@ const MapComponent = ({ setIsLoading }) => {
         </Option>
       </Options>
       <div id="map" style={{ width: "500px", height: "500px" }}></div>
-      <Button
-        onClick={() => window.location.reload()}
-        width="100px"
-        bgColor="white"
-        fgColor="#333"
-        alignSelf="flex-end"
-      >
-        <BiCurrentLocation />
-      </Button>
     </Container>
   );
 };

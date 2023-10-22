@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import WeeklyChart from "../components/chart/WeeklyChart";
 import YearlyChart from "../components/chart/YearlyChart";
 import DailyChart from "../components/chart/DailyChart";
 import MonthlyChart from "../components/chart/MonthlyChart";
-import SalesTable from "../components/SalesTable";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import PeriodChart from "../components/chart/PeriodChart";
-import AverageAgeChart from "../components/chart/AverageAgeChart";
+import instance from "../components/api";
 
 const Accounting = () => {
   const [selectedChart, setSelectedChart] = useState(null);
@@ -15,7 +14,6 @@ const Accounting = () => {
     startDate: "",
     endDate: "",
   });
-  console.log(duration);
   const handleDateChange = (e) => {
     const { name, value } = e.target;
 
@@ -46,6 +44,18 @@ const Accounting = () => {
         setSelectedChart(null);
     }
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      await instance.get("/doctor/month-sales-view", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    };
+    fetchData().then((res) => {
+      console.log(res);
+    });
+  }, []);
   return (
     <Container>
       <Header>매출관리</Header>
@@ -76,7 +86,6 @@ const Accounting = () => {
         </Duration>
       </Buttons>
       {selectedChart}
-      <SalesTable />
     </Container>
   );
 };

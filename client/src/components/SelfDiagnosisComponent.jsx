@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import { useRecoilState } from "recoil";
 import { answerAtom } from "../stores/answerAtom";
 import { questions } from "../assets/questions";
+import instance from "./api";
 
-const SelfDiagnosisComponent = () => {
+const SelfDiagnosisComponent = ({ id }) => {
   const [answers, setAnswers] = useRecoilState(answerAtom);
 
   const [data, setData] = useState([]);
@@ -18,7 +19,28 @@ const SelfDiagnosisComponent = () => {
     };
     setAnswers(newAnswers);
   };
-  console.log(answers);
+  // console.log(answers);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await instance.post(
+          `/doctor/health-check/`,
+          { patientId: id },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log("doctor", response);
+      } catch (error) {
+        console.error("An error occurred while fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <Table>
       <Subject>

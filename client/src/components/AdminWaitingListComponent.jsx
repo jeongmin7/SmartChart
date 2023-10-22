@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
+import instance from "./api";
 
 const appointment = [
   {
@@ -51,13 +52,26 @@ const AdminWaitingListComponent = () => {
 
   const today = `${year}-${month}-${day}`;
 
+  useEffect(() => {
+    const fetchData = async () => {
+      await instance
+        .get("/doctor/waiting-list-view", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => console.log("1111", response));
+    };
+    fetchData();
+  }, []);
+
   const sortedAppointments = appointment.sort(compareAppointments);
   const [tasks, setTasks] = useState({
     대기중: sortedAppointments,
     진료중: [],
     완료: [],
   });
-  console.log(tasks);
+  // console.log(tasks);
 
   const handleDragStart = (e, appointment, status) => {
     e.dataTransfer.setData(

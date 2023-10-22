@@ -1,50 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import Button from "./Button";
 import { palette } from "../styles/GlobalStyles";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { userInfoAtom } from "../stores/userInfo";
+import instance from "./api";
 
-const myInfo = [
-  {
-    name: "홍유",
-    phoneNumber: 1012341234,
-    gender: "여자",
-    age: 31,
-  },
-];
-
-const reservationList = [
-  {
-    id: 39,
-    hospitalName: "연세에스웰 피부과",
-    reservationTime: "17:00:00",
-    reservationDate: "2023-08-09",
-    reservationStatus: "미완료",
-  },
-  {
-    id: 40,
-    hospitalName: "연세에스웰 피부과2",
-    reservationTime: "17:00:00",
-    reservationDate: "2013-08-09",
-    reservationStatus: "미완료",
-  },
-  {
-    id: 41,
-    hospitalName: "연세에스웰 피부과3",
-    reservationTime: "13:00:00",
-    reservationDate: "2013-08-09",
-    reservationStatus: "미완료",
-  },
-];
 const MypageComponent = () => {
+  const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
+  const [appointmentList, setAppointmentList] = useState([]);
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState({
-    name: myInfo[0].name,
-    phoneNumber: myInfo[0].phoneNumber,
-    gender: myInfo[0].gender,
-    age: myInfo[0].age,
-  });
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await instance
+          .get("/patient/page-view", {
+            withCredentials: true,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+          .then((response) => setAppointmentList(response.data.myPageList));
+      } catch (err) {}
+    };
+    fetchData();
+  }, []);
+
+  const cancelReservation = async (id) => {
+    await instance
+      .delete("/patient/page-cancel", {
+        data: { reservationId: id },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => console.log(response));
+  };
   const columns = [
     { name: "", width: "5%" },
     { name: "병원명", width: "15%" },
@@ -57,6 +50,23 @@ const MypageComponent = () => {
 
   const handleChange = (field, value) => {
     setUserInfo({ ...userInfo, [field]: value });
+  };
+  console.log(userInfo);
+  const handleUpdate = async () => {
+    try {
+      const response = await instance.patch("/patient/page", {
+        name: userInfo.name,
+        gender: userInfo.gender,
+        age: userInfo.phoneNumber,
+        phoneNumber: userInfo.phoneNumber,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response);
+    } catch (error) {
+      console.error("error", error);
+    }
   };
 
   return (
@@ -75,17 +85,13 @@ const MypageComponent = () => {
             </RowDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>성별:</InfoTitle>
-              <select defaultValue={myInfo[0].gender} disabled>
-                <option value="">성별</option>
-                <option value="남자">남성</option>
-                <option value="여자">여성</option>
-              </select>
+              <div>{userInfo.gender}</div>
             </RowDivideWrapper>
           </ColumnDivideWrapper>
           <ColumnDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>나이:</InfoTitle>
-              <InfoValue value={myInfo[0].age} readOnly />
+              <InfoValue value={userInfo.age} readOnly />
             </RowDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>전화번호:</InfoTitle>
@@ -112,7 +118,7 @@ const MypageComponent = () => {
             ))}
           </AppointmentListTitle>
           <AppointmentListBody>
-            {reservationList.map((item, index) => (
+            {appointmentList.map((item, index) => (
               <ListWrapper key={index}>
                 <div style={{ width: "5%" }}>{item.id}</div>
                 <div style={{ width: "15%" }}>{item.hospitalName}</div>
@@ -126,6 +132,7 @@ const MypageComponent = () => {
                     padding="5px"
                     fontSize="15px"
                     borderRadius="10px"
+                    onClick={() => cancelReservation(item.id)}
                   >
                     예약 취소
                   </Button>
@@ -146,7 +153,13 @@ const MypageComponent = () => {
             ))}
           </AppointmentListBody>
         </ColumnHalfWrapper>
-        <Button width="100px" height="100px" padding="10px" fontSize="15px">
+        <Button
+          width="100px"
+          height="100px"
+          padding="10px"
+          fontSize="15px"
+          onClick={handleUpdate}
+        >
           Update
         </Button>
       </MypageWrapper>

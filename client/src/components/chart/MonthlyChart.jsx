@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Chart,
   CategoryScale,
@@ -17,6 +17,7 @@ import LatestChart from "./LatestChart";
 import Button from "../Button";
 import AverageAgeChart from "./AverageAgeChart";
 import PatientGenderTrends from "./PatientGenderTrends";
+import instance from "../api";
 
 Chart.register(
   CategoryScale,
@@ -83,6 +84,30 @@ const options = {
     },
   },
 };
+const tableDatas = [
+  {
+    sum: 800,
+    year_MONTH: "2013-08",
+    patientCount: 2,
+    maleCount: 2,
+    femaleCount: 0,
+  },
+  {
+    sum: 180000,
+    year_MONTH: "2023-07",
+    patientCount: 2,
+    maleCount: 0,
+    femaleCount: 2,
+  },
+  {
+    sum: 1620400,
+    year_MONTH: "2023-08",
+    patientCount: 3,
+    maleCount: 1,
+    femaleCount: 2,
+  },
+];
+
 const datas = [
   {
     sum: 800,
@@ -144,6 +169,18 @@ const data = {
 const MonthlyChart = () => {
   const { activeChart, handleChart } = useActiveChart();
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await instance.get(`/doctor/month-sales-view`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response.data);
+    };
+    fetchData();
+  }, []);
+
   return (
     <Wrapper>
       <ChartContainer>
@@ -190,6 +227,29 @@ const MonthlyChart = () => {
           </Button>
         </Buttons>
       </ChartContainer>
+      <table>
+        <thead>
+          <tr>
+            <th>매출합</th>
+            <th>월</th>
+            <th>환자수</th>
+            <th>남성환자</th>
+            <th>여성환자</th>
+            <th>평균나이</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tableDatas.map((item, index) => (
+            <tr key={index}>
+              <td>{item.sum}</td>
+              <td>{item.year_MONTH}</td>
+              <td>{item.patientCount}</td>
+              <td>{item.maleCount}</td>
+              <td>{item.femaleCount}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </Wrapper>
   );
 };

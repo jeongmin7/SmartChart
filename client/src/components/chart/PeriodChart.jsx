@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Chart,
   CategoryScale,
@@ -15,6 +15,7 @@ import useActiveChart from "../../hooks/useActiveChart";
 import Button from "../Button";
 import RevenueChart from "./RevenueChart";
 import LatestChart from "./LatestChart";
+import instance from "../api";
 
 Chart.register(
   CategoryScale,
@@ -23,7 +24,7 @@ Chart.register(
   LineElement,
   Title,
   Tooltip,
-  Legend,
+  Legend
 );
 
 const recentPeriod = [
@@ -172,6 +173,30 @@ export const data = {
 const PeriodChart = () => {
   const { activeChart, handleChart } = useActiveChart();
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await instance.post(
+          "/doctor/period-sales",
+          {
+            startDate: "2023-07-01",
+            endDate: "2023-08-31",
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Cache-Control": "no-cache",
+            },
+          }
+        );
+        console.log("doctor", response);
+      } catch (error) {
+        console.error("An error occurred while fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <Wrapper>
       <ChartContainer>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Chart,
   CategoryScale,
@@ -15,6 +15,7 @@ import useActiveChart from "../../hooks/useActiveChart";
 import RevenueChart from "./RevenueChart";
 import LatestChart from "./LatestChart";
 import Button from "../Button";
+import instance from "../api";
 
 Chart.register(
   CategoryScale,
@@ -195,6 +196,18 @@ export const data = {
 const WeeklyChart = () => {
   const { activeChart, handleChart } = useActiveChart(); // 커스텀 훅 사용
 
+  useEffect(() => {
+    const fetchData = () => {
+      instance
+        .get("/doctor/month-sales-view", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => console.log(response));
+    };
+    fetchData();
+  }, []);
   return (
     <Wrapper>
       <ChartContainer>

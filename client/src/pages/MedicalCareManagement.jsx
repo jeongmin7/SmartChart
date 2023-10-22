@@ -1,14 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { css, styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
+import instance from "../components/api";
+import { useParams } from "react-router-dom";
 
 const MedicalCareManagement = () => {
+  const params = useParams();
+  const id = params.id;
+  const [appointmentInfo, setAppointmentInfo] = useState([]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const response = await instance.get(`/doctor/treatment-view/${id}`, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+  //     console.log(response.data);
+  //   };
+  //   fetchData();
+  // }, []);
   return (
     <Container>
       <Header>진료관리</Header>
       <SmallContainer>
         <SmallItem>
           <Label>예약번호</Label>
+
           <Value>1</Value>
         </SmallItem>
         <SmallItem>
@@ -44,24 +62,34 @@ const MedicalCareManagement = () => {
         <TopContainer>
           <TopSection>
             <Title>환자의 과거 병력</Title>
-            <Content>내용</Content>
+            <Content>
+              <TextArea />
+            </Content>
           </TopSection>
           <TopSection>
             <Title>환자가 내원한 이유와 환자의 주요 증상</Title>
-            <Content>내용</Content>
+            <Content>
+              <TextArea />
+            </Content>
           </TopSection>
           <TopSection>
             <Title>현재 증상</Title>
-            <Content>내용</Content>
+            <Content>
+              <TextArea />
+            </Content>
           </TopSection>
           <TopSection>
             <Title>치료계획</Title>
-            <Content>내용</Content>
+            <Content>
+              <TextArea />
+            </Content>
           </TopSection>
         </TopContainer>
         <BottomContainer>
           <Title>비고</Title>
-          <Content>내용</Content>
+          <Content>
+            <TextArea />
+          </Content>
         </BottomContainer>
       </BigContainer>
     </Container>
@@ -164,4 +192,9 @@ const BottomContainer = styled.div`
   border: 1px solid #333;
   min-height: 200px;
   margin-top: 10px;
+`;
+const TextArea = styled.textarea`
+  width: 100%;
+  height: 100%;
+  border: none;
 `;

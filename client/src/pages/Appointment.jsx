@@ -1,31 +1,58 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SelectData from "../components/SelectData";
 import DatePicker from "../components/DatePickerComponent";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import Button from "../components/Button";
+import instance from "../components/api";
+import { useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { dateAtom, selectedOptionState } from "../stores/dateAtom";
 
+const availableTimes = [
+  "09:00 - 10:00",
+  "10:00 - 11:00",
+  "11:00 - 12:00",
+  "12:00 - 13:00",
+  "13:00 - 14:00",
+  "14:00 - 15:00",
+  "15:00 - 16:00",
+  "16:00 - 17:00",
+  "17:00 - 18:00",
+];
 const Appointment = () => {
-  const data = {
-    patientName: "watch",
-    patiengGender: "여자",
-    patientgAge: 12,
-    patiengPhoneNumber: 1111111,
-    hospitalName: "연세에스웰 피부과",
-    doctorId: 5,
-  };
-  const availableTimes = [
-    "09:00 - 10:00",
-    "10:00 - 11:00",
-    "11:00 - 12:00",
-    "12:00 - 13:00",
-    "13:00 - 14:00",
-    "14:00 - 15:00",
-    "15:00 - 16:00",
-    "16:00 - 17:00",
-    "17:00 - 18:00",
-  ];
+  const id = useParams().id;
+  const [data, setData] = useState({});
+  const selectedDate = useRecoilValue(dateAtom);
+  const selectedTime = useRecoilValue(selectedOptionState);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await instance
+          .get(
+            `/patient/reservation-view/${id}`,
+            {},
+            {
+              headers: { "Content-Type": "application/json" },
+            },
+          )
+          .then((res) => console.log(111, res));
+      } catch (error) {}
+    };
+
+    fetchData();
+  }, [id]);
+
+  const checkAvaliablity = () => {
+    const data = {
+      reservationDate: "2021-08-29",
+      reservationTime: "10:00:00",
+    };
+    instance
+      .post("/patient/check-reservation", data)
+      .then((response) => console.log(response));
+  };
   return (
     <AppointmentContainer>
       <AppointmentWrapper>
@@ -71,7 +98,13 @@ const Appointment = () => {
               <SelectData availableOption={availableTimes} title="예약시간" />
             </RowDivideWrapper>
             <RowDivideWrapper>
-              <Button width="100px" height="30px" padding="0" fontSize="12px">
+              <Button
+                width="100px"
+                height="30px"
+                padding="0"
+                fontSize="12px"
+                onClick={checkAvaliablity}
+              >
                 예약 가능 조회
               </Button>
             </RowDivideWrapper>
