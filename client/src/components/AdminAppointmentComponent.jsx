@@ -5,70 +5,71 @@ import { useNavigate } from "react-router-dom";
 import Modal from "./Modal";
 import SelfDiagnosisComponent from "./SelfDiagnosisComponent";
 import SendSMS from "./SendSMS";
+import instance from "./api";
 
+const appointments = [
+  {
+    name: "watch",
+    id: 32,
+    paymentStatus: "미완료",
+    reservationStatus: "미완료",
+    reservationTime: "10:00:00",
+    reservationDate: "2023-09-01",
+    phoneNumber: 1111111,
+    patientId: 6,
+  },
+  {
+    name: "watch",
+    id: 31,
+    paymentStatus: "미완료",
+    reservationStatus: "미완료",
+    reservationTime: "09:00:00",
+    reservationDate: "2023-09-01",
+    phoneNumber: 1111111,
+    patientId: 6,
+  },
+  {
+    name: "watch",
+    id: 30,
+    paymentStatus: "미완료",
+    reservationStatus: "미완료",
+    reservationTime: "09:00:00",
+    reservationDate: "2029-08-31",
+    phoneNumber: 1111111,
+    patientId: 6,
+  },
+  {
+    name: "watch",
+    id: 29,
+    paymentStatus: "미완료",
+    reservationStatus: "미완료",
+    reservationTime: "09:00:00",
+    reservationDate: "2023-08-31",
+    phoneNumber: 1111111,
+    patientId: 6,
+  },
+  {
+    name: "watch",
+    id: 28,
+    paymentStatus: "미완료",
+    reservationStatus: "미완료",
+    reservationTime: "18:00:00",
+    reservationDate: "2023-08-31",
+    phoneNumber: 1111111,
+    patientId: 6,
+  },
+  {
+    name: "watch",
+    id: 27,
+    paymentStatus: "미완료",
+    reservationStatus: "미완료",
+    reservationTime: "17:00:00",
+    reservationDate: "2023-08-31",
+    phoneNumber: 1111111,
+    patientId: 6,
+  },
+];
 const AdminAppointmentComponent = () => {
-  const appointments = [
-    {
-      name: "watch",
-      id: 32,
-      paymentStatus: "미완료",
-      reservationStatus: "미완료",
-      reservationTime: "10:00:00",
-      reservationDate: "2023-09-01",
-      phoneNumber: 1111111,
-      patientId: 6,
-    },
-    {
-      name: "watch",
-      id: 31,
-      paymentStatus: "미완료",
-      reservationStatus: "미완료",
-      reservationTime: "09:00:00",
-      reservationDate: "2023-09-01",
-      phoneNumber: 1111111,
-      patientId: 6,
-    },
-    {
-      name: "watch",
-      id: 30,
-      paymentStatus: "미완료",
-      reservationStatus: "미완료",
-      reservationTime: "09:00:00",
-      reservationDate: "2029-08-31",
-      phoneNumber: 1111111,
-      patientId: 6,
-    },
-    {
-      name: "watch",
-      id: 29,
-      paymentStatus: "미완료",
-      reservationStatus: "미완료",
-      reservationTime: "09:00:00",
-      reservationDate: "2023-08-31",
-      phoneNumber: 1111111,
-      patientId: 6,
-    },
-    {
-      name: "watch",
-      id: 28,
-      paymentStatus: "미완료",
-      reservationStatus: "미완료",
-      reservationTime: "18:00:00",
-      reservationDate: "2023-08-31",
-      phoneNumber: 1111111,
-      patientId: 6,
-    },
-    {
-      name: "watch",
-      id: 27,
-      paymentStatus: "미완료",
-      reservationStatus: "미완료",
-      reservationTime: "17:00:00",
-      reservationDate: "2023-08-31",
-      phoneNumber: 1111111,
-      patientId: 6,
-    },
-  ];
   const navigate = useNavigate();
 
   const [searchUsername, setSearchUsername] = useState("");
@@ -76,6 +77,26 @@ const AdminAppointmentComponent = () => {
   const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSMSModalOpen, setIsSMSModalOpen] = useState(false);
+  const [appointmentModals, setAppointmentModals] = useState(
+    appointments.map(() => false)
+  );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await instance.get("/doctor/reservation-view", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        console.log("doctor", response);
+      } catch (error) {
+        console.error("An error occurred while fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleUsernameChange = (event) => {
     setSearchUsername(event.target.value);
@@ -104,8 +125,13 @@ const AdminAppointmentComponent = () => {
     });
   };
 
-  const handleModal = () => {
-    setIsModalOpen(!isModalOpen);
+  // const handleModal = () => {
+  //   setIsModalOpen(!isModalOpen);
+  // };
+  const handleModal = (index) => {
+    const updatedModals = [...appointmentModals];
+    updatedModals[index] = !updatedModals[index];
+    setAppointmentModals(updatedModals);
   };
 
   const handleSMSModal = () => {
@@ -161,7 +187,7 @@ const AdminAppointmentComponent = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredAppointments.map((appointment) => (
+              {filteredAppointments.map((appointment, index) => (
                 <tr key={appointment.id}>
                   <Td>{appointment.id}</Td>
                   <Td>{appointment.name}</Td>
@@ -209,12 +235,15 @@ const AdminAppointmentComponent = () => {
                       height="30px"
                       padding="0"
                       fontSize="12px"
-                      onClick={handleModal}
+                      onClick={() => handleModal(index)}
                     >
                       건강체크 확인
                     </Button>
-                    <Modal isOpen={isModalOpen} handleModal={handleModal}>
-                      <SelfDiagnosisComponent />
+                    <Modal
+                      isOpen={appointmentModals[index]}
+                      handleModal={() => handleModal(index)}
+                    >
+                      <SelfDiagnosisComponent id={appointment.id} />
                     </Modal>
                   </Td>
                 </tr>
