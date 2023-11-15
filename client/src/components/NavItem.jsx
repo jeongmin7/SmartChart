@@ -61,7 +61,7 @@ const NavItem = () => {
       </NavItemWrapper>
       <NavItemWrapper>
         {userRole === "DOCTOR" ? (
-          <NavLink to="/adminWaitingList">환자 대기 관리</NavLink>
+          <NavLink to="/doctor/waiting-list-view">환자 대기 관리</NavLink>
         ) : (
           <NavLink to="/selfdiagnosis">스마트 문진</NavLink>
         )}

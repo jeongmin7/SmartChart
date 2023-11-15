@@ -270,7 +270,7 @@ const LoginComponent = () => {
         )}
         <HelpContainer>
           <Password onClick={handlePassword}>비밀번호 찾기</Password>
-          <SignupLink to="/signup">회원가입하기</SignupLink>
+          <SignupLink to="/join-view">회원가입하기</SignupLink>
         </HelpContainer>
         {findPassword === true && (
           <Modal isOpen={findPassword} handleModal={handlePassword}>

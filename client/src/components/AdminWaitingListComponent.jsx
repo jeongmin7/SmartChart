@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import instance from "./api";
+import axios from "axios";
 
 const appointment = [
   {
@@ -32,12 +33,12 @@ const appointment = [
 
 function compareAppointments(appointment1, appointment2) {
   const dateComparison = appointment1.reservationDate.localeCompare(
-    appointment2.reservationDate,
+    appointment2.reservationDate
   );
 
   if (dateComparison === 0) {
     return appointment1.reservationTime.localeCompare(
-      appointment2.reservationTime,
+      appointment2.reservationTime
     );
   }
 
@@ -49,18 +50,23 @@ const AdminWaitingListComponent = () => {
   const year = currentTime.getFullYear();
   const month = String(currentTime.getMonth() + 1).padStart(2, "0");
   const day = String(currentTime.getDate()).padStart(2, "0");
-
   const today = `${year}-${month}-${day}`;
 
   useEffect(() => {
     const fetchData = async () => {
-      await instance
-        .get("/doctor/waiting-list-view", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => console.log("1111", response));
+      try {
+        await instance
+          .get("/doctor/waiting-list-view", {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          })
+          .then((response) => console.log("1111", response));
+      } catch (error) {
+        console.error(error);
+      }
     };
     fetchData();
   }, []);
@@ -72,11 +78,10 @@ const AdminWaitingListComponent = () => {
     완료: [],
   });
   // console.log(tasks);
-
   const handleDragStart = (e, appointment, status) => {
     e.dataTransfer.setData(
       "text/plain",
-      JSON.stringify({ appointment, status }),
+      JSON.stringify({ appointment, status })
     );
   };
 
