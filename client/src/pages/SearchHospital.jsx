@@ -2,8 +2,7 @@ import React, { lazy, Suspense, useState } from "react";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import Loader from "../components/Loader";
-
-const MapComponent = lazy(() => import("../components/MapComponent"));
+import Maps from "../components/Maps";
 
 const SearchHospital = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -13,7 +12,7 @@ const SearchHospital = () => {
         {isLoading && <Loader />}
         <Wrapper>
           <Header>병원 검색하기</Header>
-          <MapComponent setIsLoading={setIsLoading} />
+          <Maps setIsLoading={setIsLoading} />
         </Wrapper>
       </Container>
     </Suspense>
