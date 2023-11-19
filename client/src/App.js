@@ -8,9 +8,10 @@ import ChatIcon from "./assets/ChatIcon";
 import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 function App() {
-  // const isToggle = useRecoilValue(sizeStore);
+  const navigate = useNavigate();
   const setSizeStore = useSetRecoilState(sizeStore);
   useEffect(() => {
     function handleResize() {
@@ -23,6 +24,19 @@ function App() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    const session = document.cookie.includes("session");
+    const token = document.cookie.includes("token");
+
+    if (!session && !token) {
+      navigate("/");
+    } else if (!session) {
+      navigate("/mypage");
+    } else if (!token) {
+      navigate("/hospitalpage");
+    }
+  }, [navigate]);
 
   return (
     <>
