@@ -1,19 +1,21 @@
-import React, { useState } from "react";
-import MapComponent from "../components/MapComponent";
+import React, { lazy, Suspense, useState } from "react";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import Loader from "../components/Loader";
+import Maps from "../components/Maps";
 
 const SearchHospital = () => {
   const [isLoading, setIsLoading] = useState(true);
   return (
-    <Container>
-      {isLoading && <Loader />}
-      <Wrapper>
-        <Header>병원 검색하기</Header>
-        <MapComponent setIsLoading={setIsLoading} />
-      </Wrapper>
-    </Container>
+    <Suspense fallback={<Loader />}>
+      <Container>
+        {isLoading && <Loader />}
+        <Wrapper>
+          <Header>병원 검색하기</Header>
+          <Maps setIsLoading={setIsLoading} />
+        </Wrapper>
+      </Container>
+    </Suspense>
   );
 };
 

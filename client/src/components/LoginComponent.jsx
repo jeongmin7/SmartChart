@@ -26,6 +26,11 @@ import {
   SignupLink,
   SubmitButton,
 } from "../styles/CommonStyle";
+import { userRoleAtom } from "../stores/userInfo";
+import { useRecoilState } from "recoil";
+import kakao from "../assets/kakao_login_medium_wide.png";
+import styled from "styled-components";
+import axios from "axios";
 
 const getCookie = (name) => {
   const value = `; ${document.cookie}`;
@@ -44,8 +49,8 @@ const LoginComponent = () => {
   const [findPassword, setFindPassword] = useState(false);
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [emailAddress, setEmailAddress] = useState("");
+  const [userRole, setUserRole] = useRecoilState(userRoleAtom);
 
-  // const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   const onChange = (e) => {
     const {
       target: { name, value },
@@ -83,47 +88,41 @@ const LoginComponent = () => {
   const handlePassword = () => {
     setFindPassword(!findPassword);
   };
-
+  // 쿠키 만료 날짜 설정 ( 7일 후로 설정)
+  const expirationDate = new Date();
+  expirationDate.setDate(expirationDate.getDate() + 7);
   const userLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     if (isDoctor) {
-      await instance
-        .post(
+      try {
+        const response = await axios.post(
           "/doctor/login",
           {
             email: email,
             password: password,
           },
           {
-            withCredential: true,
             headers: {
               "Content-Type": "application/json",
             },
-          },
-        )
-        .then((res) => {
-          if (res.status === 200) {
-            toast.success("로그인 되었습니다.");
           }
-        })
-        .then(setIsLoading(false))
-        .then(() => navigate("/hospitalpage"))
-        .catch((error) => {
-          if (error.response && error.response.status === 405) {
-            toast.error("이메일, 비밀번호, 환자구별을 확인해주세요");
-          }
-        });
+        );
 
-      // .then((response) => {
-      //   const token = response.data.token.token;
+        if (response.status === 200) {
+          toast.success("로그인 되었습니다.");
+          setIsLoading(false);
+          navigate("/hospitalpage");
+          setUserRole(response.data.role);
+          const session = response.data.session;
 
-      // 쿠키 만료 날짜 설정 ( 7일 후로 설정)
-      const expirationDate = new Date();
-      expirationDate.setDate(expirationDate.getDate() + 7);
-
-      //   // 쿠키 설정
-      //   document.cookie = `token=${token}; expires=${expirationDate.toUTCString()}; path=/`;
+          document.cookie = `session=${session}; expires=${expirationDate.toUTCString()}; path=/`;
+        }
+      } catch (error) {
+        if (error.response || error.response.status === 405) {
+          toast.error("이메일, 비밀번호, 환자구별을 확인해주세요");
+        }
+      }
 
       if (isRememberMe) {
         // 이메일을 쿠키로 저장
@@ -134,58 +133,55 @@ const LoginComponent = () => {
       }
       // });
     } else {
-      await instance
-        .post(
+      try {
+        const response = await axios.post(
           "/patient/login",
           {
             email: email,
             password: password,
           },
           {
-            withCredential: true,
             headers: {
               "Content-Type": "application/json",
             },
-          },
-        )
-
-        .then((response) => {
-          const token = response.data.token.token;
-
-          const expirationDate = new Date();
-          expirationDate.setDate(expirationDate.getDate() + 7);
-
-          document.cookie = `token=${token}; expires=${expirationDate.toUTCString()}; path=/`;
-
-          if (isRememberMe) {
-            document.cookie = `email=${email}; expires=${expirationDate.toUTCString()}; path=/`;
-          } else {
-            document.cookie =
-              "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           }
-        })
-        .then((res) => {
-          if (res.status === 200) {
-            toast.success("로그인 되었습니다.");
-          }
-        })
-        .then(setIsLoading(false))
-        .then(() => navigate("/mypage"))
-        .catch((error) => {
-          if (error.response && error.response.status === 405) {
-            toast.error("이메일, 비밀번호, 환자구별을 확인해주세요");
-          }
-        });
+        );
+
+        const token = response.data.token.token;
+
+        const expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 7);
+
+        document.cookie = `token=${token}; expires=${expirationDate.toUTCString()}; path=/`;
+
+        if (isRememberMe) {
+          document.cookie = `email=${email}; expires=${expirationDate.toUTCString()}; path=/`;
+        } else {
+          document.cookie =
+            "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        }
+
+        if (response.status === 200) {
+          toast.success("로그인 되었습니다.");
+          setIsLoading(false);
+          navigate("/mypage");
+          setUserRole(response.data.role);
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 405) {
+          toast.error("이메일, 비밀번호, 환자구별을 확인해주세요");
+        }
+        console.log(error);
+      }
     }
   };
 
-  // Todo:
   // FIXME:비밀번호 찾기
   const findPasswordButton = async (e) => {
     // TODO:실제 이메일만 갈 수 있으시 validation 체크 필요
     e.preventDefault();
 
-    await instance
+    await axios
       .post(
         "/patient/sendEmail",
         {
@@ -196,12 +192,30 @@ const LoginComponent = () => {
           headers: {
             "Content-Type": "application/json",
           },
-        },
+        }
       )
       .then(function (response) {
         console.log(response);
       });
   };
+
+  const loginKakao = () => {
+    console.log("Login");
+  };
+  // "/"페이지 접근 막기
+  useEffect(() => {
+    const session = document.cookie.includes("session");
+    const token = document.cookie.includes("token");
+
+    if (session || token) {
+      if (userRole === "DOCTOR") {
+        navigate("/hospitalPage");
+      } else {
+        console.log("patient");
+        navigate("/myPage");
+      }
+    }
+  }, [navigate, userRole]);
 
   return (
     <>
@@ -307,13 +321,18 @@ const LoginComponent = () => {
             />
           </CheckBoxContainer>
         </Section>
-        <Section>
-          <SubmitButton
+        <LoginWrapper>
+          <LoginButton
             type="submit"
             value="로그인"
             disabled={error?.length > 0}
           />
-        </Section>
+          {!isDoctor && (
+            <Kakao href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=338b152f34fe502634c3e709272cd726&redirect_uri=http://localhost:3000/auth/kakao/callback">
+              <img src={kakao} alt="카카오 로그인" onClick={loginKakao} />
+            </Kakao>
+          )}
+        </LoginWrapper>
       </Form>
     </>
   );
@@ -321,136 +340,37 @@ const LoginComponent = () => {
 
 export default LoginComponent;
 
-// const CheckBoxContainer = styled.div`
-//   width: 100%;
-//   height: 50px;
-// `;
-
-// const PContainer = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   align-items: center;
-//   color: #333;
-//   padding-top: 20px;
-// `;
-// const PasswordTitle = styled.div`
-//   font-size: 20px;
-//   padding: 10px;
-//   background-color: #1798e1;
-//   border-radius: 5px;
-//   color: #fff;
-//   font-weight: 600;
-//   width: 50%;
-//   position: absolute;
-//   top: 10px;
-//   text-align: center;
-//   z-index: 1;
-// `;
-// const PContent = styled.div`
-//   border: 1px solid #333;
-//   border-radius: 5px;
-//   padding: 20px;
-//   padding-top: 40px;
-// `;
-// const PInput = styled.input`
-//   width: 100%;
-//   margin-top: 10px;
-//   margin-bottom: 10px;
-//   line-height: 1.5;
-//   border-color: #1798e1;
-//   border-radius: 3px;
-// `;
-
-// const PButton = styled.button`
-//   background-color: #1798e1;
-//   border: none;
-//   color: #fff;
-//   font-weight: 600;
-//   padding: 5px 10px;
-// `;
-// const Error = styled.div`
-//   color: red;
-//   margin-bottom: 10px;
-//   font-size: 14px;
-// `;
-// const SelectWrapper = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   gap: 40px;
-//   justify-content: center;
-//   margin: 10px 0;
-// `;
-// const LabelWrapper = styled.label`
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: center;
-//   align-items: center;
-//   cursor: pointer;
-// `;
-// const Form = styled.form`
-//   margin: 0 auto;
-//   max-width: 680px;
-//   padding: 20px;
-//   margin-top: 20px;
-//   min-height: 70vh;
-//   margin-top: 10vh;
-// `;
-// const LogoContainer = styled.div`
-//   display: flex;
-//   justify-content: center;
-// `;
-
-// const Section = styled.div`
-//   margin-top: 20px;
-//   width: 100%;
-// `;
-// const SectionInput = styled.input`
-//   margin-top: 20px;
-//   height: 40px;
-//   padding: 10px 10px;
-//   font-size: 16px;
-//   border-radius: 0.3rem;
-//   border: 1px solid lightgray;
-//   width: 100%;
-//   max-width: 680px;
-// `;
-
-// const Label = styled.label`
-//   display: block;
-//   font-weight: 500;
-//   margin-bottom: 10px;
-//   margin-top: 20px;
-// `;
-// const SubmitButton = styled.input`
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   width: 100%;
-//   height: 48px;
-//   padding: 10px 10px;
-//   border-radius: 0.3rem;
-//   border: 1px solid lightgray;
-//   max-width: 680px;
-//   float: right;
-//   margin: 0 auto;
-//   cursor: pointer;
-//   font-size: 16px;
-//   background-color: #1798e1;
-//   color: white;
-//   font-weight: 600;
-// `;
-
-// const HelpContainer = styled.div`
-//   margin-top: 20px;
-//   width: 50%;
-//   display: flex;
-//   justify-content: space-between;
-// `;
-// const SignupLink = styled(Link)`
-//   text-decoration: none;
-//   color: ${palette.gray.dark};
-// `;
-// const Password = styled.div`
-//   color: ${palette.gray.dark};
-// `;
+const Kakao = styled.a`
+  cursor: pointer;
+`;
+const LoginButton = styled.input`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 48px;
+  padding: 10px 10px;
+  border-radius: 0.3rem;
+  border: 1px solid lightgray;
+  /* max-width: 300px; */
+  /* float: right; */
+  margin: 0 auto;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: #1798e1;
+  color: white;
+  font-weight: 600;
+`;
+const LoginWrapper = styled.div`
+  /* min-width: 640px; */
+  max-width: 680px;
+  display: flex;
+  flex-direction: row;
+  @media (max-width: 640px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+`;

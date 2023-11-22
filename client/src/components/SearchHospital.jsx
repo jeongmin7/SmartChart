@@ -4,50 +4,73 @@ import { useDaumPostcodePopup } from "react-daum-postcode";
 import { Form, Label, Section } from "../styles/CommonStyle";
 import { useRecoilState } from "recoil";
 import { hospitalAtom } from "../stores/userInfo";
+import Button from "./Button";
+import instance from "./api";
+import axios from "axios";
 
 const SearchHospital = () => {
-  const [hospitalInfo, setHospitalInfo] = useRecoilState(hospitalAtom);
+  // const [hospitalInfo, setHospitalInfo] = useState("");
+
+  // const onChange = (e) => {
+  //   const {
+  //     target: { name, value },
+  //   } = e;
+  //   setHospitalInfo((prevUserInfo) => ({
+  //     ...prevUserInfo,
+  //     [name]: value,
+  //   }));
+  // };
+  // const addressModalopen = useDaumPostcodePopup();
+
+  // const removeDecimal = (number) => {
+  //   return number.toString().replace(/\./g, "");
+  // };
+  // const searchAddress = (data) => {
+  //   const geocoder = new window.kakao.maps.services.Geocoder();
+  //   geocoder.addressSearch(data.address, function (results, status) {
+  //     if (status === window.kakao.maps.services.Status.OK) {
+  //       const result = results[0];
+  //       const coords = new window.kakao.maps.LatLng(result.y, result.x);
+  //       setHospitalInfo((prev) => ({
+  //         ...prev,
+  //         mapx: removeDecimal(coords.Ma),
+  //         mapy: removeDecimal(coords.La),
+  //       }));
+  //     }
+  //   });
+
+  //   setHospitalInfo((prev) => ({
+  //     ...prev,
+  //     buildingName: data.buildingName,
+  //     postalCode: data.zonecode,
+  //     address: data.address,
+  //   }));
+  // };
+
+  // const handleClick = () => {
+  //   addressModalopen({ onComplete: searchAddress });
+  // };
+
+  const [hospitalData, setHospitalData] = useState([]);
+  const [query, setQuery] = useState("");
 
   const onChange = (e) => {
-    const {
-      target: { name, value },
-    } = e;
-    setHospitalInfo((prevUserInfo) => ({
-      ...prevUserInfo,
-      [name]: value,
-    }));
-  };
-  const addressModalopen = useDaumPostcodePopup();
-
-  const removeDecimal = (number) => {
-    return number.toString().replace(/\./g, "");
-  };
-  const searchAddress = (data) => {
-    const geocoder = new window.kakao.maps.services.Geocoder();
-    geocoder.addressSearch(data.address, function (results, status) {
-      if (status === window.kakao.maps.services.Status.OK) {
-        const result = results[0];
-        const coords = new window.kakao.maps.LatLng(result.y, result.x);
-        setHospitalInfo((prev) => ({
-          ...prev,
-          mapx: removeDecimal(coords.Ma),
-          mapy: removeDecimal(coords.La),
-        }));
-      }
-    });
-
-    setHospitalInfo((prev) => ({
-      ...prev,
-      buildingName: data.buildingName,
-      postalCode: data.zonecode,
-      address: data.address,
-    }));
+    setQuery(e.target.value);
   };
 
-  const handleClick = () => {
-    addressModalopen({ onComplete: searchAddress });
+  const handleSearch = () => {
+    try {
+      axios
+        .post(
+          "/doctor/naver",
+          { query: query },
+          { headers: { "Content-Type": "application/json" } }
+        )
+        .then((response) => console.log(response));
+    } catch (err) {
+      console.log(err);
+    }
   };
-
   return (
     <>
       <Form>
@@ -62,17 +85,22 @@ const SearchHospital = () => {
           병원 등록하기
         </div>
         <Section>
-          <Label htmlFor="name">병원 이름 </Label>
+          <DoctorInput type="text" onChange={onChange} />
+          <Button onClick={handleSearch}>검색하기</Button>
+        </Section>
+        {/* <Label htmlFor="name">병원 이름 </Label>
           <DoctorInput name="name" id="name" onChange={onChange} />
         </Section>
         <Section>
           <Label>병원 주소</Label>
+         */}
 
-          <DoctorInput
+        {/* <DoctorInput
             name="postalCode"
             id="postalCode"
             value={hospitalInfo.postalCode}
             onClick={handleClick}
+            required
           />
 
           <DoctorInput
@@ -80,13 +108,14 @@ const SearchHospital = () => {
             id="address"
             value={hospitalInfo.address}
             onClick={handleClick}
+            required
           />
           <DoctorInput
             name="detailAddress"
             id="detailAddress"
             onChange={onChange}
-          />
-        </Section>
+          /> */}
+        {/* </Section>
         <Section>
           <Label htmlFor="tel">병원 전화번호 </Label>
           <DoctorInput name="tel" id="tel" onChange={onChange} />
@@ -95,7 +124,7 @@ const SearchHospital = () => {
           <Label>진료과목</Label>
 
           <DoctorInput name="specialty" id="specialty" onChange={onChange} />
-        </Section>
+        </Section> */}
       </Form>
     </>
   );

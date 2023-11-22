@@ -1,88 +1,130 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CiSquareChevDown } from "react-icons/ci";
-import { Link } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { Link, useNavigate } from "react-router-dom";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { styled } from "styled-components";
-import { userInfoAtom } from "../stores/userInfo";
+import { userInfoAtom, userRoleAtom } from "../stores/userInfo";
 import patientIcon from "../assets/patient.png";
 import femaleDoctor from "../assets/doctor_female.png";
-import maleDoctor from "../assets/doctor_male.png";
+import axios from "axios";
 
 const NavItem = () => {
-  const userInfo = useRecoilValue(userInfoAtom);
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
+  const userRole = useRecoilValue(userRoleAtom);
+
+  function deleteCookie(name) {
+    const currentDate = new Date();
+    // 현재날짜 이전 날짜
+    const expirationDate = new Date(currentDate.getTime() - 1);
+
+    document.cookie = `${name}=; expires=${expirationDate.toUTCString()}; path=/;`;
+  }
+  const token = document.cookie.includes("token");
+
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
-    console.log(isOpen);
   };
+
+  const handlePatientLogout = async () => {
+    await axios.get("/patient/sign_out");
+    deleteCookie("token");
+    navigate("/");
+  };
+  const handleDoctorLogout = async () => {
+    await axios.get("/doctor/sign_out");
+    deleteCookie("session");
+    navigate("/");
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (userRole === "PATIENT") {
+        try {
+          const response = await axios.get("/patient/page-view", {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          setUserInfo(response.data.myPage[0]);
+        } catch (err) {
+          console.error(err);
+        }
+      } else {
+        try {
+          const response = await axios.get("/doctor/hospital-view", {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          setUserInfo(response.data.hospitalPage[0]);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <StyledNavItem>
       <NavItemWrapper>
-        {userInfo.isDoctor ? (
+        {!token ? (
           <NavLink to="/adminAppointment">예약/진료관리</NavLink>
         ) : (
           <NavLink to="/searchHospital">병원예약</NavLink>
         )}
       </NavItemWrapper>
       <NavItemWrapper>
-        {userInfo.isDoctor ? (
-          <NavLink to="/adminWaitingList">환자 대기 관리</NavLink>
+        {!token ? (
+          <NavLink to="/doctor/waiting-list-view">환자 대기 관리</NavLink>
         ) : (
           <NavLink to="/selfdiagnosis">스마트 문진</NavLink>
         )}
       </NavItemWrapper>
       <NavItemWrapper>
-        {userInfo.isDoctor ? (
+        {!token ? (
           <NavLink to="/accounting">매출관리</NavLink>
         ) : (
           <NavLink to="/pay">진료비 내기</NavLink>
         )}
       </NavItemWrapper>
       <NavItemWrapper>
-        {userInfo.isDoctor ? (
-          <NavLink to="/teleConsult">실시간 진료 상담</NavLink>
-        ) : (
-          ""
-        )}
+        {!token ? <NavLink to="/teleConsult">실시간 진료 상담</NavLink> : ""}
       </NavItemWrapper>
       {/* TODO:여기가 드롭다운이 생길 부분 */}
       <NavItemWrapper>
-        {userInfo.isDoctor ? (
-          userInfo.gender === "female" ? (
-            <NameContainer>
-              <Icon src={femaleDoctor} alt="여자의사" />
-              <div>{userInfo.username}의사</div>
-              <CiSquareChevDown onClick={toggleDropdown} />
-              {userInfo.username}
-            </NameContainer>
-          ) : (
-            <NameContainer>
-              <Icon src={maleDoctor} alt="남자의사" />
-              <div>{userInfo.username}의사</div>
-              <CiSquareChevDown onClick={toggleDropdown} />
-            </NameContainer>
-          )
+        {!token ? (
+          <NameContainer>
+            <Icon src={femaleDoctor} alt="여자의사" />
+            <div>{userInfo.hospitalName}</div>
+            <CiSquareChevDown onClick={toggleDropdown} />
+            {userInfo.name}
+          </NameContainer>
         ) : (
           <NameContainer>
             <Icon src={patientIcon} alt="환자아이콘" />
-            <div>{userInfo.username}환자</div>
+            <div>{userInfo.name}환자</div>
             <CiSquareChevDown onClick={toggleDropdown} />
           </NameContainer>
         )}
         {/* TODO:드롭다운이 생길부분 */}
         <MenuContent open={isOpen}>
           <MenuLinkContainer>
-            <SignoutButton
-              onClick={() => {
-                console.log("logout");
-              }}
-            >
-              로그아웃
-            </SignoutButton>
-            {userInfo.isDoctor ? (
-              <MenuLink to="/hospitalPage">병원페이지</MenuLink>
+            {userRole === "DOCTOR" ? (
+              <>
+                <SignoutButton onClick={handleDoctorLogout}>
+                  로그아웃
+                </SignoutButton>
+                <MenuLink to="/hospitalPage">병원페이지</MenuLink>
+              </>
             ) : (
-              <MenuLink to="/mypage">마이페이지</MenuLink>
+              <>
+                <SignoutButton onClick={handlePatientLogout}>
+                  로그아웃
+                </SignoutButton>
+                <MenuLink to="/mypage">마이페이지</MenuLink>
+              </>
             )}
           </MenuLinkContainer>
         </MenuContent>

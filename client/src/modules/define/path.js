@@ -1,6 +1,6 @@
 export const path = {
   home: "/",
-  signUp: "/signUp",
+  signUp: "/signup",
   selfDiagnosis: "/selfDiagnosis",
   appointment: "/appointment/:id",
   map: "/map",
@@ -9,10 +9,11 @@ export const path = {
   chat: "/chat",
   hospitalPage: "/hospitalPage",
   adminAppointment: "/adminAppointment",
-  adminWaitingList: "/adminWaitingList",
+  adminWaitingList: "/doctor/waiting-list-view",
   accounting: "/accounting",
   teleConsult: "/teleConsult",
   billing: "/billing",
   search: "/searchHospital",
   medicalcaremanagement: "/medicalcaremanagement/:id",
+  kakao: "/auth/kakao/callback",
 };

@@ -3,7 +3,7 @@ import { atom } from "recoil";
 export const userInfoAtom = atom({
   key: "userInfo",
   default: {
-    isDoctor: false,
+    // isDoctor: false,
     email: "",
     password: "",
     username: "",
@@ -25,5 +25,12 @@ export const hospitalAtom = atom({
     mapx: "",
     mapy: "",
     tel: "",
+  },
+});
+
+export const userRoleAtom = atom({
+  key: "userRole",
+  default: {
+    role: "PATIENT",
   },
 });

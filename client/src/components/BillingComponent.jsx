@@ -1,26 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import Button from "../components/Button";
+import axios from "axios";
+import Invoice from "./\bInvoice";
 
 const detailCost = [
-  {
-    cost: 19914,
-    treatment: "마취료",
-  },
-  {
-    cost: 158094,
-    treatment: "입원료",
-  },
-  {
-    cost: 200000,
-    treatment: "x-ray",
-  },
-  {
-    cost: 400000,
-    treatment: "물리치료",
-  },
+  // {
+  //   cost: 19914,
+  //   treatment: "마취료",
+  // },
+  // {
+  //   cost: 158094,
+  //   treatment: "입원료",
+  // },
+  // {
+  //   cost: 200000,
+  //   treatment: "x-ray",
+  // },
+  // {
+  //   cost: 400000,
+  //   treatment: "물리치료",
+  // },
 ];
 const total = [
   {
@@ -31,6 +33,7 @@ const BillingComponent = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
+  const isDoctor = true;
 
   const cost = [
     {
@@ -41,39 +44,62 @@ const BillingComponent = () => {
     { treatment: "입원비", cost: "100" },
     { treatment: "주사비", cost: "10" },
   ];
-  const [selectedValue, setSelectedValue] = useState("");
-  const [selectedFields, setSelectedFields] = useState([]);
-  // const [detailCost, setDetailCost] = useState([]);
+  // const [selectedValue, setSelectedValue] = useState("");
+  // const [selectedFields, setSelectedFields] = useState([]);
+  const [patientInfo, setPatientInfo] = useState([]);
+  // const [Cost, setCost] = useState([]);
 
-  const totalCost = selectedFields.reduce(
-    (total, item) => total + parseInt(item.cost),
-    0,
-  );
-  const handleSelectChange = (event) => {
-    setSelectedValue(event.target.value);
-  };
-  const addInputField = (type, index) => {
-    const selectedItem = cost.find((item) => item.treatment === selectedValue);
+  // const totalCost = selectedFields.reduce(
+  //   (total, item) => total + parseInt(item.cost),
+  //   0
+  // );
+  // const handleSelectChange = (event) => {
+  //   setSelectedValue(event.target.value);
+  // };
+  // const addInputField = (type, index) => {
+  //   const selectedItem = cost.find((item) => item.treatment === selectedValue);
 
-    if (type === "delete") {
-      const newSelectedFields = selectedFields.filter(
-        (item, idx) => idx !== index,
-      );
-      setSelectedFields(newSelectedFields);
-      return;
-    }
-    if (selectedItem) {
-      setSelectedFields([
-        ...selectedFields,
-        { treatment: selectedValue, cost: selectedItem.cost },
-      ]);
-    }
-  };
+  //   if (type === "delete") {
+  //     const newSelectedFields = selectedFields.filter(
+  //       (item, idx) => idx !== index
+  //     );
+  //     setSelectedFields(newSelectedFields);
+  //     return;
+  //   }
+  //   if (selectedItem) {
+  //     setSelectedFields([
+  //       ...selectedFields,
+  //       { treatment: selectedValue, cost: selectedItem.cost },
+  //     ]);
+  //   }
+  // };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`/doctor/cost-view/${id}`);
+        setPatientInfo(response.data.data[0]);
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
   return (
     <Container>
       <Header>의료비 청구</Header>
-      <Wrapper>
-        <GridItem header="true">
+      <Invoice
+        patientInfo={patientInfo}
+        id={id}
+        total={total}
+        cost={cost}
+        detailCost={detailCost}
+        isDoctor={isDoctor}
+      />
+      {/* <Wrapper>
+        <GridItem header>
           <Section>진료비</Section>
         </GridItem>
 
@@ -86,6 +112,27 @@ const BillingComponent = () => {
             <Title>병원명</Title>
             <Content>test</Content>
           </GridItem>
+          <GridItem>
+            <Title>진료날짜</Title>
+            <Content>{patientInfo.reservationDate}</Content>
+          </GridItem>
+          <GridItem>
+            <Title>환자성명</Title>
+            <Content>{patientInfo.name}</Content>
+          </GridItem>
+          <GridItem>
+            <Title>환자 전화번호</Title>
+            <Content>{patientInfo.phoneNumber}</Content>
+          </GridItem>
+          <GridItem>
+            <Title>환자 성별</Title>
+            <Content>{patientInfo.gender}</Content>
+          </GridItem>
+          <GridItem>
+            <Title>환자 나이</Title>
+            <Content>{patientInfo.age}</Content>
+          </GridItem>
+          <GridItem></GridItem>
         </GridContainer>
         <GridItem header="true" className="borderTop">
           <Section>치료 내역서</Section>
@@ -106,7 +153,7 @@ const BillingComponent = () => {
             </div>
           ) : (
             selectedFields.map((field, index) => (
-              <GridItem key={index}>
+              <GridItem header key={index}>
                 <StyledInput type="text" title="true">
                   {index + 1 === selectedFields.length && (
                     <ListBox>
@@ -128,7 +175,7 @@ const BillingComponent = () => {
                         borderRadius="10px"
                         onClick={addInputField}
                       >
-                        하단에 추가
+                        추가
                       </Button>
                     </ListBox>
                   )}
@@ -182,7 +229,7 @@ const BillingComponent = () => {
             </GridItem>
           )}
         </GridContainer>
-      </Wrapper>
+      </Wrapper> */}
     </Container>
   );
 };
@@ -227,7 +274,7 @@ const GridItem = styled.div`
   font-size: 18px;
   display: grid;
   font-weight: ${(props) => (props.header ? "700" : "400")};
-  grid-template-columns: ${(props) => (props.header ? "" : "6fr 4fr")};
+  grid-template-columns: ${(props) => (props.header ? "6fr 4fr" : "1fr 9fr")};
   padding: 0;
   width: 100%;
   border-bottom: ${(props) =>
@@ -242,16 +289,8 @@ const GridItem = styled.div`
   &.borderTop {
     border-top: 1px solid ${palette.primary.black};
   }
-  /* &:not(:first-child) {
-    border-left: 1px solid ${palette.primary.black};
-  } */
-  /* &.noneBorderLeft {
-    border-left: none;
-  } */
-  /* &.secondRow {
-    border-bottom: 2px solid ${palette.primary.black};
-  } */
 `;
+
 const Section = styled.div`
   padding: 20px;
   display: flex;
@@ -265,6 +304,8 @@ const Title = styled.div`
   border-right: 1px solid #000;
   font-weight: 600;
   font-size: 20px;
+  width: 140px;
+  white-space: nowrap;
 `;
 
 const Content = styled.div`

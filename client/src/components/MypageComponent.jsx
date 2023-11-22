@@ -1,62 +1,76 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import Button from "./Button";
 import { palette } from "../styles/GlobalStyles";
-import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { userInfoAtom } from "../stores/userInfo";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-const myInfo = [
-  {
-    name: "홍유",
-    phoneNumber: 1012341234,
-    gender: "여자",
-    age: 31,
-  },
-];
-
-const reservationList = [
-  {
-    id: 39,
-    hospitalName: "연세에스웰 피부과",
-    reservationTime: "17:00:00",
-    reservationDate: "2023-08-09",
-    reservationStatus: "미완료",
-  },
-  {
-    id: 40,
-    hospitalName: "연세에스웰 피부과2",
-    reservationTime: "17:00:00",
-    reservationDate: "2013-08-09",
-    reservationStatus: "미완료",
-  },
-  {
-    id: 41,
-    hospitalName: "연세에스웰 피부과3",
-    reservationTime: "13:00:00",
-    reservationDate: "2013-08-09",
-    reservationStatus: "미완료",
-  },
-];
 const MypageComponent = () => {
-  const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState({
-    name: myInfo[0].name,
-    phoneNumber: myInfo[0].phoneNumber,
-    gender: myInfo[0].gender,
-    age: myInfo[0].age,
-  });
+  const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
+  const [appointmentList, setAppointmentList] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/patient/page-view", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        });
+        const appointmentList = response.data.myPageList;
+
+        // 최신 5개만 남기기
+        const latestAppointments = appointmentList.slice(0, 5);
+
+        setAppointmentList(latestAppointments);
+      } catch (err) {}
+    };
+    fetchData();
+  }, []);
+
+  const cancelReservation = async (id) => {
+    const reservationId = String(id);
+    await axios
+      .delete("/patient/page-cancel", {
+        data: { reservationId: reservationId },
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      })
+      .then((response) => console.log(response));
+  };
 
   const columns = [
-    { name: "", width: "5%" },
+    { name: "", width: "10%" },
     { name: "병원명", width: "15%" },
     { name: "예약 날짜", width: "25%" },
-    { name: "예약 시간", width: "12%" },
-    { name: "예약 상태", width: "10%" },
-    { name: "", width: "10%" },
-    { name: "", width: "23%" },
+    { name: "예약 시간", width: "20%" },
+    { name: "예약 상태", width: "15%" },
+    { name: "", width: "15%" },
   ];
 
   const handleChange = (field, value) => {
     setUserInfo({ ...userInfo, [field]: value });
+  };
+  const handleUpdate = async () => {
+    try {
+      await axios.patch("/patient/page", {
+        name: userInfo.name,
+        gender: userInfo.gender,
+        age: 10,
+        phoneNumber: userInfo.phoneNumber,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      toast.success("저장되었습니다.");
+    } catch (error) {
+      toast.error("관리자에게 문의해주세요");
+    }
   };
 
   return (
@@ -67,25 +81,17 @@ const MypageComponent = () => {
           <ColumnDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>환자이름:</InfoTitle>
-              <InfoValue
-                type="text"
-                value={userInfo.name}
-                onChange={(e) => handleChange("name", e.target.value)}
-              />
+              <div>{userInfo.name}</div>
             </RowDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>성별:</InfoTitle>
-              <select defaultValue={myInfo[0].gender} disabled>
-                <option value="">성별</option>
-                <option value="남자">남성</option>
-                <option value="여자">여성</option>
-              </select>
+              <div>{userInfo.gender}</div>
             </RowDivideWrapper>
           </ColumnDivideWrapper>
           <ColumnDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>나이:</InfoTitle>
-              <InfoValue value={myInfo[0].age} readOnly />
+              <div>{userInfo.age}</div>
             </RowDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>전화번호:</InfoTitle>
@@ -96,57 +102,59 @@ const MypageComponent = () => {
               />
             </RowDivideWrapper>
           </ColumnDivideWrapper>
+          <Tip>
+            **전화번호 변경시 기존번호를 클릭하시고 새로운 번호를 입력하신 후
+            아래의 업데이트 버튼을 눌러주세요.**
+          </Tip>
         </FirstColumnHalfWrapper>
-        {/* //! 예약리스트 border 겹치는 것 해결하고 다시 수정 */}
         <ColumnHalfWrapper>
-          <Header>예약리스트</Header>
-          <AppointmentListTitle>
-            {columns.map((column, index) => (
-              <ListRowDivideWrapper
-                width={column.width}
-                index={index}
-                key={index}
-              >
-                {column.name}
-              </ListRowDivideWrapper>
-            ))}
-          </AppointmentListTitle>
-          <AppointmentListBody>
-            {reservationList.map((item, index) => (
-              <ListWrapper key={index}>
-                <div style={{ width: "5%" }}>{item.id}</div>
-                <div style={{ width: "15%" }}>{item.hospitalName}</div>
-                <div style={{ width: "25%" }}>{item.reservationDate}</div>
-                <div style={{ width: "12%" }}>{item.reservationTime}</div>
-                <div style={{ width: "10%" }}>{item.reservationStatus}</div>
-                <ButtonContainer>
-                  <Button
-                    width="70%"
-                    height="60%"
-                    padding="5px"
-                    fontSize="15px"
-                    borderRadius="10px"
-                  >
-                    예약 취소
-                  </Button>
-                </ButtonContainer>
-                <ButtonContainer width="23%">
-                  <Button
-                    width="70%"
-                    height="50%"
-                    padding="5px"
-                    fontSize="15px"
-                    borderRadius="10px"
-                    onClick={() => navigate("/selfdiagnosis")}
-                  >
-                    기본 건강체크하러 가기
-                  </Button>
-                </ButtonContainer>
-              </ListWrapper>
-            ))}
-          </AppointmentListBody>
+          {/* <Header>예약리스트</Header> */}
+          <Table>
+            <AppointmentListTitle>
+              {columns.map((column, index) => (
+                <ListRowDivideWrapper
+                  width={column.width}
+                  index={index}
+                  key={index}
+                >
+                  {column.name}
+                </ListRowDivideWrapper>
+              ))}
+            </AppointmentListTitle>
+
+            <AppointmentListBody>
+              {appointmentList.map((item, index) => (
+                <ListWrapper key={index}>
+                  <div style={{ width: "10%" }}>{item.id}</div>
+                  <div style={{ width: "15%" }}>{item.hospitalName}</div>
+                  <div style={{ width: "25%" }}>{item.reservationDate}</div>
+                  <div style={{ width: "20%" }}>{item.reservationTime}</div>
+                  <div style={{ width: "15%" }}>{item.reservationStatus}</div>
+
+                  <ButtonContainer style={{ width: "15%" }}>
+                    <Button
+                      width="70%"
+                      height="60%"
+                      padding="5px"
+                      fontSize="15px"
+                      borderRadius="10px"
+                      onClick={() => cancelReservation(item.id)}
+                    >
+                      예약 취소
+                    </Button>
+                  </ButtonContainer>
+                </ListWrapper>
+              ))}
+            </AppointmentListBody>
+          </Table>
         </ColumnHalfWrapper>
-        <Button width="100px" height="100px" padding="10px" fontSize="15px">
+        <Button
+          width="100px"
+          height="100px"
+          padding="10px"
+          fontSize="15px"
+          onClick={handleUpdate}
+        >
           Update
         </Button>
       </MypageWrapper>
@@ -161,7 +169,6 @@ const MypageContainer = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* background-color: yellow; */
   width: 100vw;
   height: calc(100vh - 100px);
   min-width: 950px;
@@ -169,7 +176,6 @@ const MypageContainer = styled.section`
 `;
 
 const MypageWrapper = styled.div`
-  /* background-color: green; */
   display: flex;
   position: relative;
   flex-direction: column;
@@ -178,21 +184,26 @@ const MypageWrapper = styled.div`
   height: 80%;
   min-width: 950px;
   min-height: 800px;
-  border: 1px solid ${palette.gray.border};
-  border-radius: 20px;
+  /* border: 1px solid ${palette.gray.border}; */
+  /* border-radius: 20px; */
   padding: 100px 0;
-
-  /* div + div {
-    margin-top: 20px;
-  } */
 `;
-
+const Tip = styled.div`
+  font-size: 11px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-top: 10px;
+  color: #3498db;
+  font-weight: 600;
+`;
 const Header = styled.div`
   font-weight: bold;
-  margin-bottom: 20px;
   font-size: 25px;
   width: 100%;
   text-align: center;
+  margin-top: 40px;
 `;
 
 const ColumnHalfWrapper = styled.div`
@@ -200,8 +211,15 @@ const ColumnHalfWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100%;
+  margin-bottom: 40px;
 `;
 
+const Table = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 const ColumnDivideWrapper = styled.div`
   display: flex;
   width: 100%;
@@ -209,22 +227,25 @@ const ColumnDivideWrapper = styled.div`
 `;
 const AppointmentListTitle = styled.div`
   display: flex;
-  width: 100%;
-  height: 20%;
+  width: 90%;
+  height: 10%;
   background-color: ${palette.gray.light};
   border-top: 1px solid ${palette.gray.border};
   border-bottom: 1px solid ${palette.gray.border};
 `;
 const AppointmentListBody = styled.div`
   display: flex;
-  width: 100%;
+  width: 90%;
   height: 20%;
   flex-direction: column;
   margin-bottom: 80px;
 `;
 
 const FirstColumnHalfWrapper = styled(ColumnHalfWrapper)`
-  padding: 100px 200px 100px;
+  border: 0.5px solid ${palette.gray.dark};
+  width: 80%;
+  border-radius: 5px;
+  margin-top: 20px;
 `;
 
 const RowDivideWrapper = styled.div`
@@ -235,11 +256,13 @@ const RowDivideWrapper = styled.div`
   height: 100%;
   font-weight: bold;
   font-size: 16px;
+  padding: 20px;
 `;
 
 const ListRowDivideWrapper = styled.div`
   position: relative;
   display: flex;
+  justify-content: center;
   align-items: center;
   justify-content: ${(props) =>
     (props.index === 0 || props.index === 5 || props.index === 6) && "center"};
@@ -261,6 +284,7 @@ const InfoTitle = styled.div`
 
 const InfoValue = styled.input`
   width: 60%;
+  border: none;
 `;
 const ListWrapper = styled.div`
   display: flex;
@@ -269,7 +293,8 @@ const ListWrapper = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 `;
 
 const ButtonContainer = styled.div`

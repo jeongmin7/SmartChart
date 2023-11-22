@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { styled } from "styled-components";
-import { dateAtom } from "../stores/dateAtom";
+import { dateAtom, selectedOptionState } from "../stores/dateAtom";
 
 const SelectData = ({ availableOption, title }) => {
   const selectedDate = useRecoilValue(dateAtom);
-  const [selectedOption, setSelectedOption] = useState("");
-
-  console.log(selectedDate);
+  const [selectedOption, setSelectedOption] =
+    useRecoilState(selectedOptionState);
 
   const handleTimeChange = (event) => {
     setSelectedOption(event.target.value);
@@ -16,11 +15,7 @@ const SelectData = ({ availableOption, title }) => {
   return (
     <Container>
       <InfoTitle>{title}</InfoTitle>
-      <OptionSelect
-        value={selectedOption}
-        onChange={handleTimeChange}
-        disabled={!selectedDate}
-      >
+      <OptionSelect value={selectedOption} onChange={handleTimeChange}>
         <option value="">{`${title} 선택`}</option>
         {availableOption.map((option) => (
           <option key={option} value={option}>

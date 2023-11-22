@@ -1,25 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Logo from "../components/Logo";
 import { Link, useLocation } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { userInfoAtom } from "../stores/userInfo";
 
 import { path } from "../modules/define/path";
 import NavItem from "../components/NavItem";
+import { useRecoilValue } from "recoil";
+import { userInfoAtom, userRoleAtom } from "../stores/userInfo";
 
 const NavBar = () => {
   const pathname = useLocation().pathname;
   const [mobileMenu, setMobileMenu] = useState(false);
+  //   const userRole = useRecoilValue(userRoleAtom);
+  // (userRole.role);
   const handleMenu = () => {
     setMobileMenu(!mobileMenu);
   };
 
-  if (pathname === "/" || pathname === "/signUp" || pathname === " ") {
+  if (
+    pathname === "/" ||
+    pathname === "/signup" ||
+    pathname === " " ||
+    pathname === "/auth/kakao/callback"
+  ) {
     return null;
   }
   return (
-    <NavBarContainer className="navbar-container">
+    <NavBarContainer>
       <Wrapper>
         <NavLink to={path.home}>
           <Logo nav="true" />
@@ -49,6 +56,7 @@ const NavBarContainer = styled.nav`
   position: relative;
   z-index: 10;
   width: 100%;
+  height: 60px;
   color: white;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 `;

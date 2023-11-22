@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Input from "./Input";
-import { styled } from "styled-components";
 import Button from "./Button";
 import { palette } from "../styles/GlobalStyles";
 import SearchHospital from "./SearchHospital";
@@ -14,21 +13,28 @@ import {
   SelectWrapper,
   SubmitButton,
 } from "../styles/CommonStyle";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { hospitalAtom, userInfoAtom } from "../stores/userInfo";
+import { useRecoilValue } from "recoil";
+import { hospitalAtom } from "../stores/userInfo";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const SignUpForm = () => {
+  const navigate = useNavigate();
   const [emailError, setEmailError] = useState("");
-  // const [passwordError, setPasswordError] = useState("");
-  const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
-  // 의사냐 환자냐
+  const [userInfo, setUserInfo] = useState([]);
+  const [passwordError, setPasswordError] = useState("");
+  const [isEmailDuplicate, setIsEmailDuplicate] = useState(false);
+
+  const [isDoctor, setIsDoctor] = useState(false);
   const hospitalInfo = useRecoilValue(hospitalAtom);
   const fullAddress = `${hospitalInfo.address} ${hospitalInfo.detailAddress}`;
 
   const emailCheck = async () => {
-    //FIXME: 하나로 합치면 이부분도 하나로합쳐야함
-    if (userInfo.isDoctor) {
-      await instance
+    setIsEmailDuplicate(true);
+
+    if (isDoctor) {
+      await axios
         .post(
           "/doctor/check-email",
           { email: userInfo.email },
@@ -37,13 +43,25 @@ const SignUpForm = () => {
             headers: {
               "Content-Type": "application/json",
             },
-          },
+          }
         )
         .then((response) => {
-          console.log(response);
+          if (response.data.code === 200) {
+            // 중복되지 않을 때
+            setIsEmailDuplicate(true);
+            toast.success(response.data.message);
+          } else {
+            // 중복될 때
+            toast.error(response.data.message);
+          }
+        })
+        .catch((error) => {
+          // 오류 처리
+          setIsEmailDuplicate(false);
+          console.error(error);
         });
     } else {
-      await instance
+      await axios
         .post(
           "/patient/check-email",
           { email: userInfo.email },
@@ -52,25 +70,35 @@ const SignUpForm = () => {
             headers: {
               "Content-Type": "application/json",
             },
-          },
+          }
         )
         .then((response) => {
-          console.log(response);
+          if (response.data.code === 200) {
+            // 중복되지 않을 때
+            setIsEmailDuplicate(true);
+            toast.success(response.data.message);
+          } else {
+            // 중복될 때
+            setIsEmailDuplicate(false);
+
+            toast.error(response.data.message);
+          }
+        })
+        .catch((error) => {
+          // 오류 처리
+          setIsEmailDuplicate(false);
+          console.error(error);
         });
     }
   };
   const handleRadioChange = (e) => {
-    setUserInfo((prevUserInfo) => ({
-      ...prevUserInfo,
-      isDoctor: e.target.value === "doctor",
-    }));
+    setIsDoctor(!isDoctor);
   };
 
   const onChange = (e) => {
     const {
       target: { name, value },
     } = e;
-    console.log(name, value);
     setUserInfo((prevUserInfo) => ({
       ...prevUserInfo,
       [name]: value,
@@ -83,27 +111,25 @@ const SignUpForm = () => {
         setEmailError("");
       }
     }
-    // if (name === "password") {
-    //   if (
-    //     userInfo.passwordConfirm?.length > 0 &&
-    //     value !== userInfo.passwordConfirm
-    //   ) {
-    //     setPasswordError(
-    //       "비밀번호와 비밀번호 확인 값이 다릅니다. 다시 확인해주세요 ",
-    //     );
-    //   } else {
-    //     setPasswordError("");
-    //   }
-    // }
-    // if (name === "passwordConfirm") {
-    //   if (userInfo.password.length > 0 && value !== userInfo.password) {
-    //     setPasswordError(
-    //       "비밀번호와 비밀번호 확인 값이 다릅니다. 다시 확인해주세요 ",
-    //     );
-    //   } else {
-    //     setPasswordError("");
-    //   }
-    // }
+    if (name === "password") {
+      if (userInfo.passwordConfirm && value !== userInfo.passwordConfirm) {
+        setPasswordError("비밀번호가 일치하지 않습니다.");
+      } else {
+        setPasswordError("");
+      }
+    }
+    if (name === "passwordConfirm") {
+      setUserInfo((prevUserInfo) => ({
+        ...prevUserInfo,
+        passwordConfirm: value,
+      }));
+
+      if (userInfo.password && value !== userInfo.password) {
+        setPasswordError("비밀번호가 일치하지 않습니다.");
+      } else {
+        setPasswordError("");
+      }
+    }
   };
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -116,10 +142,15 @@ const SignUpForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isEmailDuplicate) {
+      toast.warn("이메일 중복확인을 진행해주세요");
+      return;
+    }
 
     try {
-      if (userInfo.isDoctor === false) {
-        instance
+      if (isDoctor === false) {
+        // 필수 필드가 비어 있는 경우
+        axios
           .post(
             "/patient/join",
             {
@@ -135,16 +166,17 @@ const SignUpForm = () => {
               headers: {
                 "Content-Type": "application/json",
               },
-            },
+            }
           )
           .then(function (response) {
-            console.log(response);
+            toast.success("회원가입에 성공했습니다.");
+            navigate("/");
           })
           .catch(function (error) {
             console.log(error);
           });
       } else {
-        instance
+        axios
           .post(
             "/doctor/join",
             {
@@ -166,10 +198,11 @@ const SignUpForm = () => {
               headers: {
                 "Content-Type": "application/json",
               },
-            },
+            }
           )
           .then(function (response) {
-            console.log(response);
+            toast.success("회원가입에 성공했습니다.");
+            navigate("/");
           })
           .catch(function (error) {
             console.log(error);
@@ -190,7 +223,7 @@ const SignUpForm = () => {
                 type="radio"
                 value="patient"
                 name="isDoctor"
-                checked={!userInfo.isDoctor}
+                checked={!isDoctor}
                 onChange={handleRadioChange}
               />
             </LabelWrapper>
@@ -198,9 +231,8 @@ const SignUpForm = () => {
               의사
               <input
                 type="radio"
-                value="doctor"
                 name="isDoctor"
-                checked={userInfo.isDoctor}
+                checked={isDoctor}
                 onChange={handleRadioChange}
               />
             </LabelWrapper>
@@ -216,7 +248,7 @@ const SignUpForm = () => {
               required
               value={userInfo.email}
               onChange={onChange}
-              marginBottom="5px"
+              marginB="5px"
               width="98%"
             />
           </div>
@@ -226,9 +258,10 @@ const SignUpForm = () => {
             padding="0"
             fontSize="12px"
             borderRadius="5px"
-            marginBottom="10px"
+            marginB="20px"
             fontweight="700"
             onClick={emailCheck}
+            disabled={userInfo.email && emailError?.length > 0}
           >
             중복확인
           </Button>
@@ -244,10 +277,10 @@ const SignUpForm = () => {
             required
             value={userInfo.password}
             onChange={onChange}
-            marginBottom="5px"
+            marginB="5px"
           />
         </Section>
-        {/* <Section>
+        <Section>
           <Label htmlFor="passwordConfirm">비밀번호 확인</Label>
           <Input
             type="password"
@@ -255,13 +288,13 @@ const SignUpForm = () => {
             id="passwordConfirm"
             required
             value={userInfo.passwordConfirm}
-            marginBottom="5px"
+            marginB="5px"
             onChange={onChange}
           />
           {passwordError && passwordError?.length > 0 && (
             <Error>{passwordError}</Error>
           )}
-        </Section> */}
+        </Section>
         <Section>
           <Label htmlFor="name">이름</Label>
           <Input
@@ -269,13 +302,9 @@ const SignUpForm = () => {
             name="name"
             id="name"
             required
-            // value={userInfo.name}
-            marginBottom="5px"
+            marginB="5px"
             onChange={onChange}
           />
-          {/* {passwordError && passwordError?.length > 0 && (
-            <Error>{passwordError}</Error>
-          )} */}
         </Section>
 
         <Section>
@@ -283,8 +312,8 @@ const SignUpForm = () => {
 
           <select
             name="gender"
-            // value={userInfo.gender}
             onChange={handleInputChange}
+            required={isDoctor}
             style={{
               marginLeft: "10px",
               border: `1px solid ${palette.gray.border}`,
@@ -304,10 +333,9 @@ const SignUpForm = () => {
             type="text"
             name="age"
             id="age"
-            required
-            // value={userInfo.age}
+            required={isDoctor}
             onChange={onChange}
-            marginBottom="5px"
+            marginB="5px"
           />
         </Section>
         <Section>
@@ -315,14 +343,13 @@ const SignUpForm = () => {
           <Input
             type="tel"
             name="phoneNumber"
+            required={isDoctor}
             id="phoneNumber"
-            required
-            // value={userInfo.phoneNumber}
             onChange={onChange}
-            marginBottom="5px"
+            marginB="5px"
           />
         </Section>
-        {userInfo.isDoctor === true && <SearchHospital />}
+        {isDoctor === true && <SearchHospital />}
         <Section>
           <SubmitButton
             type="submit"
