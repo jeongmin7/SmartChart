@@ -2,24 +2,56 @@ import React, { useEffect, useState } from "react";
 import { css, styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import instance from "../components/api";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import Button from "../components/Button";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const MedicalCareManagement = () => {
+  const navigate = useNavigate();
   const params = useParams();
   const id = params.id;
-  const [appointmentInfo, setAppointmentInfo] = useState([]);
+  const [patientInfo, setPatientInfo] = useState({});
+  const [medicalNote, setMedicalNote] = useState({
+    reservationId: id,
+    medicalHistory: "",
+    mainSymptoms: "",
+    currentSymptoms: "",
+    treatmentPlan: "",
+    note: "",
+  });
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = await instance.get(`/doctor/treatment-view/${id}`, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //     console.log(response.data);
-  //   };
-  //   fetchData();
-  // }, []);
+  const onChange = (event) => {
+    const { name, value } = event.target;
+
+    setMedicalNote((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      await axios
+        .post("/doctor/treatment", medicalNote)
+        .then((res) => toast.success("저장되었습니다."))
+        .then(navigate("/adminAppointment"));
+    } catch (error) {
+      toast.error("실패하였습니다.");
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await instance.get(`/doctor/treatment-view/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setPatientInfo(response.data.data[0]);
+    };
+    fetchData();
+  }, []);
   return (
     <Container>
       <Header>진료관리</Header>
@@ -27,15 +59,15 @@ const MedicalCareManagement = () => {
         <SmallItem>
           <Label>예약번호</Label>
 
-          <Value>1</Value>
+          <Value>{id}</Value>
         </SmallItem>
         <SmallItem>
           <Label>병원명</Label>
-          <Value>1</Value>
+          <Value>{patientInfo.hospitalName}</Value>
         </SmallItem>
         <SmallItem>
           <Label>진료날짜</Label>
-          <Value>1</Value>
+          <Value>{patientInfo.reservationDate}</Value>
         </SmallItem>
         <SmallItem>
           <Label Nothing={true}></Label>
@@ -43,55 +75,66 @@ const MedicalCareManagement = () => {
         </SmallItem>
         <SmallItem>
           <Label>환자 성명</Label>
-          <Value>1</Value>
+          <Value>{patientInfo.name}</Value>
         </SmallItem>
         <SmallItem>
           <Label>환자 전화번호</Label>
-          <Value>1</Value>
+          <Value>{patientInfo.phoneNumber}</Value>
         </SmallItem>
         <SmallItem>
           <Label>환자 성별</Label>
-          <Value>1</Value>
+          <Value>{patientInfo.gender}</Value>
         </SmallItem>
         <SmallItem>
           <Label>환자 나이</Label>
-          <Value>1</Value>
+          <Value>{patientInfo.age}</Value>
         </SmallItem>
       </SmallContainer>
+
       <BigContainer>
         <TopContainer>
           <TopSection>
             <Title>환자의 과거 병력</Title>
             <Content>
-              <TextArea />
+              <TextArea name="medicalHistory" onChange={onChange} />
             </Content>
           </TopSection>
           <TopSection>
             <Title>환자가 내원한 이유와 환자의 주요 증상</Title>
             <Content>
-              <TextArea />
+              <TextArea name="mainSymptoms" onChange={onChange} />
             </Content>
           </TopSection>
           <TopSection>
             <Title>현재 증상</Title>
             <Content>
-              <TextArea />
+              <TextArea name="currentSymptoms" onChange={onChange} />
             </Content>
           </TopSection>
           <TopSection>
             <Title>치료계획</Title>
             <Content>
-              <TextArea />
+              <TextArea name="treatmentPlan" onChange={onChange} />
             </Content>
           </TopSection>
         </TopContainer>
         <BottomContainer>
           <Title>비고</Title>
           <Content>
-            <TextArea />
+            <TextArea name="note" onChange={onChange} />
           </Content>
         </BottomContainer>
       </BigContainer>
+      <Button
+        width="80px"
+        height="40px"
+        padding="10px"
+        fontSize="15px"
+        borderRadius="10px"
+        onClick={handleSubmit}
+      >
+        저장
+      </Button>
     </Container>
   );
 };
@@ -154,6 +197,7 @@ const BigContainer = styled.div`
   width: 70%;
   height: 100%;
   margin-top: 10px;
+  margin-bottom: 10px;
 `;
 
 const TopContainer = styled.div`

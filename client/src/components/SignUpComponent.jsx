@@ -17,6 +17,7 @@ import { useRecoilValue } from "recoil";
 import { hospitalAtom } from "../stores/userInfo";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const SignUpForm = () => {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const SignUpForm = () => {
     setIsEmailDuplicate(true);
 
     if (isDoctor) {
-      await instance
+      await axios
         .post(
           "/doctor/check-email",
           { email: userInfo.email },
@@ -60,7 +61,7 @@ const SignUpForm = () => {
           console.error(error);
         });
     } else {
-      await instance
+      await axios
         .post(
           "/patient/check-email",
           { email: userInfo.email },
@@ -149,7 +150,7 @@ const SignUpForm = () => {
     try {
       if (isDoctor === false) {
         // 필수 필드가 비어 있는 경우
-        instance
+        axios
           .post(
             "/patient/join",
             {
@@ -175,7 +176,7 @@ const SignUpForm = () => {
             console.log(error);
           });
       } else {
-        instance
+        axios
           .post(
             "/doctor/join",
             {

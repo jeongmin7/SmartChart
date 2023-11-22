@@ -4,6 +4,7 @@ import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Button from "./Button";
 import instance from "./api";
+import axios from "axios";
 
 const { kakao } = window;
 
@@ -18,7 +19,7 @@ const MapComponent = ({ setIsLoading }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await instance.get("/patient/reservation-map-view/");
+        const response = await axios.get("/patient/reservation-map-view/");
         setHospitalData(response.data);
       } catch (error) {
         // 에러 처리
@@ -71,7 +72,7 @@ const MapComponent = ({ setIsLoading }) => {
         (error) => {
           console.error("사용자 위치 가져오기 오류:", error);
           setIsLoading(false);
-        },
+        }
       );
     } else {
       console.error("지리적 위치 정보를 사용할 수 없습니다.");
@@ -94,7 +95,7 @@ const MapComponent = ({ setIsLoading }) => {
         if (selectedSpecialty === "" || specialty === selectedSpecialty) {
           const markerPosition = new kakao.maps.LatLng(
             addDecimalToString(hospital.mapy),
-            addDecimalToString(hospital.mapx),
+            addDecimalToString(hospital.mapx)
           );
 
           const marker = new kakao.maps.Marker({
@@ -129,7 +130,7 @@ const MapComponent = ({ setIsLoading }) => {
     // 커스텀 오버레이가 표시될 위치입니다
     var position = new kakao.maps.LatLng(
       addDecimalToString(hospital.mapy),
-      addDecimalToString(hospital.mapx),
+      addDecimalToString(hospital.mapx)
     );
     // 커스텀 오버레이를 생성합니다
     var customOverlay = new kakao.maps.CustomOverlay({
@@ -144,7 +145,7 @@ const MapComponent = ({ setIsLoading }) => {
     const button = document.getElementById("infoWindowButton");
     button.addEventListener("click", () => handleButtonClick(id));
     const closeInfoWindowButton = document.getElementById(
-      "closeInfoWindowButton",
+      "closeInfoWindowButton"
     );
     closeInfoWindowButton.addEventListener("click", () => {
       customOverlay.setMap(null); // 오버레이를 숨깁니다.

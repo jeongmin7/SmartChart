@@ -5,53 +5,75 @@ import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import Button from "../components/Button";
 import instance from "../components/api";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { dateAtom, selectedOptionState } from "../stores/dateAtom";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const availableTimes = [
-  "09:00 - 10:00",
-  "10:00 - 11:00",
-  "11:00 - 12:00",
-  "12:00 - 13:00",
-  "13:00 - 14:00",
-  "14:00 - 15:00",
-  "15:00 - 16:00",
-  "16:00 - 17:00",
-  "17:00 - 18:00",
+  "09:00:00",
+  "10:00:00",
+  "11:00:00",
+  "12:00:00",
+  "13:00:00",
+  "14:00:00",
+  "15:00:00",
+  "16:00:00",
+  "17:00:00",
 ];
 const Appointment = () => {
+  const navigate = useNavigate();
   const id = useParams().id;
-  const [data, setData] = useState({});
+  const [info, setInfo] = useState({});
+  const [checkAvailablity, setCheckAvailablity] = useState(false);
   const selectedDate = useRecoilValue(dateAtom);
   const selectedTime = useRecoilValue(selectedOptionState);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await instance
-          .get(
-            `/patient/reservation-view/${id}`,
-            {},
-            {
-              headers: { "Content-Type": "application/json" },
-            },
-          )
-          .then((res) => console.log(111, res));
-      } catch (error) {}
+        const response = await axios.get(`/patient/reservation-view/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache",
+          },
+          withCredentials: true,
+        });
+        setInfo(response.data);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     fetchData();
-  }, [id]);
+  }, []);
 
   const checkAvaliablity = () => {
     const data = {
-      reservationDate: "2021-08-29",
-      reservationTime: "10:00:00",
+      reservationDate: selectedDate,
+      reservationTime: selectedTime,
     };
-    instance
+    axios
       .post("/patient/check-reservation", data)
-      .then((response) => console.log(response));
+      .then((response) => {
+        toast.success("예약 가능한 시간입니다.");
+        setCheckAvailablity(true);
+      })
+      .catch((error) => {
+        toast.error("예약불가능한 시간입니다.");
+      });
+  };
+  const handleSave = () => {
+    axios
+      .post(`/patient/reservation`, {
+        doctorId: info.doctorId,
+        reservationDate: selectedDate,
+        reservationTime: selectedTime,
+      })
+      .then(toast.success("예약되었습니다."), navigate("/selfdiagnosis"))
+
+      .catch((error) => toast.error("예약이 되지 않았습니다."));
   };
   return (
     <AppointmentContainer>
@@ -63,21 +85,21 @@ const Appointment = () => {
           <ColumnDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>환자이름:</InfoTitle>
-              <InfoValue>{data.patientName}</InfoValue>
+              <InfoValue>{info.patientName}</InfoValue>
             </RowDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>성별:</InfoTitle>
-              <InfoValue>{data.patiengGender}</InfoValue>
+              <InfoValue>{info.patiengGender}</InfoValue>
             </RowDivideWrapper>
           </ColumnDivideWrapper>
           <ColumnDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>나이:</InfoTitle>
-              <InfoValue>{data.patientgAge}</InfoValue>
+              <InfoValue>{info.patientgAge}</InfoValue>
             </RowDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>전화번호:</InfoTitle>
-              <InfoValue>{data.patiengPhoneNumber}</InfoValue>
+              <InfoValue>{info.patiengPhoneNumber}</InfoValue>
             </RowDivideWrapper>
           </ColumnDivideWrapper>
         </FirstColumnHalfWrapper>
@@ -85,7 +107,7 @@ const Appointment = () => {
           <ColumnDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>병원이름:</InfoTitle>
-              <InfoValue>{data.hospitalName}</InfoValue>
+              <InfoValue>{info.hospitalName}</InfoValue>
             </RowDivideWrapper>
 
             <RowDivideWrapper>
@@ -110,8 +132,15 @@ const Appointment = () => {
             </RowDivideWrapper>
           </ColumnDivideWrapper>
         </ColumnHalfWrapper>
-        <Button width="100px" height="100px" padding="0" fontSize="15px">
-          SAVE
+        <Button
+          width="100px"
+          height="100px"
+          padding="0"
+          fontSize="15px"
+          disabled={!checkAvailablity}
+          onClick={handleSave}
+        >
+          예약하기
         </Button>
       </AppointmentWrapper>
     </AppointmentContainer>

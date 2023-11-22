@@ -1,23 +1,34 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "./Button";
+import axios from "axios";
 
-function SendSMS() {
-  const [recipientPhoneNumber, setRecipientPhoneNumber] = useState("");
+function SendSMS({ SMSInfo }) {
   const [content, setContent] = useState("");
 
-  const sendSMS = () => {};
+  const sendSMS = () => {
+    try {
+      axios.post("/doctor/reservation-text", {
+        reservationId: SMSInfo.id,
+        recipientPhoneNumber: SMSInfo.phoneNumber,
+        content: content,
+      });
+      console.log("Sent SMS");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <Container>
       <Header>문자 전송하기</Header>
       <Body>
         <HospitalName>병원이름</HospitalName>
+        {/* //TODO: 병원이름 수정 */}
         <TextInput
           type="text"
           placeholder="수신인 전화번호는 (-)없이 기입해주시기 바랍니다."
-          value={recipientPhoneNumber}
-          onChange={(e) => setRecipientPhoneNumber(e.target.value)}
+          defaultValue={SMSInfo.phoneNumber}
         />
         <Textarea
           placeholder="내용"

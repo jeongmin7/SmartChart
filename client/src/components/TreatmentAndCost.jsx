@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "./Button";
 import { palette } from "../styles/GlobalStyles";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const TreatmentAndCost = () => {
   const [inputData, setInputData] = useState({ treatment: "", cost: "" });
@@ -18,7 +20,16 @@ const TreatmentAndCost = () => {
       setInputData({ treatment: "", cost: "" });
     }
   };
-
+  const handleSubmit = async () => {
+    try {
+      await axios
+        .post("/doctor/cost", data)
+        .then(() => toast.success("저장되었습니다."))
+        .then(() => window.location.reload());
+    } catch (error) {
+      toast.error("저장에 실패하였습니다.");
+    }
+  };
   return (
     <div>
       <InputContainer>
@@ -69,7 +80,12 @@ const TreatmentAndCost = () => {
           </tbody>
         </Table>
         <ButtonContainer>
-          <Button borderRadius="5px" marginBottom="10px" width="30%">
+          <Button
+            borderRadius="5px"
+            marginBottom="10px"
+            width="30%"
+            onClick={handleSubmit}
+          >
             저장
           </Button>
         </ButtonContainer>

@@ -2,79 +2,48 @@ import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import Button from "../components/Button";
 import { palette } from "../styles/GlobalStyles";
-import { useDaumPostcodePopup } from "react-daum-postcode";
-import instance from "../components/api";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const HospitalPage = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
-  // const [fullAddress, setFullAddress] = useState("");
-  // const [getAddress, setGetAddress] = useState(false);
-  const [hospitalInfo, setHospitalInfo] = useState([]);
-  const [newInfo, setNewInfo] = useState([]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = await instance.get("/doctor/page-view", {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //     console.log(response);
-  //   };
-  //   fetchData();
-  // }, []);
-  const addressModalopen = useDaumPostcodePopup();
-
-  const searchAddress = (data) => {
-    setNewInfo((prev) => ({
-      ...prev,
-      buildingName: data.buildingName,
-      postalCode: data.zonecode,
-      address: data.address,
-    }));
-  };
-  const handleClick = () => {
-    addressModalopen({ onComplete: searchAddress });
-  };
+  const [hospitalInfo, setHospitalInfo] = useState({
+    hospitalName: "",
+    hospitalPhoneNumber: "",
+    hospitalIntroduce: "",
+  });
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get("/doctor/hospital-view", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setHospitalInfo(response.data.hospitalPage[0]);
+    };
+    fetchData();
+  }, []);
 
   const onChange = (event) => {
     const { name, value } = event.target;
 
-    setNewInfo((prev) => ({
+    setHospitalInfo((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
-  const handleSubmit = () => {
-    console.log(newInfo);
+  const handleSubmit = async () => {
+    try {
+      await axios.patch("/doctor/hospital", {
+        hospitalName: hospitalInfo.hospitalName,
+        hospitalPhoneNumber: hospitalInfo.hospitalPhoneNumber,
+        hospitalIntroduction: hospitalInfo.hospitalIntroduce,
+      });
+      toast.success("성공적으로 업데이트 되었습니다.");
+      window.location.reload();
+    } catch (error) {
+      toast.error("에러가 발생하였습니다.");
+    }
   };
-
-  // console.log(hospitalInfo, "111");
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setSelectedFile(file);
-  };
-
-  // const handleAddressClick = () => {
-  //   // 주소 입력창을 토글 (클릭할 때마다 상태를 반전)
-  //   setGetAddress((prev) => !prev);
-  // }
-  // const handleComplete = (data) => {
-  //   let fullAddress = data.address;
-  //   let extraAddress = "";
-
-  //   if (data.addressType === "R") {
-  //     if (data.bname !== "") {
-  //       extraAddress += data.bname;
-  //     }
-  //     if (data.buildingName !== "") {
-  //       extraAddress +=
-  //         extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
-  //     }
-  //     fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
-  //     setFullAddress(fullAddress);
-  //   }
-  // };
 
   return (
     <Container>
@@ -85,58 +54,41 @@ const HospitalPage = () => {
             <TR>
               <TH>병원명</TH>
               <TD>
-                <Input type="text" name="name" onChange={onChange} />
-              </TD>
-            </TR>
-            <TR alternate="true">
-              <TH>주소</TH>
-
-              <TD>
                 <Input
                   type="text"
-                  value={newInfo.address}
-                  onClick={handleClick}
+                  name="hospitalName"
+                  onChange={onChange}
+                  value={hospitalInfo && hospitalInfo.hospitalName}
+                  readOnly={false}
                 />
-                {/* {getAddress && (
-                  <div>
-                    <DaumPostcodeEmbed
-                      onComplete={handleComplete}
-                      height={700}
-                    />
-                  </div>
-                )} */}
               </TD>
             </TR>
-            <TR>
+
+            <TR alternate>
               <TH>전화번호</TH>
               <TD>
-                <Input type="text" name="tel" onChange={onChange} />
+                <Input
+                  alternate
+                  type="text"
+                  name="hospitalPhoneNumber"
+                  onChange={onChange}
+                  value={hospitalInfo && hospitalInfo.hospitalPhoneNumber}
+                />
               </TD>
             </TR>
-            {/* <TR alternate>
+            <TR>
               <TH>병원소개</TH>
               <TD>
-                <Textarea type="text" name="tel" onChange={onChange} />
-              </TD>
-            </TR> */}
-            <TR>
-              <TH>병원사진</TH>
-              <TD>
-                <UploadWrapper>
-                  {selectedFile ? (
-                    <ImagePreview
-                      src={URL.createObjectURL(selectedFile)}
-                      alt="Uploaded"
-                    />
-                  ) : (
-                    <Nothing>No image</Nothing>
-                  )}
-                  <FileInput
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                  />
-                </UploadWrapper>
+                <Textarea
+                  type="text"
+                  name="hospitalIntroduce"
+                  onChange={onChange}
+                  value={
+                    hospitalInfo && hospitalInfo.hospitalIntroduce === null
+                      ? "클릭하여 병원 소개를 입력해주세요"
+                      : hospitalInfo.hospitalIntroduce
+                  }
+                />
               </TD>
             </TR>
           </tbody>
@@ -146,7 +98,7 @@ const HospitalPage = () => {
           height="30px"
           padding="0"
           fontSize="12px"
-          onChange={handleSubmit}
+          onClick={handleSubmit}
         >
           업데이트
         </Button>
@@ -182,7 +134,7 @@ const Header = styled.div`
 
 const Table = styled.table`
   border-collapse: collapse;
-  width: 100%;
+  width: 400px;
   height: 300px;
   margin-bottom: 15px;
 `;
@@ -224,11 +176,14 @@ const Input = styled.input`
   line-height: 2;
   padding: 0;
   font-size: 15px;
+  background-color: ${(props) => (props.alternate ? "#E0E3E6" : "white")};
+  border: none;
 `;
 
 const Textarea = styled.textarea`
   width: 100%;
   line-height: 3;
+  border: none;
 `;
 const Nothing = styled.div`
   width: 100px;

@@ -1,83 +1,73 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
-import instance from "./api";
 import axios from "axios";
 
-const appointment = [
-  {
-    id: 31,
-    reservationTime: "09:00:00",
-    reservationDate: "2023-09-01",
-    patientName: "watch",
-  },
-  {
-    id: 13,
-    reservationTime: "10:00:00",
-    reservationDate: "2023-09-02",
-    patientName: "watch",
-  },
-  {
-    id: 19,
-    reservationTime: "15:00:00",
-    reservationDate: "2023-08-14",
-    patientName: "watch",
-  },
-  {
-    id: 21,
-    reservationTime: "18:00:00",
-    reservationDate: "2023-08-26",
-    patientName: "watch",
-  },
-];
-
-function compareAppointments(appointment1, appointment2) {
-  const dateComparison = appointment1.reservationDate.localeCompare(
-    appointment2.reservationDate
-  );
-
-  if (dateComparison === 0) {
-    return appointment1.reservationTime.localeCompare(
-      appointment2.reservationTime
-    );
-  }
-
-  return dateComparison;
-}
-
 const AdminWaitingListComponent = () => {
+  const [appointment, setAppointment] = useState([]);
   const currentTime = new Date();
   const year = currentTime.getFullYear();
   const month = String(currentTime.getMonth() + 1).padStart(2, "0");
   const day = String(currentTime.getDate()).padStart(2, "0");
   const today = `${year}-${month}-${day}`;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await instance
-          .get("/doctor/waiting-list-view", {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-Type": "application/json",
-            },
-            withCredentials: true,
-          })
-          .then((response) => console.log("1111", response));
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  const sortedAppointments = appointment.sort(compareAppointments);
+  const sortedAppointments =
+    appointment.length >= 2
+      ? [...appointment].sort(compareAppointments)
+      : appointment;
   const [tasks, setTasks] = useState({
     대기중: sortedAppointments,
     진료중: [],
     완료: [],
   });
-  // console.log(tasks);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/doctor/waiting-list-view", {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        });
+        const fetchedAppointments = response.data.data;
+
+        // 정렬된 상태를 가져오기 위해 새로운 배열 생성
+        const sortedAppointments = [...fetchedAppointments].sort(
+          compareAppointments
+        );
+
+        setAppointment(sortedAppointments);
+
+        setTasks({
+          대기중: sortedAppointments,
+          진료중: [],
+          완료: [],
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  console.log(appointment);
+
+  function compareAppointments(appointment1, appointment2) {
+    const dateComparison = appointment1.reservationDate.localeCompare(
+      appointment2.reservationDate
+    );
+
+    if (dateComparison === 0) {
+      return appointment1.reservationTime.localeCompare(
+        appointment2.reservationTime
+      );
+    }
+
+    return dateComparison;
+  }
+
+  console.log(tasks);
+
   const handleDragStart = (e, appointment, status) => {
     e.dataTransfer.setData(
       "text/plain",
@@ -100,7 +90,6 @@ const AdminWaitingListComponent = () => {
         [status]: tasks[status].filter((apt) => apt.id !== appointment.id), // 기존 상태에서 해당 약속 제거
         [targetStatus]: [...tasks[targetStatus], appointment],
       };
-
       setTasks(updatedTasks);
       localStorage.setItem("tasks", JSON.stringify(updatedTasks));
     }
@@ -111,7 +100,7 @@ const AdminWaitingListComponent = () => {
     if (storedTasks) {
       setTasks(JSON.parse(storedTasks)); // 읽어온 값 tasks초기화
     }
-  }, []);
+  }, [appointment]);
 
   return (
     <Container>

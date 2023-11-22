@@ -25,128 +25,105 @@ Chart.register(
   Title,
   Tooltip,
   Legend,
-  BarElement,
+  BarElement
 );
 
-const recentDate = [
-  {
-    sum: 400,
-    date: "2023-08-09",
-    patientCount: 1,
-  },
-  {
-    sum: 20000,
-    date: "2023-08-08",
-    patientCount: 1,
-  },
-  {
-    sum: 1600000,
-    date: "2023-08-04",
-    patientCount: 1,
-  },
-  {
-    sum: 140000,
-    date: "2023-07-09",
-    patientCount: 1,
-  },
-  {
-    sum: 40000,
-    date: "2023-07-08",
-    patientCount: 1,
-  },
-  {
-    sum: 800,
-    date: "2013-08-09",
-    patientCount: 2,
-  },
-];
-const salesDate = [
-  {
-    sum: 1600000,
-    date: "2023-08-04",
-    patientCount: 1,
-  },
-  {
-    sum: 140000,
-    date: "2023-07-09",
-    patientCount: 1,
-  },
-  {
-    sum: 40000,
-    date: "2023-07-08",
-    patientCount: 1,
-  },
-  {
-    sum: 20000,
-    date: "2023-08-08",
-    patientCount: 1,
-  },
-  {
-    sum: 800,
-    date: "2013-08-09",
-    patientCount: 2,
-  },
-  {
-    sum: 400,
-    date: "2023-08-09",
-    patientCount: 1,
-  },
-];
-const datas = [
-  {
-    sum: 800,
-    date: "2013-08-09",
-    patientCount: 2,
-  },
-  {
-    sum: 40000,
-    date: "2023-07-08",
-    patientCount: 1,
-  },
-  {
-    sum: 140000,
-    date: "2023-07-09",
-    patientCount: 1,
-  },
-  {
-    sum: 1600000,
-    date: "2023-08-04",
-    patientCount: 1,
-  },
-  {
-    sum: 20000,
-    date: "2023-08-08",
-    patientCount: 1,
-  },
-  {
-    sum: 400,
-    date: "2023-08-09",
-    patientCount: 1,
-  },
-];
-
-const data = {
-  labels: datas.map((item) => item.date),
-
-  datasets: [
-    {
-      label: "일 매출",
-      data: datas.map((item) => item.sum),
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-      yAxisID: "y-axis-1",
-      type: "line",
-    },
-    {
-      label: "환자수",
-      data: datas.map((item) => item.patientCount),
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      yAxisID: "y-axis-2",
-      type: "bar",
-    },
-  ],
-};
+// const recentDate = [
+//   {
+//     sum: 400,
+//     date: "2023-08-09",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 20000,
+//     date: "2023-08-08",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 1600000,
+//     date: "2023-08-04",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 140000,
+//     date: "2023-07-09",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 40000,
+//     date: "2023-07-08",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 800,
+//     date: "2013-08-09",
+//     patientCount: 2,
+//   },
+// ];
+// const salesDate = [
+//   {
+//     sum: 1600000,
+//     date: "2023-08-04",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 140000,
+//     date: "2023-07-09",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 40000,
+//     date: "2023-07-08",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 20000,
+//     date: "2023-08-08",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 800,
+//     date: "2013-08-09",
+//     patientCount: 2,
+//   },
+//   {
+//     sum: 400,
+//     date: "2023-08-09",
+//     patientCount: 1,
+//   },
+// ];
+// const datas = [
+//   {
+//     sum: 800,
+//     date: "2013-08-09",
+//     patientCount: 2,
+//   },
+//   {
+//     sum: 40000,
+//     date: "2023-07-08",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 140000,
+//     date: "2023-07-09",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 1600000,
+//     date: "2023-08-04",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 20000,
+//     date: "2023-08-08",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 400,
+//     date: "2023-08-09",
+//     patientCount: 1,
+//   },
+// ];
 
 const options = {
   plugins: {
@@ -187,9 +164,30 @@ const options = {
   },
 };
 
-const DailyChart = () => {
+const DailyChart = ({ datas, salesDate, recentDate }) => {
   const { activeChart, handleChart } = useActiveChart();
+  const data = {
+    labels: datas.map((item) => item.date),
 
+    datasets: [
+      {
+        label: "일 매출",
+        data: datas.map((item) => item.sum),
+        borderColor: "rgb(53, 162, 235)",
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
+        yAxisID: "y-axis-1",
+        type: "line",
+      },
+      {
+        label: "환자수",
+        data: datas.map((item) => item.patientCount),
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        yAxisID: "y-axis-2",
+        type: "bar",
+      },
+    ],
+  };
   return (
     <Wrapper>
       <ChartContainer>

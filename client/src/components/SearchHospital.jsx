@@ -6,6 +6,7 @@ import { useRecoilState } from "recoil";
 import { hospitalAtom } from "../stores/userInfo";
 import Button from "./Button";
 import instance from "./api";
+import axios from "axios";
 
 const SearchHospital = () => {
   // const [hospitalInfo, setHospitalInfo] = useState("");
@@ -59,9 +60,9 @@ const SearchHospital = () => {
 
   const handleSearch = () => {
     try {
-      instance
+      axios
         .post(
-          "/api/naver",
+          "/doctor/naver",
           { query: query },
           { headers: { "Content-Type": "application/json" } }
         )

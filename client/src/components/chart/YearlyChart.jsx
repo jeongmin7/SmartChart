@@ -25,80 +25,8 @@ Chart.register(
   Title,
   Tooltip,
   Legend,
-  BarElement,
+  BarElement
 );
-
-const recentYear = [
-  {
-    sum: 400,
-    date: "2023-08",
-    patientCount: 1,
-  },
-  {
-    sum: 20000,
-    date: "2023-07",
-    patientCount: 1,
-  },
-  {
-    sum: 1600000,
-    date: "2023-06",
-    patientCount: 1,
-  },
-];
-
-const salesYear = [
-  {
-    sum: 1600000,
-    date: "2023-08",
-    patientCount: 1,
-  },
-  {
-    sum: 140000,
-    date: "2023-07",
-    patientCount: 1,
-  },
-  {
-    sum: 40000,
-    date: "2023-06",
-    patientCount: 1,
-  },
-];
-
-const datas = [
-  {
-    sum: 800,
-    year: 2013,
-    patientCount: 2,
-  },
-  {
-    sum: 1800400,
-    year: 2023,
-    patientCount: 5,
-  },
-];
-
-const data = {
-  labels: datas.map((item) => item.year),
-
-  datasets: [
-    {
-      label: "연 매출",
-      data: datas.map((item) => item.sum),
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-      yAxisID: "y-axis-1",
-      type: "line",
-    },
-    {
-      label: "환자수",
-      data: datas.map((item) => item.patientCount),
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      yAxisID: "y-axis-2",
-      type: "bar",
-    },
-  ],
-};
 
 const options = {
   plugins: {
@@ -139,8 +67,31 @@ const options = {
   },
 };
 
-const YearlyChart = () => {
+const YearlyChart = ({ datas, salesYear, recentYear }) => {
+  console.log("!", recentYear);
   const { activeChart, handleChart } = useActiveChart();
+  const data = {
+    labels: datas.map((item) => item.year),
+
+    datasets: [
+      {
+        label: "연 매출",
+        data: datas.map((item) => item.sum),
+        borderColor: "rgb(53, 162, 235)",
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
+        yAxisID: "y-axis-1",
+        type: "line",
+      },
+      {
+        label: "환자수",
+        data: datas.map((item) => item.patientCount),
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        yAxisID: "y-axis-2",
+        type: "bar",
+      },
+    ],
+  };
 
   return (
     <Wrapper>

@@ -6,13 +6,33 @@ import Modal from "../components/Modal";
 import BillingComponent from "../components/BillingComponent";
 import instance from "../components/api";
 import PatientBill from "../components/PatientBill";
+import axios from "axios";
 
 const Pay = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [list, setList] = useState([]);
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [patient, setPatient] = useState({});
+  const [total, setTotal] = useState(0);
 
-  const handleModal = () => {
+  const handleModal = (itemId) => {
+    setSelectedItemId(itemId);
     setIsModalOpen(!isModalOpen);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/patient/cost-view", {});
+
+        setList(response.data.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const columns = [
     { name: "", width: "3%" },
@@ -26,7 +46,23 @@ const Pay = () => {
     { name: "진료비 내기", width: "13%" },
   ];
 
-  const handlePayment = () => {
+  const handlePayment = async (id) => {
+    try {
+      const response = await axios.post(
+        "/patient/cost",
+        {
+          reservationId: id,
+        },
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      setPatient(response.data.data[0]);
+      setTotal(response.data.date3[0].sum);
+    } catch (error) {
+      console.error(error);
+    }
     const IMP = window.IMP;
     IMP.init("imp18267031");
 
@@ -36,17 +72,18 @@ const Pay = () => {
         pay_method: "kakaopay",
         merchant_uid: "patient_" + new Date().getTime(),
         name: "병원비 내기",
-        amount: 10000,
-        reservationId: 32,
-        hospital_name: "차앤박 병원",
-        patient_name: "watch",
+        amount: total,
+        reservationId: id,
+        hospital_name: patient.hospitalName,
+        patient_name: patient.name,
       },
+
       function (rsp) {
         if (rsp.success) {
           let data = {
             imp_uid: rsp.imp_uid,
             amount: rsp.paid_amount,
-            reservationId: 32,
+            reservationId: id,
           };
 
           fetch("/patient/vertifyIamport", {
@@ -82,49 +119,57 @@ const Pay = () => {
             ))}
           </AppointmentListTitle>
           <AppointmentListBody>
-            {columns.map((column, index) => (
-              <ListRowDivideWrapper width={column.width} index={index}>
-                {index === 0 ? (
-                  String(index + 1)
-                ) : index === 1 ? (
-                  <div>31</div>
-                ) : index === 2 ? (
-                  <div>차앤박 피부과</div>
-                ) : index === 3 ? (
-                  <div>진료 날짜 </div>
-                ) : index === 4 ? (
-                  <div> 이OO </div>
-                ) : index === 5 ? (
-                  <div>110000원</div>
-                ) : index === 6 ? (
-                  <div>미납</div>
-                ) : index === 7 ? (
-                  <Button
-                    width="80px"
-                    fontSize="12px"
-                    padding="5px"
-                    borderRadius="7px"
-                    onClick={handleModal}
+            {list.map((item, itemIndex) => (
+              <ListWrapper key={itemIndex}>
+                {columns.map((column, index) => (
+                  <ListRowDivideWrapper
+                    width={column.width}
+                    index={index}
+                    key={index}
                   >
-                    진료비 보기
-                  </Button>
-                ) : index === 8 ? (
-                  <Button
-                    width="80px"
-                    fontSize="12px"
-                    padding="5px"
-                    borderRadius="7px"
-                    onClick={handlePayment}
-                  >
-                    진료비 내기
-                  </Button>
-                ) : (
-                  column.name
-                )}
-              </ListRowDivideWrapper>
+                    {index === 0 ? (
+                      String(itemIndex + 1)
+                    ) : index === 1 ? (
+                      <div>{item.id}</div>
+                    ) : index === 2 ? (
+                      <div>{item.hospitalName}</div>
+                    ) : index === 3 ? (
+                      <div>{item.reservationDate}</div>
+                    ) : index === 4 ? (
+                      <div>{item.name}</div>
+                    ) : index === 5 ? (
+                      <div>{item.sum}원</div>
+                    ) : index === 6 ? (
+                      <div>{item.patientPaymentStatus}</div>
+                    ) : index === 7 ? (
+                      <Button
+                        width="80px"
+                        fontSize="12px"
+                        padding="5px"
+                        borderRadius="7px"
+                        onClick={() => handleModal(item.id)}
+                      >
+                        진료비 보기
+                      </Button>
+                    ) : index === 8 ? (
+                      <Button
+                        width="80px"
+                        fontSize="12px"
+                        padding="5px"
+                        borderRadius="7px"
+                        onClick={() => handlePayment(item.id)}
+                      >
+                        진료비 내기
+                      </Button>
+                    ) : (
+                      column.name
+                    )}
+                  </ListRowDivideWrapper>
+                ))}
+              </ListWrapper>
             ))}
             <Modal isOpen={isModalOpen} handleModal={handleModal}>
-              <PatientBill />
+              <PatientBill id={selectedItemId} />
             </Modal>
           </AppointmentListBody>
         </List>
@@ -179,6 +224,7 @@ const AppointmentListTitle = styled.div`
 `;
 const AppointmentListBody = styled.div`
   display: flex;
+  flex-direction: column;
   width: 100%;
   height: 20%;
   border-bottom: 1px solid ${palette.gray.border};
@@ -199,4 +245,9 @@ const ListRowDivideWrapper = styled.div`
     props.index !== 0 && `1px solid ${palette.gray.border}`};
   padding-left: ${(props) =>
     props.index !== 0 && props.index !== 5 && props.index !== 6 && "10px"};
+`;
+
+const ListWrapper = styled.div`
+  display: flex;
+  margin: 5px 0px;
 `;

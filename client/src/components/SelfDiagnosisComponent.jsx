@@ -4,17 +4,16 @@ import { palette } from "../styles/GlobalStyles";
 import { useRecoilState } from "recoil";
 import { answerAtom } from "../stores/answerAtom";
 import { questions } from "../assets/questions";
-import instance from "./api";
+import axios from "axios";
 
 const SelfDiagnosisComponent = ({ id }) => {
   const [answers, setAnswers] = useRecoilState(answerAtom);
-
   const [data, setData] = useState([]);
-
+  console.log(id);
   const handleAnswer = (index, value) => {
     const newAnswers = [...answers];
     newAnswers[index] = {
-      questionId: (index + 1).toString(),
+      questionNumber: index + 1,
       answer: value,
     };
     setAnswers(newAnswers);
@@ -24,7 +23,7 @@ const SelfDiagnosisComponent = ({ id }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await instance.post(
+        const response = await axios.post(
           `/doctor/health-check/`,
           { patientId: id },
           {

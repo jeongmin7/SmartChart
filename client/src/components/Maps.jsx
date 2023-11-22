@@ -4,6 +4,7 @@ import Markers from "./Markers";
 import instance from "./api";
 import styled from "styled-components";
 import InfoBox from "./InfoBox";
+import axios from "axios";
 
 const Maps = ({ setIsLoading }) => {
   const [map, setMap] = useState(null);
@@ -16,7 +17,7 @@ const Maps = ({ setIsLoading }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await instance.get("/patient/reservation-map-view/");
+        const response = await axios.get("/patient/reservation-map-view/");
 
         setHospitals(response.data);
       } catch (error) {

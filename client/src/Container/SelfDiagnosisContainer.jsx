@@ -4,24 +4,24 @@ import Button from "../components/Button";
 import { styled } from "styled-components";
 import { useRecoilValue } from "recoil";
 import { answerAtom } from "../stores/answerAtom";
-import instance from "../components/api";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const SelfDiagnosisContainer = () => {
   const answers = useRecoilValue(answerAtom);
 
-  const handleSubmit = () => {
-    instance
-      .post(
-        "/patient/health-check",
-        { answers },
-        {
-          withCredential: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
+  const handleSubmit = async () => {
+    try {
+      await axios.post("/patient/health-check", answers, {
+        headers: {
+          "Content-Type": "application/json",
         },
-      )
-      .then((response) => console.log(response));
+        withCredentials: true,
+      });
+      toast.success("성공적으로 저장되었습니다.");
+    } catch (err) {
+      console.error(err);
+    }
   };
   return (
     <Container>

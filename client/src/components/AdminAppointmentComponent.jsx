@@ -6,77 +6,17 @@ import Modal from "./Modal";
 import SelfDiagnosisComponent from "./SelfDiagnosisComponent";
 import SendSMS from "./SendSMS";
 import instance from "./api";
+import axios from "axios";
 
-const appointments = [
-  {
-    name: "watch",
-    id: 32,
-    paymentStatus: "미완료",
-    reservationStatus: "미완료",
-    reservationTime: "10:00:00",
-    reservationDate: "2023-09-01",
-    phoneNumber: 1111111,
-    patientId: 6,
-  },
-  {
-    name: "watch",
-    id: 31,
-    paymentStatus: "미완료",
-    reservationStatus: "미완료",
-    reservationTime: "09:00:00",
-    reservationDate: "2023-09-01",
-    phoneNumber: 1111111,
-    patientId: 6,
-  },
-  {
-    name: "watch",
-    id: 30,
-    paymentStatus: "미완료",
-    reservationStatus: "미완료",
-    reservationTime: "09:00:00",
-    reservationDate: "2029-08-31",
-    phoneNumber: 1111111,
-    patientId: 6,
-  },
-  {
-    name: "watch",
-    id: 29,
-    paymentStatus: "미완료",
-    reservationStatus: "미완료",
-    reservationTime: "09:00:00",
-    reservationDate: "2023-08-31",
-    phoneNumber: 1111111,
-    patientId: 6,
-  },
-  {
-    name: "watch",
-    id: 28,
-    paymentStatus: "미완료",
-    reservationStatus: "미완료",
-    reservationTime: "18:00:00",
-    reservationDate: "2023-08-31",
-    phoneNumber: 1111111,
-    patientId: 6,
-  },
-  {
-    name: "watch",
-    id: 27,
-    paymentStatus: "미완료",
-    reservationStatus: "미완료",
-    reservationTime: "17:00:00",
-    reservationDate: "2023-08-31",
-    phoneNumber: 1111111,
-    patientId: 6,
-  },
-];
 const AdminAppointmentComponent = () => {
   const navigate = useNavigate();
 
   const [searchUsername, setSearchUsername] = useState("");
   const [searchDate, setSearchDate] = useState("");
   const [filteredAppointments, setFilteredAppointments] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSMSModalOpen, setIsSMSModalOpen] = useState(false);
+  const [SMSInfo, setSMSInfo] = useState({});
+  const [appointments, setAppointments] = useState([]);
   const [appointmentModals, setAppointmentModals] = useState(
     appointments.map(() => false)
   );
@@ -84,14 +24,14 @@ const AdminAppointmentComponent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await instance.get("/doctor/reservation-view", {
+        const response = await axios.get("/doctor/reservation-view", {
           headers: {
             "Content-Type": "application/json",
           },
         });
-        console.log("doctor", response);
+        setAppointments(response.data.data);
       } catch (error) {
-        console.error("An error occurred while fetching data:", error);
+        console.error(error);
       }
     };
 
@@ -107,11 +47,12 @@ const AdminAppointmentComponent = () => {
     setSearchDate(event.target.value);
     filterAppointments(searchUsername, event.target.value);
   };
-
   const filterAppointments = (username, date) => {
     const filtered = appointments.filter((appointment) => {
-      const nameMatch = appointment.name.includes(username);
-      const dateMatch = appointment.reservationDate.includes(date);
+      const nameMatch = username ? appointment.name.includes(username) : true;
+      const dateMatch = date
+        ? appointment.reservationDate.includes(date)
+        : true;
       return nameMatch && dateMatch;
     });
 
@@ -125,30 +66,26 @@ const AdminAppointmentComponent = () => {
     });
   };
 
-  // const handleModal = () => {
-  //   setIsModalOpen(!isModalOpen);
-  // };
   const handleModal = (index) => {
     const updatedModals = [...appointmentModals];
     updatedModals[index] = !updatedModals[index];
     setAppointmentModals(updatedModals);
   };
 
-  const handleSMSModal = () => {
+  const handleSMSModal = ({ appointment } = {}) => {
     setIsSMSModalOpen(!isSMSModalOpen);
+    setSMSInfo(appointment);
   };
 
   useEffect(() => {
     filterAppointments(searchUsername, searchDate);
-  }, [searchUsername, searchDate]);
-
+  }, [searchUsername, searchDate, appointments]);
   return (
     <Container>
       <Wrapper>
         <Header>예약관리</Header>
-
         <Modal isOpen={isSMSModalOpen} handleModal={handleSMSModal}>
-          <SendSMS />
+          <SendSMS SMSInfo={SMSInfo} />
         </Modal>
 
         <Search>
@@ -200,7 +137,7 @@ const AdminAppointmentComponent = () => {
                       height="30px"
                       padding="0"
                       fontSize="12px"
-                      onClick={handleSMSModal}
+                      onClick={() => handleSMSModal({ appointment })}
                     >
                       예약 확정 문자
                     </Button>
@@ -267,6 +204,10 @@ const Container = styled.section`
   width: 100%;
   min-width: 1300px;
   min-height: calc(100vh - 100px);
+  @media screen and (max-width: 1300px) {
+    min-width: 100%;
+    padding: 50px 20px;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -279,6 +220,7 @@ const Wrapper = styled.div`
   max-width: 1500px;
   padding: 100px 200px;
   border-radius: 20px;
+  min-width: 1200px;
 `;
 const Header = styled.div`
   font-weight: bold;
@@ -290,6 +232,7 @@ const Search = styled.div`
   width: 80%;
   justify-content: space-between;
   padding: 2rem;
+  min-width: 700px;
 `;
 const LabelContainer = styled.div`
   display: flex;

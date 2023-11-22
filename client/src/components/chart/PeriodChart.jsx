@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Chart,
   CategoryScale,
@@ -15,7 +15,7 @@ import useActiveChart from "../../hooks/useActiveChart";
 import Button from "../Button";
 import RevenueChart from "./RevenueChart";
 import LatestChart from "./LatestChart";
-import instance from "../api";
+import axios from "axios";
 
 Chart.register(
   CategoryScale,
@@ -27,88 +27,6 @@ Chart.register(
   Legend
 );
 
-const recentPeriod = [
-  {
-    sum: 400,
-    date: "2023-08-09",
-    patientCount: 1,
-  },
-  {
-    sum: 20000,
-    date: "2023-08-08",
-    patientCount: 1,
-  },
-  {
-    sum: 1600000,
-    date: "2023-08-04",
-    patientCount: 1,
-  },
-  {
-    sum: 140000,
-    date: "2023-07-09",
-    patientCount: 1,
-  },
-  {
-    sum: 40000,
-    date: "2023-07-08",
-    patientCount: 1,
-  },
-];
-const salesPeriod = [
-  {
-    sum: 1600000,
-    date: "2023-08-04",
-    patientCount: 1,
-  },
-  {
-    sum: 140000,
-    date: "2023-07-09",
-    patientCount: 1,
-  },
-  {
-    sum: 40000,
-    date: "2023-07-08",
-    patientCount: 1,
-  },
-  {
-    sum: 20000,
-    date: "2023-08-08",
-    patientCount: 1,
-  },
-  {
-    sum: 400,
-    date: "2023-08-09",
-    patientCount: 1,
-  },
-];
-
-const datas = [
-  {
-    sum: 40000,
-    date: "2023-07-08",
-    patientCount: 1,
-  },
-  {
-    sum: 140000,
-    date: "2023-07-09",
-    patientCount: 1,
-  },
-  {
-    sum: 1600000,
-    date: "2023-08-04",
-    patientCount: 1,
-  },
-  {
-    sum: 20000,
-    date: "2023-08-08",
-    patientCount: 1,
-  },
-  {
-    sum: 400,
-    date: "2023-08-09",
-    patientCount: 1,
-  },
-];
 const options = {
   plugins: {
     legend: {
@@ -148,61 +66,59 @@ const options = {
   },
 };
 
-const labels = datas.map((item) => item.date);
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "기간별 매출",
-      data: datas.map((item) => item.sum),
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-      yAxisID: "y-axis-1",
-      type: "line",
-    },
-    {
-      label: "환자수",
-      data: datas.map((item) => item.patientCount),
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      yAxisID: "y-axis-2",
-      type: "bar",
-    },
-  ],
-};
-const PeriodChart = () => {
+const PeriodChart = ({ duration }) => {
   const { activeChart, handleChart } = useActiveChart();
-
+  const [chartData, setChartData] = useState({});
+  const period = chartData.period || [];
+  console.log(period);
+  const labels = period.map((item) => item.date);
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "기간별 매출",
+        data: period.map((item) => item.sum),
+        borderColor: "rgb(53, 162, 235)",
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
+        yAxisID: "y-axis-1",
+        type: "line",
+      },
+      {
+        label: "환자수",
+        data: period.map((item) => item.patientCount),
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        yAxisID: "y-axis-2",
+        type: "bar",
+      },
+    ],
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await instance.post(
-          "/doctor/period-sales",
-          {
-            startDate: "2023-07-01",
-            endDate: "2023-08-31",
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "Cache-Control": "no-cache",
-            },
-          }
-        );
-        console.log("doctor", response);
+        await axios
+          .post("/doctor/period-sales", {
+            startDate: duration.startDate,
+            endDate: duration.endDate,
+          })
+          .then((res) => setChartData(res.data));
       } catch (error) {
-        console.error("An error occurred while fetching data:", error);
+        console.error(error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [duration.endDate, duration.startDate]);
   return (
     <Wrapper>
       <ChartContainer>
         <Line options={options} data={data} />
-        {activeChart === "revenue" && <RevenueChart basisData={salesPeriod} />}
-        {activeChart === "latest" && <LatestChart basisData={recentPeriod} />}
+        {activeChart === "revenue" && (
+          <RevenueChart basisData={chartData.sales} />
+        )}
+        {activeChart === "latest" && (
+          <LatestChart basisData={chartData.recent} />
+        )}
         <Buttons>
           <Button
             width="100px"

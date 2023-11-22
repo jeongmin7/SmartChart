@@ -17,7 +17,7 @@ import LatestChart from "./LatestChart";
 import Button from "../Button";
 import AverageAgeChart from "./AverageAgeChart";
 import PatientGenderTrends from "./PatientGenderTrends";
-import instance from "../api";
+import axios from "axios";
 
 Chart.register(
   CategoryScale,
@@ -26,26 +26,9 @@ Chart.register(
   LineElement,
   Title,
   Tooltip,
-  Legend,
+  Legend
 );
 
-const salesMonth = [
-  {
-    sum: 1620400,
-    year_MONTH: "2023-08",
-    patientCount: 3,
-  },
-  {
-    sum: 180000,
-    year_MONTH: "2023-07",
-    patientCount: 2,
-  },
-  {
-    sum: 800,
-    year_MONTH: "2013-08",
-    patientCount: 2,
-  },
-];
 const options = {
   plugins: {
     legend: {
@@ -108,70 +91,99 @@ const tableDatas = [
   },
 ];
 
-const datas = [
-  {
-    sum: 800,
-    year_MONTH: "2013-08",
-    patientCount: 2,
-  },
-  {
-    sum: 180000,
-    year_MONTH: "2023-07",
-    patientCount: 2,
-  },
-  {
-    sum: 1620400,
-    year_MONTH: "2023-08",
-    patientCount: 3,
-  },
-];
-const recentMonth = [
-  {
-    sum: 1620400,
-    year_MONTH: "2023-08",
-    patientCount: 3,
-  },
-  {
-    sum: 180000,
-    year_MONTH: "2023-07",
-    patientCount: 2,
-  },
-  {
-    sum: 800,
-    year_MONTH: "2013-08",
-    patientCount: 2,
-  },
-];
-const labels = datas.map((item) => item.year_MONTH);
-const data = {
-  labels: labels,
+// const datas = [
+//   {
+//     sum: 800,
+//     year_MONTH: "2013-08",
+//     patientCount: 2,
+//   },
+//   {
+//     sum: 180000,
+//     year_MONTH: "2023-07",
+//     patientCount: 2,
+//   },
+//   {
+//     sum: 1620400,
+//     year_MONTH: "2023-08",
+//     patientCount: 3,
+//   },
+// ];
+// const recentMonth = [
+//   {
+//     sum: 1620400,
+//     year_MONTH: "2023-08",
+//     patientCount: 3,
+//   },
+//   {
+//     sum: 180000,
+//     year_MONTH: "2023-07",
+//     patientCount: 2,
+//   },
+//   {
+//     sum: 800,
+//     year_MONTH: "2013-08",
+//     patientCount: 2,
+//   },
+// ];
+// const labels = datas.map((item) => item.year_MONTH);
+// const data = {
+//   labels: labels,
 
-  datasets: [
-    {
-      label: "월 매출",
-      data: datas.map((item) => item.sum),
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-      yAxisID: "y-axis-1",
-      type: "line",
-    },
-    {
-      label: "환자수",
-      data: datas.map((item) => item.patientCount),
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      yAxisID: "y-axis-2",
-      type: "bar",
-    },
-  ],
-};
+//   datasets: [
+//     {
+//       label: "월 매출",
+//       data: datas.map((item) => item.sum),
+//       borderColor: "rgb(53, 162, 235)",
+//       backgroundColor: "rgba(53, 162, 235, 0.5)",
+//       yAxisID: "y-axis-1",
+//       type: "line",
+//     },
+//     {
+//       label: "환자수",
+//       data: datas.map((item) => item.patientCount),
+//       borderColor: "rgb(255, 99, 132)",
+//       backgroundColor: "rgba(255, 99, 132, 0.5)",
+//       yAxisID: "y-axis-2",
+//       type: "bar",
+//     },
+//   ],
+// };
 
-const MonthlyChart = () => {
+const MonthlyChart = ({
+  datas,
+  salesMonth,
+  recentMonth,
+  gender,
+  averageAge,
+}) => {
   const { activeChart, handleChart } = useActiveChart();
+  const labels = datas.map((item) => item.year_MONTH);
+  const data = {
+    labels: labels,
+
+    datasets: [
+      {
+        label: "월 매출",
+        data: datas.map((item) => item.sum),
+        borderColor: "rgb(53, 162, 235)",
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
+        yAxisID: "y-axis-1",
+        type: "line",
+      },
+      {
+        label: "환자수",
+        data: datas.map((item) => item.patientCount),
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        yAxisID: "y-axis-2",
+        type: "bar",
+      },
+    ],
+  };
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await instance.get(`/doctor/month-sales-view`, {
+      const response = await axios.get(`/doctor/month-sales-view`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -185,9 +197,8 @@ const MonthlyChart = () => {
     <Wrapper>
       <ChartContainer>
         <Line data={data} options={options} />
-        {activeChart === "gender" && <PatientGenderTrends />}
-        {activeChart === "averageAge" && <AverageAgeChart />}
-
+        {activeChart === "gender" && <PatientGenderTrends data={gender} />}
+        {activeChart === "averageAge" && <AverageAgeChart data={averageAge} />}
         {activeChart === "revenue" && <RevenueChart basisData={salesMonth} />}
         {activeChart === "latest" && <LatestChart basisData={recentMonth} />}
 

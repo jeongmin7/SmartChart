@@ -30,6 +30,7 @@ import { userRoleAtom } from "../stores/userInfo";
 import { useRecoilState } from "recoil";
 import kakao from "../assets/kakao_login_medium_wide.png";
 import styled from "styled-components";
+import axios from "axios";
 
 const getCookie = (name) => {
   const value = `; ${document.cookie}`;
@@ -50,7 +51,6 @@ const LoginComponent = () => {
   const [emailAddress, setEmailAddress] = useState("");
   const [userRole, setUserRole] = useRecoilState(userRoleAtom);
 
-  // const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   const onChange = (e) => {
     const {
       target: { name, value },
@@ -88,13 +88,15 @@ const LoginComponent = () => {
   const handlePassword = () => {
     setFindPassword(!findPassword);
   };
-
+  // 쿠키 만료 날짜 설정 ( 7일 후로 설정)
+  const expirationDate = new Date();
+  expirationDate.setDate(expirationDate.getDate() + 7);
   const userLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     if (isDoctor) {
       try {
-        const response = await instance.post(
+        const response = await axios.post(
           "/doctor/login",
           {
             email: email,
@@ -112,22 +114,15 @@ const LoginComponent = () => {
           setIsLoading(false);
           navigate("/hospitalpage");
           setUserRole(response.data.role);
+          const session = response.data.session;
+
+          document.cookie = `session=${session}; expires=${expirationDate.toUTCString()}; path=/`;
         }
       } catch (error) {
-        if (error.response && error.response.status === 405) {
+        if (error.response || error.response.status === 405) {
           toast.error("이메일, 비밀번호, 환자구별을 확인해주세요");
         }
       }
-
-      // .then((response) => {
-      //   const token = response.data.token.token;
-
-      // 쿠키 만료 날짜 설정 ( 7일 후로 설정)
-      const expirationDate = new Date();
-      expirationDate.setDate(expirationDate.getDate() + 7);
-
-      //   // 쿠키 설정
-      //   document.cookie = `token=${token}; expires=${expirationDate.toUTCString()}; path=/`;
 
       if (isRememberMe) {
         // 이메일을 쿠키로 저장
@@ -139,7 +134,7 @@ const LoginComponent = () => {
       // });
     } else {
       try {
-        const response = await instance.post(
+        const response = await axios.post(
           "/patient/login",
           {
             email: email,
@@ -181,13 +176,12 @@ const LoginComponent = () => {
     }
   };
 
-  // Todo:
   // FIXME:비밀번호 찾기
   const findPasswordButton = async (e) => {
     // TODO:실제 이메일만 갈 수 있으시 validation 체크 필요
     e.preventDefault();
 
-    await instance
+    await axios
       .post(
         "/patient/sendEmail",
         {
@@ -208,6 +202,20 @@ const LoginComponent = () => {
   const loginKakao = () => {
     console.log("Login");
   };
+  // "/"페이지 접근 막기
+  useEffect(() => {
+    const session = document.cookie.includes("session");
+    const token = document.cookie.includes("token");
+
+    if (session || token) {
+      if (userRole === "DOCTOR") {
+        navigate("/hospitalPage");
+      } else {
+        console.log("patient");
+        navigate("/myPage");
+      }
+    }
+  }, [navigate, userRole]);
 
   return (
     <>
@@ -270,7 +278,7 @@ const LoginComponent = () => {
         )}
         <HelpContainer>
           <Password onClick={handlePassword}>비밀번호 찾기</Password>
-          <SignupLink to="/join-view">회원가입하기</SignupLink>
+          <SignupLink to="/signup">회원가입하기</SignupLink>
         </HelpContainer>
         {findPassword === true && (
           <Modal isOpen={findPassword} handleModal={handlePassword}>
@@ -320,7 +328,7 @@ const LoginComponent = () => {
             disabled={error?.length > 0}
           />
           {!isDoctor && (
-            <Kakao href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=338b152f34fe502634c3e709272cd726&redirect_uri=http://localhost:8080/auth/kakao/callback">
+            <Kakao href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=338b152f34fe502634c3e709272cd726&redirect_uri=http://localhost:3000/auth/kakao/callback">
               <img src={kakao} alt="카카오 로그인" onClick={loginKakao} />
             </Kakao>
           )}

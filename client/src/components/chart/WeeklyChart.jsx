@@ -15,7 +15,7 @@ import useActiveChart from "../../hooks/useActiveChart";
 import RevenueChart from "./RevenueChart";
 import LatestChart from "./LatestChart";
 import Button from "../Button";
-import instance from "../api";
+import axios from "axios";
 
 Chart.register(
   CategoryScale,
@@ -24,73 +24,73 @@ Chart.register(
   LineElement,
   Title,
   Tooltip,
-  Legend,
+  Legend
 );
 
-const recentWeek = [
-  {
-    sum: 20400,
-    start: "2023-08-06",
-    end: "2023-08-12",
-    patientCount: 2,
-  },
-  {
-    sum: 1600000,
-    start: "2023-07-30",
-    end: "2023-08-05",
-    patientCount: 1,
-  },
-  {
-    sum: 140000,
-    start: "2023-07-09",
-    end: "2023-07-15",
-    patientCount: 1,
-  },
-  {
-    sum: 40000,
-    start: "2023-07-02",
-    end: "2023-07-08",
-    patientCount: 1,
-  },
-  {
-    sum: 800,
-    start: "2013-08-04",
-    end: "2013-08-10",
-    patientCount: 2,
-  },
-];
-const salesWeek = [
-  {
-    sum: 1600000,
-    start: "2023-07-30",
-    end: "2023-08-05",
-    patientCount: 1,
-  },
-  {
-    sum: 140000,
-    start: "2023-07-09",
-    end: "2023-07-15",
-    patientCount: 1,
-  },
-  {
-    sum: 40000,
-    start: "2023-07-02",
-    end: "2023-07-08",
-    patientCount: 1,
-  },
-  {
-    sum: 20400,
-    start: "2023-08-06",
-    end: "2023-08-12",
-    patientCount: 2,
-  },
-  {
-    sum: 800,
-    start: "2013-08-04",
-    end: "2013-08-10",
-    patientCount: 2,
-  },
-];
+// const recentWeek = [
+//   {
+//     sum: 20400,
+//     start: "2023-08-06",
+//     end: "2023-08-12",
+//     patientCount: 2,
+//   },
+//   {
+//     sum: 1600000,
+//     start: "2023-07-30",
+//     end: "2023-08-05",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 140000,
+//     start: "2023-07-09",
+//     end: "2023-07-15",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 40000,
+//     start: "2023-07-02",
+//     end: "2023-07-08",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 800,
+//     start: "2013-08-04",
+//     end: "2013-08-10",
+//     patientCount: 2,
+//   },
+// ];
+// const salesWeek = [
+//   {
+//     sum: 1600000,
+//     start: "2023-07-30",
+//     end: "2023-08-05",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 140000,
+//     start: "2023-07-09",
+//     end: "2023-07-15",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 40000,
+//     start: "2023-07-02",
+//     end: "2023-07-08",
+//     patientCount: 1,
+//   },
+//   {
+//     sum: 20400,
+//     start: "2023-08-06",
+//     end: "2023-08-12",
+//     patientCount: 2,
+//   },
+//   {
+//     sum: 800,
+//     start: "2013-08-04",
+//     end: "2013-08-10",
+//     patientCount: 2,
+//   },
+// ];
 
 const options = {
   plugins: {
@@ -131,89 +131,42 @@ const options = {
   },
 };
 
-const datas = [
-  {
-    sum: 800,
-    start: "2013-08-04",
-    end: "2013-08-10",
-    patientCount: 2,
-  },
-  {
-    sum: 40000,
-    start: "2023-07-02",
-    end: "2023-07-08",
-    patientCount: 1,
-  },
-  {
-    sum: 140000,
-    start: "2023-07-09",
-    end: "2023-07-15",
-    patientCount: 1,
-  },
-  {
-    sum: 1600000,
-    start: "2023-07-30",
-    end: "2023-08-05",
-    patientCount: 1,
-  },
-  {
-    sum: 20400,
-    start: "2023-08-06",
-    end: "2023-08-12",
-    patientCount: 2,
-  },
-];
-
-const labels = datas.map((item) => {
-  const startDate = item.start;
-  const endDate = item.end;
-  const dateRange = `${startDate} ~ ${endDate}`;
-  return dateRange;
-});
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "주간 매출",
-      data: datas.map((item) => item.sum),
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-      yAxisID: "y-axis-1",
-      type: "line",
-    },
-    {
-      label: "환자수",
-      data: datas.map((item) => item.patientCount),
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      yAxisID: "y-axis-2",
-      type: "bar",
-    },
-  ],
-};
-
-const WeeklyChart = () => {
+const WeeklyChart = ({ datas, salesWeek, recentWeek }) => {
   const { activeChart, handleChart } = useActiveChart(); // 커스텀 훅 사용
+  const labels = datas.map((item) => {
+    const startDate = item.start;
+    const endDate = item.end;
+    const dateRange = `${startDate} ~ ${endDate}`;
+    return dateRange;
+  });
 
-  useEffect(() => {
-    const fetchData = () => {
-      instance
-        .get("/doctor/month-sales-view", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => console.log(response));
-    };
-    fetchData();
-  }, []);
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "주간 매출",
+        data: datas.map((item) => item.sum),
+        borderColor: "rgb(53, 162, 235)",
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
+        yAxisID: "y-axis-1",
+        type: "line",
+      },
+      {
+        label: "환자수",
+        data: datas.map((item) => item.patientCount),
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        yAxisID: "y-axis-2",
+        type: "bar",
+      },
+    ],
+  };
   return (
     <Wrapper>
       <ChartContainer>
         <Line options={options} data={data} />
-        {activeChart === "revenue" && <RevenueChart basisData={recentWeek} />}
-        {activeChart === "latest" && <LatestChart basisData={salesWeek} />}
+        {activeChart === "revenue" && <RevenueChart basisData={salesWeek} />}
+        {activeChart === "latest" && <LatestChart basisData={recentWeek} />}
         <Buttons>
           <Button
             width="100px"
