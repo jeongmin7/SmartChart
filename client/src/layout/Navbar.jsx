@@ -5,20 +5,28 @@ import { Link, useLocation } from "react-router-dom";
 
 import { path } from "../modules/define/path";
 import NavItem from "../components/NavItem";
-import instance from "../components/api";
+import { useRecoilValue } from "recoil";
+import { userInfoAtom, userRoleAtom } from "../stores/userInfo";
 
 const NavBar = () => {
   const pathname = useLocation().pathname;
   const [mobileMenu, setMobileMenu] = useState(false);
+  //   const userRole = useRecoilValue(userRoleAtom);
+  // (userRole.role);
   const handleMenu = () => {
     setMobileMenu(!mobileMenu);
   };
 
-  if (pathname === "/" || pathname === "/signup" || pathname === " ") {
+  if (
+    pathname === "/" ||
+    pathname === "/signup" ||
+    pathname === " " ||
+    pathname === "/auth/kakao/callback"
+  ) {
     return null;
   }
   return (
-    <NavBarContainer className="navbar-container">
+    <NavBarContainer>
       <Wrapper>
         <NavLink to={path.home}>
           <Logo nav="true" />

@@ -1,6 +1,6 @@
 export const path = {
-  home: "/doctor/login-view",
-  signUp: "/doctor/join-view",
+  home: "/",
+  signUp: "/signup",
   selfDiagnosis: "/selfDiagnosis",
   appointment: "/appointment/:id",
   map: "/map",
@@ -15,4 +15,5 @@ export const path = {
   billing: "/billing",
   search: "/searchHospital",
   medicalcaremanagement: "/medicalcaremanagement/:id",
+  kakao: "/auth/kakao/callback",
 };
