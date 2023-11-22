@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
-import instance from "./api";
+import axios from "axios";
+import Invoice from "./\bInvoice";
 
-const PatientBill = () => {
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const id = searchParams.get("id");
+const PatientBill = ({ id }) => {
   const [detailCost, setDetailCost] = useState([]);
-
+  const [patient, setPatient] = useState({});
+  const [total, setTotal] = useState(0);
+  const isDoctor = false;
+  console.log("id", id);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await instance.post(
+        const response = await axios.post(
           "/patient/cost",
           {
-            reservationId: 32,
+            reservationId: id,
           },
           {
             withCredentials: true,
@@ -24,6 +24,8 @@ const PatientBill = () => {
           }
         );
         setDetailCost(response.data.data2);
+        setPatient(response.data.data[0]);
+        setTotal(response.data.date3[0].sum);
       } catch (error) {
         console.error(error);
       }
@@ -34,7 +36,14 @@ const PatientBill = () => {
   return (
     <Container>
       <Header>의료비 청구</Header>
-      <Wrapper>
+      <Invoice
+        isDoctor={isDoctor}
+        detailCost={detailCost}
+        patientInfo={patient}
+        sum={total}
+        id={id}
+      />
+      {/* <Wrapper>
         <GridItem header="true">
           <Section>진료비</Section>
         </GridItem>
@@ -46,8 +55,29 @@ const PatientBill = () => {
           </GridItem>
           <GridItem>
             <Title>병원명</Title>
-            <Content>test</Content>
+            <Content>{patient.hospitalName}</Content>
           </GridItem>
+          <GridItem>
+            <Title>진료날짜</Title>
+            <Content>{patient.reservationDate}</Content>
+          </GridItem>
+          <GridItem>
+            <Title>환자성명</Title>
+            <Content>{patient.name}</Content>
+          </GridItem>
+          <GridItem>
+            <Title>환자 전화번호</Title>
+            <Content>{patient.phoneNumber}</Content>
+          </GridItem>
+          <GridItem>
+            <Title>환자 성별</Title>
+            <Content>{patient.gender}</Content>
+          </GridItem>
+          <GridItem>
+            <Title>환자 나이</Title>
+            <Content>{patient.age}</Content>
+          </GridItem>
+          <GridItem></GridItem>
         </GridContainer>
         <GridItem header="true" className="borderTop">
           <Section>치료 내역서</Section>
@@ -63,7 +93,7 @@ const PatientBill = () => {
               ))}
               <GridItem className="noBorderBottom">
                 <Title>총금액</Title>
-                {/* <Content>{total[0].sum}원</Content> */}
+                <Content>{total}원</Content>
               </GridItem>
             </div>
           ) : (
@@ -73,11 +103,11 @@ const PatientBill = () => {
           {detailCost.length === 0 && (
             <GridItem className="noBorderBottom">
               <Title>총금액</Title>
-              {/* <Content>{totalCost}원</Content> */}
+              <Content>{total}원</Content>
             </GridItem>
           )}
         </GridContainer>
-      </Wrapper>
+      </Wrapper> */}
     </Container>
   );
 };
