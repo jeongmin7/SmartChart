@@ -56,7 +56,7 @@ const NavBarContainer = styled.nav`
   position: relative;
   z-index: 10;
   width: 100%;
-  height: 60px;
+  height: 80px;
   color: white;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 `;
@@ -65,6 +65,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 100%;
 `;
 const MobileS = styled.div`
   font-size: 1.5rem;

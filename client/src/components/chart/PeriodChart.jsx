@@ -16,6 +16,7 @@ import Button from "../Button";
 import RevenueChart from "./RevenueChart";
 import LatestChart from "./LatestChart";
 import axios from "axios";
+import styled from "styled-components";
 
 Chart.register(
   CategoryScale,
@@ -70,8 +71,8 @@ const PeriodChart = ({ duration }) => {
   const { activeChart, handleChart } = useActiveChart();
   const [chartData, setChartData] = useState({});
   const period = chartData.period || [];
-  console.log(period);
   const labels = period.map((item) => item.date);
+
   const data = {
     labels,
     datasets: [
@@ -112,34 +113,50 @@ const PeriodChart = ({ duration }) => {
   return (
     <Wrapper>
       <ChartContainer>
-        <Line options={options} data={data} />
-        {activeChart === "revenue" && (
-          <RevenueChart basisData={chartData.sales} />
+        {chartData.period.length === 0 ? (
+          <Nothing>데이터가 없습니다.</Nothing>
+        ) : (
+          <>
+            <Line options={options} data={data} />
+            {activeChart === "revenue" && (
+              <RevenueChart basisData={chartData.sales} />
+            )}
+            {activeChart === "latest" && (
+              <LatestChart basisData={chartData.recent} />
+            )}
+            <Buttons>
+              <Button
+                width="100px"
+                padding="10px"
+                borderRadius="7px"
+                onClick={() => handleChart("revenue")}
+              >
+                매출별
+              </Button>
+              <Button
+                width="100px"
+                padding="10px"
+                borderRadius="7px"
+                onClick={() => handleChart("latest")}
+              >
+                최신순
+              </Button>
+            </Buttons>
+          </>
         )}
-        {activeChart === "latest" && (
-          <LatestChart basisData={chartData.recent} />
-        )}
-        <Buttons>
-          <Button
-            width="100px"
-            padding="10px"
-            borderRadius="7px"
-            onClick={() => handleChart("revenue")}
-          >
-            매출별
-          </Button>
-          <Button
-            width="100px"
-            padding="10px"
-            borderRadius="7px"
-            onClick={() => handleChart("latest")}
-          >
-            최신순
-          </Button>
-        </Buttons>
       </ChartContainer>
     </Wrapper>
   );
 };
 
 export default PeriodChart;
+
+const Nothing = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 600px;
+  font-size: 20px;
+  font-weight: 600;
+`;
