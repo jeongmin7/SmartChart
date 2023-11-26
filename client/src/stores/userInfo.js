@@ -17,14 +17,11 @@ export const hospitalAtom = atom({
   key: "hospitalInfo",
   default: {
     name: "",
-    buildingName: "",
-    postalCode: "",
     address: "",
-    detailAddress: "",
-    specialty: "",
     mapx: "",
     mapy: "",
     tel: "",
+    category: "",
   },
 });
 

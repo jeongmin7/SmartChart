@@ -1,131 +1,79 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
-import { useDaumPostcodePopup } from "react-daum-postcode";
-import { Form, Label, Section } from "../styles/CommonStyle";
 import { useRecoilState } from "recoil";
 import { hospitalAtom } from "../stores/userInfo";
 import Button from "./Button";
-import instance from "./api";
 import axios from "axios";
+import { palette } from "../styles/GlobalStyles";
 
 const SearchHospital = () => {
-  // const [hospitalInfo, setHospitalInfo] = useState("");
+  const [hospitalInfo, setHospitalInfo] = useRecoilState(hospitalAtom);
+  const [selectedHospitalInfo, setSelectedHospitalInfo] = useState(null);
 
-  // const onChange = (e) => {
-  //   const {
-  //     target: { name, value },
-  //   } = e;
-  //   setHospitalInfo((prevUserInfo) => ({
-  //     ...prevUserInfo,
-  //     [name]: value,
-  //   }));
-  // };
-  // const addressModalopen = useDaumPostcodePopup();
+  const handleSelectHospital = (selectedHospital) => {
+    setHospitalInfo((prevHospitalInfo) => ({
+      ...prevHospitalInfo,
+      name: selectedHospital.title.replace(/<\/?b>/g, ""),
+      address: selectedHospital.address,
+      tel: selectedHospital.telephone,
+      mapy: parseInt(selectedHospital.mapy),
+      mapx: parseInt(selectedHospital.mapx),
+      category: selectedHospital.category.split(">")[1].trim(),
+    }));
+    setSelectedHospitalInfo(selectedHospital);
+  };
 
-  // const removeDecimal = (number) => {
-  //   return number.toString().replace(/\./g, "");
-  // };
-  // const searchAddress = (data) => {
-  //   const geocoder = new window.kakao.maps.services.Geocoder();
-  //   geocoder.addressSearch(data.address, function (results, status) {
-  //     if (status === window.kakao.maps.services.Status.OK) {
-  //       const result = results[0];
-  //       const coords = new window.kakao.maps.LatLng(result.y, result.x);
-  //       setHospitalInfo((prev) => ({
-  //         ...prev,
-  //         mapx: removeDecimal(coords.Ma),
-  //         mapy: removeDecimal(coords.La),
-  //       }));
-  //     }
-  //   });
-
-  //   setHospitalInfo((prev) => ({
-  //     ...prev,
-  //     buildingName: data.buildingName,
-  //     postalCode: data.zonecode,
-  //     address: data.address,
-  //   }));
-  // };
-
-  // const handleClick = () => {
-  //   addressModalopen({ onComplete: searchAddress });
-  // };
-
-  const [hospitalData, setHospitalData] = useState([]);
+  const [data, setData] = useState([]);
   const [query, setQuery] = useState("");
 
   const onChange = (e) => {
     setQuery(e.target.value);
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     try {
-      axios
-        .post(
-          "/doctor/naver",
-          { query: query },
-          { headers: { "Content-Type": "application/json" } }
-        )
-        .then((response) => console.log(response));
+      const response = await axios.post(
+        "/doctor/naver",
+        { query: query },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      setData(response.data.items);
     } catch (err) {
       console.log(err);
     }
   };
+
   return (
     <>
-      <Form>
-        <div
-          style={{
-            fontWeight: 600,
-            fontSize: "1.1rem",
-            marginBottom: "10px",
-            marginTop: "10px",
-          }}
+      <div>병원 등록하기</div>
+      <Section>
+        <DoctorInput type="text" onChange={onChange} />
+        <Button width="90px" height="40px" onClick={handleSearch}>
+          검색하기
+        </Button>
+      </Section>
+      {data.map((hospital, index) => (
+        <HospitalItem
+          key={index}
+          isSelected={selectedHospitalInfo === hospital}
         >
-          병원 등록하기
-        </div>
-        <Section>
-          <DoctorInput type="text" onChange={onChange} />
-          <Button onClick={handleSearch}>검색하기</Button>
-        </Section>
-        {/* <Label htmlFor="name">병원 이름 </Label>
-          <DoctorInput name="name" id="name" onChange={onChange} />
-        </Section>
-        <Section>
-          <Label>병원 주소</Label>
-         */}
-
-        {/* <DoctorInput
-            name="postalCode"
-            id="postalCode"
-            value={hospitalInfo.postalCode}
-            onClick={handleClick}
-            required
-          />
-
-          <DoctorInput
-            name="address"
-            id="address"
-            value={hospitalInfo.address}
-            onClick={handleClick}
-            required
-          />
-          <DoctorInput
-            name="detailAddress"
-            id="detailAddress"
-            onChange={onChange}
-          /> */}
-        {/* </Section>
-        <Section>
-          <Label htmlFor="tel">병원 전화번호 </Label>
-          <DoctorInput name="tel" id="tel" onChange={onChange} />
-        </Section>
-        <Section>
-          <Label>진료과목</Label>
-
-          <DoctorInput name="specialty" id="specialty" onChange={onChange} />
-        </Section> */}
-      </Form>
+          <HospitalName>{hospital.title.replace(/<\/?b>/g, "")}</HospitalName>
+          <HospitalInfo>
+            진료과:{hospital.category.split(">")[1].trim()}
+          </HospitalInfo>
+          <HospitalInfo>주소: {hospital.address}</HospitalInfo>
+          <Button
+            width="60px"
+            fontSize="12px"
+            padding="10px"
+            borderRadius="8px"
+            onClick={() => handleSelectHospital(hospital)}
+          >
+            확인
+          </Button>
+        </HospitalItem>
+      ))}
     </>
   );
 };
@@ -141,4 +89,29 @@ const DoctorInput = styled.input`
   width: 96%;
   max-width: 680px;
   margin-bottom: 5px;
+`;
+const Section = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+`;
+const HospitalItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  border: ${(props) =>
+    props.isSelected ? `4px solid ${palette.primary.blue}` : "1px solid #ccc"};
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+  min-height: 150px;
+  justify-content: space-between;
+`;
+const HospitalName = styled.div`
+  font-weight: 600;
+  font-size: 30px;
+`;
+const HospitalInfo = styled.div`
+  font-size: 16px;
 `;

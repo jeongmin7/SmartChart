@@ -3,21 +3,19 @@ import Input from "./Input";
 import Button from "./Button";
 import { palette } from "../styles/GlobalStyles";
 import SearchHospital from "./SearchHospital";
-import instance from "./api";
 import {
   Error,
-  Form,
   Label,
   LabelWrapper,
   Section,
   SelectWrapper,
-  SubmitButton,
 } from "../styles/CommonStyle";
 import { useRecoilValue } from "recoil";
 import { hospitalAtom } from "../stores/userInfo";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import styled from "styled-components";
 
 const SignUpForm = () => {
   const navigate = useNavigate();
@@ -28,7 +26,6 @@ const SignUpForm = () => {
 
   const [isDoctor, setIsDoctor] = useState(false);
   const hospitalInfo = useRecoilValue(hospitalAtom);
-  const fullAddress = `${hospitalInfo.address} ${hospitalInfo.detailAddress}`;
 
   const emailCheck = async () => {
     setIsEmailDuplicate(true);
@@ -179,6 +176,7 @@ const SignUpForm = () => {
         axios
           .post(
             "/doctor/join",
+
             {
               email: userInfo.email,
               password: userInfo.password,
@@ -187,11 +185,11 @@ const SignUpForm = () => {
               age: userInfo.age,
               phoneNumber: userInfo.phoneNumber,
               hospitalName: hospitalInfo.name,
-              hospitalAddress: fullAddress,
               mapx: parseInt(hospitalInfo.mapx),
               mapy: parseInt(hospitalInfo.mapy),
-              category: hospitalInfo.specialty,
+              category: hospitalInfo.category,
               hospitalPhoneNumber: hospitalInfo.tel,
+              hospitalAddress: hospitalInfo.address,
             },
             {
               withCredential: true,
@@ -211,8 +209,8 @@ const SignUpForm = () => {
     } catch (e) {}
   };
   return (
-    <>
-      <Form onSubmit={handleSubmit}>
+    <div>
+      <Wrapper>
         <h1>회원가입</h1>
         <div>아래 정보를 입력해주세요.</div>
         <Section>
@@ -238,7 +236,7 @@ const SignUpForm = () => {
             </LabelWrapper>
           </SelectWrapper>
         </Section>
-        <Section email>
+        <Section email="true">
           <div style={{ flex: 1 }}>
             <Label htmlFor="email">이메일</Label>
             <Input
@@ -253,8 +251,8 @@ const SignUpForm = () => {
             />
           </div>
           <Button
-            width="10%"
-            height="30px"
+            width="80px"
+            height="40px"
             padding="0"
             fontSize="12px"
             borderRadius="5px"
@@ -351,15 +349,26 @@ const SignUpForm = () => {
         </Section>
         {isDoctor === true && <SearchHospital />}
         <Section>
-          <SubmitButton
-            type="submit"
-            value="회원가입"
+          <Button
+            width="100px"
             disabled={emailError?.length > 0}
-          />
+            onClick={handleSubmit}
+          >
+            회원가입
+          </Button>
         </Section>
-      </Form>
-    </>
+      </Wrapper>
+    </div>
   );
 };
 
 export default SignUpForm;
+
+const Wrapper = styled.div`
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  padding: 2rem;
+`;
