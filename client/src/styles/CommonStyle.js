@@ -137,3 +137,32 @@ export const SignupLink = styled(Link)`
 export const Password = styled.div`
   color: ${palette.gray.dark};
 `;
+export const Container = styled.section`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 900px;
+  min-height: calc(100vh - 80px);
+`;
+
+export const Wrapper = styled.div`
+  display: flex;
+  width: 80%;
+  min-height: calc(100vh - 100px);
+  min-width: 500px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 200px 100px;
+  border-radius: 15px;
+  position: relative;
+  border: 1px solid ${palette.gray.border};
+`;
+export const Header = styled.div`
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-size: 25px;
+  position: absolute;
+  top: 40px;
+`;

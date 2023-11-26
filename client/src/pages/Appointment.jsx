@@ -10,6 +10,7 @@ import { useRecoilValue } from "recoil";
 import { dateAtom, selectedOptionState } from "../stores/dateAtom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Container, Header, Wrapper } from "../styles/CommonStyle";
 
 const availableTimes = [
   "09:00:00",
@@ -76,8 +77,8 @@ const Appointment = () => {
       .catch((error) => toast.error("예약이 되지 않았습니다."));
   };
   return (
-    <AppointmentContainer>
-      <AppointmentWrapper>
+    <Container>
+      <Wrapper>
         <Header>병원 예약하기</Header>
 
         {/* <InfoWrapper> */}
@@ -142,8 +143,8 @@ const Appointment = () => {
         >
           예약하기
         </Button>
-      </AppointmentWrapper>
-    </AppointmentContainer>
+      </Wrapper>
+    </Container>
   );
 };
 
@@ -179,12 +180,12 @@ const AppointmentWrapper = styled.div`
   } */
 `;
 
-const Header = styled.div`
-  /* background-color: red; */
-  font-weight: bold;
-  margin-bottom: 20px;
-  font-size: 25px;
-`;
+// const Header = styled.div`
+//   background-color: red;
+//   font-weight: bold;
+//   margin-bottom: 20px;
+//   font-size: 25px;
+// `;
 
 const ColumnHalfWrapper = styled.div`
   display: flex;

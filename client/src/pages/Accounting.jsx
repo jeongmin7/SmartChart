@@ -7,6 +7,8 @@ import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import PeriodChart from "../components/chart/PeriodChart";
 import axios from "axios";
+import Table from "../components/chart/Table";
+import { Container, Header, Wrapper } from "../styles/CommonStyle";
 
 const Accounting = () => {
   const [selectedChart, setSelectedChart] = useState(null);
@@ -24,44 +26,59 @@ const Accounting = () => {
       [name]: value,
     }));
   };
+
+  const isSearchButtonDisabled = !duration.startDate || !duration.endDate;
+
   const handleChartSelection = (chartType) => {
     switch (chartType) {
       case "주간 매출":
         setSelectedChart(
-          <WeeklyChart
-            datas={data.week}
-            salesWeek={data.salesWeek}
-            recentWeek={data.recentWeek}
-          />
+          <>
+            <WeeklyChart
+              datas={data.week}
+              salesWeek={data.salesWeek}
+              recentWeek={data.recentWeek}
+            />
+            <Table tableData={data.week} />
+          </>
         );
         break;
       case "연 매출":
         setSelectedChart(
-          <YearlyChart
-            datas={data.year}
-            salesYear={data.salesYear}
-            recentYear={data.recentYear}
-          />
+          <>
+            <YearlyChart
+              datas={data.year}
+              salesYear={data.salesYear}
+              recentYear={data.recentYear}
+            />
+            <Table tableData={data.year} />
+          </>
         );
         break;
       case "일 매출":
         setSelectedChart(
-          <DailyChart
-            datas={data.date}
-            recentDate={data.recentDate}
-            salesDate={data.salesDate}
-          />
+          <>
+            <DailyChart
+              datas={data.date}
+              recentDate={data.recentDate}
+              salesDate={data.salesDate}
+            />
+            <Table tableData={data.date} />
+          </>
         );
         break;
       case "월별 매출":
         setSelectedChart(
-          <MonthlyChart
-            datas={data.month}
-            salesMonth={data.salesMonth}
-            recentMonth={data.recentMonth}
-            gender={data.genderMonth}
-            averageAge={data.averageAge}
-          />
+          <>
+            <MonthlyChart
+              datas={data.month}
+              salesMonth={data.salesMonth}
+              recentMonth={data.recentMonth}
+              gender={data.genderMonth}
+              averageAge={data.averageAgeMonth}
+            />
+            <Table tableData={data.month} />
+          </>
         );
         break;
 
@@ -89,77 +106,90 @@ const Accounting = () => {
     };
     fetchData();
   }, []);
-  // console.log(data);
   return (
     <Container>
-      <Header>매출관리</Header>
-      <Buttons>
-        <Button onClick={() => handleChartSelection("월별 매출")}>
-          월별 매출
-        </Button>
-        <Button onClick={() => handleChartSelection("주간 매출")}>
-          주간 매출
-        </Button>
-        <Button onClick={() => handleChartSelection("연 매출")}>연 매출</Button>
-        <Button onClick={() => handleChartSelection("일 매출")}>일 매출</Button>
-        <Duration>
-          <input
-            type="date"
-            name="startDate"
-            value={duration.startDate}
-            onChange={handleDateChange}
-          />
-          ~
-          <input
-            type="date"
-            name="endDate"
-            value={duration.endDate}
-            onChange={handleDateChange}
-          />
-          <Button onClick={() => handleChartSelection("기간별")}>검색</Button>
-        </Duration>
-      </Buttons>
-      {selectedChart}
+      <Wrapper>
+        <Header>매출관리</Header>
+        <Buttons>
+          <Button onClick={() => handleChartSelection("월별 매출")}>
+            월별 매출
+          </Button>
+          <Button onClick={() => handleChartSelection("주간 매출")}>
+            주간 매출
+          </Button>
+          <Button onClick={() => handleChartSelection("연 매출")}>
+            연 매출
+          </Button>
+        </Buttons>
+        <Buttons second="true">
+          <Button onClick={() => handleChartSelection("일 매출")}>
+            일 매출
+          </Button>
+          <Duration>
+            <InputContainer>
+              <DateInput
+                type="date"
+                name="startDate"
+                value={duration.startDate}
+                onChange={handleDateChange}
+              />
+              ~
+              <DateInput
+                type="date"
+                name="endDate"
+                value={duration.endDate}
+                onChange={handleDateChange}
+              />
+            </InputContainer>
+            <Button
+              onClick={() => handleChartSelection("기간별")}
+              disabled={isSearchButtonDisabled}
+            >
+              검색
+            </Button>
+          </Duration>
+        </Buttons>
+        {selectedChart}
+      </Wrapper>
     </Container>
   );
 };
 
 export default Accounting;
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: calc(100vh-100px);
-  min-width: 700px;
-`;
 
-const Header = styled.div`
-  font-weight: bold;
-  margin: 100px 0px 40px 0px;
-  font-size: 25px;
-`;
 const Buttons = styled.div`
   display: grid;
   width: 60%;
   padding: 2rem;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: ${({ second }) =>
+    second ? "1fr 2fr" : "repeat(3, 1fr)"};
   gap: 20px;
 `;
 const Button = styled.button`
-  background-color: #1798e1;
+  background-color: ${({ disabled }) => (disabled ? "#b0b0b0" : "#1798e1")};
   border: none;
   padding: 0.5rem 1rem;
-  color: ${palette.white};
+  color: ${({ disabled }) => (disabled ? "#666" : palette.white)};
   font-weight: 700;
   height: 2.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
   min-width: 120px;
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+`;
+
+const InputContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const DateInput = styled.input`
+  width: 100%;
+  height: 2.5rem;
 `;
 const Duration = styled.div`
-  grid-column: 2 span;
-  display: flex;
-  /* justify-content: space-between; */
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  align-items: center;
 `;

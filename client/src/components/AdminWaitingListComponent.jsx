@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import axios from "axios";
+import { Header, Wrapper, Container } from "../styles/CommonStyle";
 
 const AdminWaitingListComponent = () => {
   const [appointment, setAppointment] = useState([]);
@@ -137,38 +138,13 @@ const AdminWaitingListComponent = () => {
     </Container>
   );
 };
-const Container = styled.section`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  min-width: 1300px;
-  min-height: calc(100vh - 100px);
-`;
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  max-width: 1500px;
-  padding: 100px 200px;
-  border-radius: 20px;
-`;
 
-const Header = styled.div`
-  font-weight: bold;
-  margin-bottom: 20px;
-  font-size: 25px;
-`;
 const ColumnContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
   min-width: 1200px;
-  min-height: 500px;
+  min-height: 700px;
 `;
 
 const Today = styled.div`
@@ -186,6 +162,7 @@ const Today = styled.div`
 const Columns = styled.div`
   display: flex;
   justify-content: space-between;
+  min-height: 600px;
 `;
 
 const Column = styled.div`
