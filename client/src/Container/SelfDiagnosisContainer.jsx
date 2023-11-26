@@ -6,8 +6,10 @@ import { useRecoilValue } from "recoil";
 import { answerAtom } from "../stores/answerAtom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const SelfDiagnosisContainer = () => {
+  const navigate = useNavigate();
   const answers = useRecoilValue(answerAtom);
 
   const handleSubmit = async () => {
@@ -19,6 +21,7 @@ const SelfDiagnosisContainer = () => {
         withCredentials: true,
       });
       toast.success("성공적으로 저장되었습니다.");
+      navigate("/mypage");
     } catch (err) {
       console.error(err);
     }
