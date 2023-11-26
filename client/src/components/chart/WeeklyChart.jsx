@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Chart,
   CategoryScale,
@@ -15,7 +15,6 @@ import useActiveChart from "../../hooks/useActiveChart";
 import RevenueChart from "./RevenueChart";
 import LatestChart from "./LatestChart";
 import Button from "../Button";
-import axios from "axios";
 
 Chart.register(
   CategoryScale,
@@ -26,71 +25,6 @@ Chart.register(
   Tooltip,
   Legend
 );
-
-// const recentWeek = [
-//   {
-//     sum: 20400,
-//     start: "2023-08-06",
-//     end: "2023-08-12",
-//     patientCount: 2,
-//   },
-//   {
-//     sum: 1600000,
-//     start: "2023-07-30",
-//     end: "2023-08-05",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 140000,
-//     start: "2023-07-09",
-//     end: "2023-07-15",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 40000,
-//     start: "2023-07-02",
-//     end: "2023-07-08",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 800,
-//     start: "2013-08-04",
-//     end: "2013-08-10",
-//     patientCount: 2,
-//   },
-// ];
-// const salesWeek = [
-//   {
-//     sum: 1600000,
-//     start: "2023-07-30",
-//     end: "2023-08-05",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 140000,
-//     start: "2023-07-09",
-//     end: "2023-07-15",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 40000,
-//     start: "2023-07-02",
-//     end: "2023-07-08",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 20400,
-//     start: "2023-08-06",
-//     end: "2023-08-12",
-//     patientCount: 2,
-//   },
-//   {
-//     sum: 800,
-//     start: "2013-08-04",
-//     end: "2013-08-10",
-//     patientCount: 2,
-//   },
-// ];
 
 const options = {
   plugins: {
@@ -190,7 +124,7 @@ const WeeklyChart = ({ datas, salesWeek, recentWeek }) => {
   );
 };
 export const Wrapper = styled.div`
-  width: 100%;
+  width: 50%;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -198,7 +132,7 @@ export const Wrapper = styled.div`
   align-items: center;
 `;
 export const ChartContainer = styled.div`
-  width: 50%;
+  width: 100%;
   display: flex;
   flex-direction: column;
 `;
