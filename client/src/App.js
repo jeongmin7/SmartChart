@@ -33,7 +33,9 @@ function App() {
     const token = document.cookie.includes("token");
 
     if (!session && !token) {
-      navigate("/");
+      if (window.location.pathname !== "/signup") {
+        navigate("/");
+      }
     }
   }, [navigate, userRole]);
 
