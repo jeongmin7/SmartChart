@@ -24,7 +24,6 @@ import {
   Section,
   SelectWrapper,
   SignupLink,
-  SubmitButton,
 } from "../styles/CommonStyle";
 import { userRoleAtom } from "../stores/userInfo";
 import { useRecoilState } from "recoil";
@@ -51,6 +50,10 @@ const LoginComponent = () => {
   const [emailAddress, setEmailAddress] = useState("");
   const [userRole, setUserRole] = useRecoilState(userRoleAtom);
 
+  const handleKakaoButtonClick = () => {
+    console.log("Kakao button is clicked.");
+    navigate(`/kakaoAuth`);
+  };
   const onChange = (e) => {
     const {
       target: { name, value },
@@ -105,6 +108,7 @@ const LoginComponent = () => {
           {
             headers: {
               "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
             },
           }
         );
@@ -143,6 +147,7 @@ const LoginComponent = () => {
           {
             headers: {
               "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
             },
           }
         );
@@ -199,9 +204,6 @@ const LoginComponent = () => {
       });
   };
 
-  const loginKakao = () => {
-    console.log("Login");
-  };
   // "/"페이지 접근 막기
   useEffect(() => {
     const session = document.cookie.includes("session");
@@ -328,8 +330,10 @@ const LoginComponent = () => {
             disabled={error?.length > 0}
           />
           {!isDoctor && (
-            <Kakao href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=338b152f34fe502634c3e709272cd726&redirect_uri=http://localhost:3000/auth/kakao/callback">
-              <img src={kakao} alt="카카오 로그인" onClick={loginKakao} />
+            <Kakao
+              href={`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_API_KAKAO_LOGIN}&redirect_uri=${process.env.REACT_APP_API_KAKAO_REDIRECT_URL}`}
+            >
+              <img src={kakao} alt="카카오 로그인" />
             </Kakao>
           )}
         </LoginWrapper>
