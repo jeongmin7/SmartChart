@@ -1,0 +1,13 @@
+{
+  "build": {
+    "env": {
+      "REACT_APP_API_URL": "@api-url"
+    }
+  },
+  "routes": [
+    {
+      "dest": "https://$REACT_APP_API_URL",
+      "methods": ["GET", "POST", "DELETE", "PATCH", "OPTIONS"]
+    }
+  ]
+}
