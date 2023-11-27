@@ -9,7 +9,6 @@ import axios from "axios";
 const SelfDiagnosisComponent = ({ id }) => {
   const [answers, setAnswers] = useRecoilState(answerAtom);
   const [data, setData] = useState([]);
-  console.log(id);
   const handleAnswer = (index, value) => {
     const newAnswers = [...answers];
     newAnswers[index] = {
@@ -18,7 +17,6 @@ const SelfDiagnosisComponent = ({ id }) => {
     };
     setAnswers(newAnswers);
   };
-  // console.log(answers);
 
   useEffect(() => {
     const fetchData = async () => {

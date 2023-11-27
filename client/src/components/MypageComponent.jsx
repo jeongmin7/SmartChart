@@ -21,27 +21,37 @@ const MypageComponent = () => {
           withCredentials: true,
         });
         const appointmentList = response.data.myPageList;
-
         // 최신 5개만 남기기
-        const latestAppointments = appointmentList.slice(0, 5);
+        const latestAppointments = appointmentList
+          .slice(-5)
+          .sort(
+            (a, b) => new Date(b.reservationDate) - new Date(a.reservationDate)
+          );
 
         setAppointmentList(latestAppointments);
       } catch (err) {}
     };
     fetchData();
   }, []);
-
   const cancelReservation = async (id) => {
     const reservationId = String(id);
-    await axios
-      .delete("/patient/page-cancel", {
+    try {
+      await axios.delete("/patient/page-cancel", {
         data: { reservationId: reservationId },
         headers: {
           "Content-Type": "application/json",
         },
         withCredentials: true,
-      })
-      .then((response) => console.log(response));
+      });
+
+      const updatedAppointmentList = appointmentList.filter(
+        (item) => item.id !== id
+      );
+      setAppointmentList(updatedAppointmentList);
+      toast.success("예약이 취소되었습니다.");
+    } catch (err) {
+      toast.error("예약 취소 중 오류가 발생했습니다.");
+    }
   };
 
   const columns = [
@@ -107,6 +117,15 @@ const MypageComponent = () => {
             아래의 업데이트 버튼을 눌러주세요.**
           </Tip>
         </FirstColumnHalfWrapper>
+        <Button
+          width="100px"
+          height="100px"
+          padding="10px"
+          fontSize="15px"
+          onClick={handleUpdate}
+        >
+          Update
+        </Button>
         <ColumnHalfWrapper>
           {/* <Header>예약리스트</Header> */}
           <Table>
@@ -148,15 +167,6 @@ const MypageComponent = () => {
             </AppointmentListBody>
           </Table>
         </ColumnHalfWrapper>
-        <Button
-          width="100px"
-          height="100px"
-          padding="10px"
-          fontSize="15px"
-          onClick={handleUpdate}
-        >
-          Update
-        </Button>
       </MypageWrapper>
     </MypageContainer>
   );

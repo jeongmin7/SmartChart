@@ -14,10 +14,10 @@ export const sizes = {
 export const palette = {
   // example
   gray: {
-    // 0: "#F4F4F4",
+    0: "#F4F4F4",
     // 1: "#6f6f6f",
     // 2: "#393939",
-    // 3: "#C4C4C4",
+    3: "#C4C4C4",
     // 4: "#353535",
     // 5: "#525252",
     // 6: "#C6C6C6",

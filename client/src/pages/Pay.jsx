@@ -3,10 +3,9 @@ import styled from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
-import BillingComponent from "../components/BillingComponent";
-import instance from "../components/api";
 import PatientBill from "../components/PatientBill";
 import axios from "axios";
+import { Container, Header, Wrapper } from "../styles/CommonStyle";
 
 const Pay = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -179,31 +178,6 @@ const Pay = () => {
 };
 
 export default Pay;
-const Container = styled.section`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  min-width: 1300px;
-  min-height: calc(100vh - 65px);
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  min-width: 550px;
-  min-height: 550px;
-  padding: 100px 0;
-`;
-const Header = styled.div`
-  font-weight: bold;
-  margin-bottom: 20px;
-  font-size: 25px;
-`;
 
 const List = styled.div`
   display: flex;

@@ -1,18 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Button from "../components/Button";
+import Button from "./Button";
 import { palette } from "../styles/GlobalStyles";
 
-const Invoice = ({
-  id,
-  patientInfo,
-  cost,
-  total,
-  detailCost,
-  isDoctor,
-  sum,
-}) => {
-  console.log(id);
+const Invoice = ({ id, patientInfo, cost, prevCost, isDoctor, sum }) => {
   // 옵션에서 선택한 치료내역
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedFields, setSelectedFields] = useState([]);
@@ -42,6 +33,14 @@ const Invoice = ({
       ]);
     }
   };
+  // Invoice 컴포넌트 내에 해당 함수 추가
+  const getTreatmentOptions = () => {
+    // cost 배열에서 treatment 값만 추출하여 unique한 값들을 set으로 생성
+    const treatmentOptions = new Set(cost.map((item) => item.treatment));
+    // set을 다시 배열로 변환하여 옵션으로 사용할 수 있도록 반환
+    return Array.from(treatmentOptions);
+  };
+
   return (
     <Wrapper>
       <SectionHeader>
@@ -83,11 +82,12 @@ const Invoice = ({
         <Section>치료 내역서</Section>
       </SectionHeader>
       <GridContainer detail="true">
-        {detailCost.length !== 0 ? (
+        {/* {prevCost.length !== 0 ? (
           isDoctor ? (
             //TODO: 의사일 경우
+
             <div>
-              {detailCost.map(({ treatment, cost }, index) => (
+              {prevCost.map(({ treatment, cost }, index) => (
                 <GridItem key={index} type="text" title="true" header="true">
                   <StyledInput title="true">{treatment}</StyledInput>
                   <StyledInput>{cost}원</StyledInput>
@@ -101,7 +101,7 @@ const Invoice = ({
           ) : (
             //TODO: 환자일경우
             <div>
-              {detailCost.map(({ treatment, cost }, index) => (
+              {prevCost.map(({ treatment, cost }, index) => (
                 <GridItem key={index} type="text" title="true" header>
                   <StyledInput title="true">{treatment}</StyledInput>
                   <StyledInput>{cost}원</StyledInput>
@@ -113,66 +113,162 @@ const Invoice = ({
               </GridItem>
             </div>
           )
-        ) : isDoctor ? (
-          //TODO: 의사일경우
-          selectedFields.map((field, index) => (
-            <GridItem header key={index}>
-              {/* 내역 */}
-              <StyledInput type="text" title="true">
-                {index + 1 === selectedFields.length && (
-                  <ListBox>
-                    {/* 옵션 선택하는 부분 */}
-                    <PayList
-                      value={selectedValue}
-                      onChange={handleSelectChange}
-                    >
-                      <option value="">선택하세요</option>
-                      <option value="CT진단비">CT진단비</option>
-                      <option value="마취비">마취비</option>
-                      <option value="입원비">입원비</option>
-                      <option value="주사비">주사비</option>
-                    </PayList>
+        ) : isDoctor ? ( */}
+        {isDoctor ? (
+          //   selectedFields.map((field, index) => (
+          //     <GridItem header key={index}>
+          //       {/* 내역 */}
+          //       <StyledInput type="text" title="true">
+          //         {index + 1 === selectedFields.length && (
+          //           <ListBox>
+          //             {/* 옵션 선택하는 부분 */}
+          //             <PayList
+          //               value={selectedValue}
+          //               onChange={handleSelectChange}
+          //             >
+          //               <option value="">선택하세요</option>
+          //               {getTreatmentOptions().map((option, index) => (
+          //                 <option key={index} value={option}>
+          //                   {option}
+          //                 </option>
+          //               ))}
+          //             </PayList>
+          //             <Button
+          //               width="80px"
+          //               height="25px"
+          //               fontSize="15px"
+          //               padding="0"
+          //               borderRadius="10px"
+          //               onClick={addInputField}
+          //             >
+          //               추가
+          //             </Button>
+          //           </ListBox>
+          //         )}
+          //         <div>{field.treatment}</div>
+          //         <ListBox className="buttonBox">
+          //           <Button
+          //             width="43px"
+          //             height="25px"
+          //             fontSize="15px"
+          //             padding="0"
+          //             borderRadius="10px"
+          //             onClick={() => addInputField("delete", index)}
+          //           >
+          //             제거
+          //           </Button>
+          //         </ListBox>
+          //       </StyledInput>
+          //       <StyledInput type="text">{field.cost}원</StyledInput>
+          //     </GridItem>
+
+          //   ))
+          // )
+          <>
+            {selectedFields.map((field, index) => (
+              <GridItem header key={index}>
+                {/* 내역 */}
+                <StyledInput type="text" title="true">
+                  {index + 1 === selectedFields.length && (
+                    <ListBox>
+                      {/* 옵션 선택하는 부분 */}
+                      <PayList
+                        value={selectedValue}
+                        onChange={handleSelectChange}
+                      >
+                        <option value="">선택하세요</option>
+                        {getTreatmentOptions().map((option, index) => (
+                          <option key={index} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </PayList>
+                      <Button
+                        width="80px"
+                        height="25px"
+                        fontSize="15px"
+                        padding="0"
+                        borderRadius="10px"
+                        onClick={addInputField}
+                      >
+                        추가
+                      </Button>
+                    </ListBox>
+                  )}
+                  <div>{field.treatment}</div>
+                  <ListBox className="buttonBox">
                     <Button
-                      width="80px"
+                      width="43px"
                       height="25px"
                       fontSize="15px"
                       padding="0"
                       borderRadius="10px"
-                      onClick={addInputField}
+                      onClick={() => addInputField("delete", index)}
                     >
-                      추가
+                      제거
                     </Button>
                   </ListBox>
-                )}
-                {field.treatment}
-                <ListBox className="buttonBox">
+                </StyledInput>
+                <StyledInput type="text">{field.cost}원</StyledInput>
+              </GridItem>
+            ))}
+            {isDoctor && (selectedFields.length === 0 || !prevCost) && (
+              <GridItem header>
+                <StyledInput type="text" title="true">
+                  <PayList value={selectedValue} onChange={handleSelectChange}>
+                    <option value="">선택하세요</option>
+                    {getTreatmentOptions().map((option, index) => (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </PayList>
                   <Button
                     width="43px"
                     height="25px"
                     fontSize="15px"
                     padding="0"
-                    borderRadius="10px"
-                    onClick={() => addInputField("delete", index)}
+                    onClick={addInputField}
+                    disabled={!selectedValue}
                   >
-                    제거
+                    등록
                   </Button>
-                </ListBox>
-              </StyledInput>
-              <StyledInput type="text">{field.cost}원</StyledInput>
-            </GridItem>
-          ))
+                </StyledInput>
+                <StyledInput type="text" />
+              </GridItem>
+            )}
+            {/* prevCost 표시 */}
+            {prevCost.map((detail, index) => (
+              <GridItem key={index} type="text" title="true" header>
+                <StyledInput title="true">{detail.treatment}</StyledInput>
+                <StyledInput>{detail.cost}원</StyledInput>
+              </GridItem>
+            ))}
+          </>
         ) : (
-          <div>\</div>
+          <div>
+            {prevCost.map(({ treatment, cost }, index) => (
+              <GridItem key={index} type="text" title="true" header>
+                <StyledInput title="true">{treatment}</StyledInput>
+                <StyledInput>{cost}원</StyledInput>
+              </GridItem>
+            ))}
+            <GridItem className="noBorderBottom" header>
+              <StyledInput title="true">총금액</StyledInput>
+              <StyledInput>{sum}원</StyledInput>
+            </GridItem>
+          </div>
         )}
-        {isDoctor && detailCost.length === 0 && selectedFields.length === 0 && (
+        {/* {isDoctor && (selectedFields.length === 0 || !prevCost) && (
           <GridItem header>
             <StyledInput type="text" title="true">
               <PayList value={selectedValue} onChange={handleSelectChange}>
                 <option value="">선택하세요</option>
-                <option value="CT진단비">CT진단비</option>
-                <option value="마취비">마취비</option>
-                <option value="입원비">입원비</option>
-                <option value="주사비">주사비</option>
+                {getTreatmentOptions().map((option, index) => (
+                  <option key={index} value={option}>
+                    {option}
+                  </option>
+                ))}
               </PayList>
               <Button
                 width="43px"
@@ -187,14 +283,13 @@ const Invoice = ({
             </StyledInput>
             <StyledInput type="text" />
           </GridItem>
-        )}
-
-        {detailCost.length === 0 && (
+        )} */}
+        {
           <GridItem className="noBorderBottom">
             <Title>총금액</Title>
             <Content>{totalCost}원</Content>
           </GridItem>
-        )}
+        }
       </GridContainer>
     </Wrapper>
   );

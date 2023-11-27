@@ -52,8 +52,8 @@ const HospitalPage = () => {
         <Table>
           <tbody>
             <TR>
-              <TH>병원명</TH>
-              <TD>
+              <TH top="true">병원명</TH>
+              <TD top="true">
                 <Input
                   type="text"
                   name="hospitalName"
@@ -64,11 +64,11 @@ const HospitalPage = () => {
               </TD>
             </TR>
 
-            <TR alternate>
-              <TH>전화번호</TH>
+            <TR alternate="true">
+              <TH alternate="true">전화번호</TH>
               <TD>
                 <Input
-                  alternate
+                  alternate="true"
                   type="text"
                   name="hospitalPhoneNumber"
                   onChange={onChange}
@@ -77,8 +77,8 @@ const HospitalPage = () => {
               </TD>
             </TR>
             <TR>
-              <TH>병원소개</TH>
-              <TD>
+              <TH bottom="true">병원소개</TH>
+              <TD bottom="true">
                 <Textarea
                   type="text"
                   name="hospitalIntroduce"
@@ -94,11 +94,11 @@ const HospitalPage = () => {
           </tbody>
         </Table>
         <Button
-          width="100px"
-          height="30px"
-          padding="0"
-          fontSize="12px"
+          width="120px"
+          height="45px"
+          fontSize="16px"
           onClick={handleSubmit}
+          borderRadius="10px"
         >
           업데이트
         </Button>
@@ -114,80 +114,79 @@ const Container = styled.section`
   justify-content: center;
   align-items: center;
   min-width: 900px;
-  min-height: calc(100vh - 100px);
+  min-height: calc(100vh - 80px);
 `;
 
 const Wrapper = styled.div`
   display: flex;
+  width: 80%;
+  min-height: calc(100vh - 100px);
+  min-width: 500px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 100px);
   padding: 100px 200px 100px;
-  border-radius: 20px;
+  border-radius: 15px;
+  position: relative;
+  border: 1px solid ${palette.gray.border};
 `;
 const Header = styled.div`
   font-weight: bold;
   margin-bottom: 20px;
   font-size: 25px;
+  position: absolute;
+  top: 40px;
 `;
 
 const Table = styled.table`
   border-collapse: collapse;
-  width: 400px;
-  height: 300px;
+  width: 60%;
+  min-width: 400px;
+  height: 500px;
   margin-bottom: 15px;
 `;
 
 const TH = styled.th`
   padding: 5px;
-  border: 1px solid black;
+  border-right: 1px solid ${palette.gray.border};
   text-align: center;
   vertical-align: middle; /* 수직 가운데 정렬 */
+  font-weight: 700;
+  font-size: 20px;
+  background-color: ${(props) =>
+    props.alternate ? `${palette.white}` : `#E0E3E6`};
+  border-top-left-radius: ${(props) => (props.top ? "10px" : "0")};
+  border-bottom-left-radius: ${(props) => (props.bottom ? "10px" : "0")};
 `;
 
 const TD = styled.td`
-  border: 1px solid black;
   padding: 10px;
   text-align: center;
+  border-top-right-radius: ${(props) => (props.top ? "10px" : "0")};
+  border-bottom-right-radius: ${(props) => (props.bottom ? "10px" : "0")};
 `;
 const TR = styled.tr`
   height: 3rem;
-  background-color: ${(props) => (props.alternate ? "#E0E3E6" : "white")};
-`;
-
-const UploadWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 20px;
-`;
-
-const FileInput = styled.input`
-  margin-left: 20px;
-`;
-
-const ImagePreview = styled.img`
-  max-width: 220px;
-  height: auto;
+  background-color: ${(props) =>
+    props.alternate ? `${palette.white}` : "#E0E3E6"};
 `;
 
 const Input = styled.input`
   width: 100%;
   line-height: 2;
   padding: 0;
-  font-size: 15px;
-  background-color: ${(props) => (props.alternate ? "#E0E3E6" : "white")};
+  font-size: 18px;
+  background-color: ${(props) =>
+    props.alternate ? `${palette.white}` : "#E0E3E6"};
   border: none;
+  font-weight: 500;
 `;
 
 const Textarea = styled.textarea`
   width: 100%;
   line-height: 3;
   border: none;
-`;
-const Nothing = styled.div`
-  width: 100px;
-  height: 100px;
-  padding: 20px;
-  border: 1px solid ${palette.gray.border};
+  font-weight: 500;
+  background-color: #e0e3e6;
+  font-size: 18px;
 `;

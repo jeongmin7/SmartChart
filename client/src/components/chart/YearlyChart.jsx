@@ -68,7 +68,6 @@ const options = {
 };
 
 const YearlyChart = ({ datas, salesYear, recentYear }) => {
-  console.log("!", recentYear);
   const { activeChart, handleChart } = useActiveChart();
   const data = {
     labels: datas.map((item) => item.year),
