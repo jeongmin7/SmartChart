@@ -4,7 +4,6 @@ import SaveIdCheckbox from "./SaveIdCheckbox";
 import Loader from "./Loader";
 import Logo from "./Logo";
 import Modal from "./Modal";
-import instance from "./api";
 import Input from "./Input";
 import { toast } from "react-toastify";
 import {
@@ -50,10 +49,6 @@ const LoginComponent = () => {
   const [emailAddress, setEmailAddress] = useState("");
   const [userRole, setUserRole] = useRecoilState(userRoleAtom);
 
-  const handleKakaoButtonClick = () => {
-    console.log("Kakao button is clicked.");
-    navigate(`/kakaoAuth`);
-  };
   const onChange = (e) => {
     const {
       target: { name, value },
@@ -108,7 +103,6 @@ const LoginComponent = () => {
           {
             headers: {
               "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
             },
           }
         );
@@ -117,7 +111,7 @@ const LoginComponent = () => {
           toast.success("로그인 되었습니다.");
           setIsLoading(false);
           navigate("/hospitalpage");
-          setUserRole(response.data.role);
+          setUserRole({ role: response.data.role });
           const session = response.data.session;
 
           document.cookie = `session=${session}; expires=${expirationDate.toUTCString()}; path=/`;
@@ -135,7 +129,6 @@ const LoginComponent = () => {
         document.cookie =
           "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       }
-      // });
     } else {
       try {
         const response = await axios.post(
@@ -147,7 +140,6 @@ const LoginComponent = () => {
           {
             headers: {
               "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
             },
           }
         );
@@ -170,13 +162,12 @@ const LoginComponent = () => {
           toast.success("로그인 되었습니다.");
           setIsLoading(false);
           navigate("/mypage");
-          setUserRole(response.data.role);
+          setUserRole({ role: response.data.role });
         }
       } catch (error) {
         if (error.response && error.response.status === 405) {
           toast.error("이메일, 비밀번호, 환자구별을 확인해주세요");
         }
-        console.log(error);
       }
     }
   };
@@ -199,8 +190,8 @@ const LoginComponent = () => {
           },
         }
       )
-      .then(function (response) {
-        console.log(response);
+      .then((response) => {
+        toast.success("이메일로 비밀번호 찾기 요청을 보냈습니다.");
       });
   };
 
@@ -213,7 +204,6 @@ const LoginComponent = () => {
       if (userRole === "DOCTOR") {
         navigate("/hospitalPage");
       } else {
-        console.log("patient");
         navigate("/myPage");
       }
     }
@@ -330,9 +320,7 @@ const LoginComponent = () => {
             disabled={error?.length > 0}
           />
           {!isDoctor && (
-            <Kakao
-              href={`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_API_KAKAO_LOGIN}&redirect_uri=${process.env.REACT_APP_API_KAKAO_REDIRECT_URL}`}
-            >
+            <Kakao href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=338b152f34fe502634c3e709272cd726&redirect_uri=http://localhost:3000/auth/kakao/callback">
               <img src={kakao} alt="카카오 로그인" />
             </Kakao>
           )}

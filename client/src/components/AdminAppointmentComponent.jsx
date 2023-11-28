@@ -7,6 +7,7 @@ import SelfDiagnosisComponent from "./SelfDiagnosisComponent";
 import SendSMS from "./SendSMS";
 import axios from "axios";
 import { Container, Header, Wrapper } from "../styles/CommonStyle";
+import { toast } from "react-toastify";
 
 const AdminAppointmentComponent = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const AdminAppointmentComponent = () => {
         });
         setAppointments(response.data.data);
       } catch (error) {
-        console.error(error);
+        toast.error("데이터를 읽어오는데 실패했습니다.");
       }
     };
 

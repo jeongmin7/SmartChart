@@ -51,7 +51,6 @@ const AdminWaitingListComponent = () => {
 
     fetchData();
   }, []);
-  console.log(appointment);
 
   function compareAppointments(appointment1, appointment2) {
     const dateComparison = appointment1.reservationDate.localeCompare(
@@ -66,8 +65,6 @@ const AdminWaitingListComponent = () => {
 
     return dateComparison;
   }
-
-  console.log(tasks);
 
   const handleDragStart = (e, appointment, status) => {
     e.dataTransfer.setData(
@@ -143,8 +140,10 @@ const ColumnContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
-  min-width: 1200px;
+  min-width: 1000px;
   min-height: 700px;
+  max-width: 100%; /* 최대 너비를 설정합니다. */
+  overflow-x: auto;
 `;
 
 const Today = styled.div`

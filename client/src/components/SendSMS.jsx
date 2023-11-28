@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "./Button";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function SendSMS({ SMSInfo }) {
   const [content, setContent] = useState("");
@@ -13,9 +14,9 @@ function SendSMS({ SMSInfo }) {
         recipientPhoneNumber: SMSInfo.phoneNumber,
         content: content,
       });
-      console.log("Sent SMS");
+      toast.success("성공적으로 문자를 전송하였습니다.");
     } catch (error) {
-      console.error(error);
+      toast.error("문자를 전송하느데 실패했습니다.");
     }
   };
 
