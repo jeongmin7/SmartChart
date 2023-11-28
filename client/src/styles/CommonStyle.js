@@ -149,8 +149,8 @@ export const Container = styled.section`
 export const Wrapper = styled.div`
   display: flex;
   width: 80%;
-  min-height: calc(100vh - 100px);
-  min-width: 500px;
+  min-height: 900px;
+  min-width: 1000px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
