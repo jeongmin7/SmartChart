@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { styled } from "styled-components";
 import axios from "axios";
 import Invoice from "./Invoice";
+import { toast } from "react-toastify";
 
 const prevCost = [
   // {
@@ -43,7 +44,7 @@ const BillingComponent = () => {
         setPatientInfo(response.data.data[0]);
         setCost(response.data.data2);
       } catch (error) {
-        console.error(error);
+        toast.error("데이터를 읽어오는데 실패했습니다.");
       }
     };
 
