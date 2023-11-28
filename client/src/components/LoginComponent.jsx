@@ -168,6 +168,7 @@ const LoginComponent = () => {
         if (error.response && error.response.status === 405) {
           toast.error("이메일, 비밀번호, 환자구별을 확인해주세요");
         }
+        toast.error("데이터를 읽어오는데 실패했습니다.");
       }
     }
   };
@@ -320,7 +321,7 @@ const LoginComponent = () => {
             disabled={error?.length > 0}
           />
           {!isDoctor && (
-            <Kakao href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=338b152f34fe502634c3e709272cd726&redirect_uri=http://localhost:3000/auth/kakao/callback">
+            <Kakao href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=338b152f34fe502634c3e709272cd726&redirect_uri=https://smartchart.vercel.app/auth/kakao/callback">
               <img src={kakao} alt="카카오 로그인" />
             </Kakao>
           )}
