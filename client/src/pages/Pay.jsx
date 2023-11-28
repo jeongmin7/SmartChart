@@ -6,6 +6,7 @@ import Modal from "../components/Modal";
 import PatientBill from "../components/PatientBill";
 import axios from "axios";
 import { Container, Header, Wrapper } from "../styles/CommonStyle";
+import { toast } from "react-toastify";
 
 const Pay = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,7 +61,7 @@ const Pay = () => {
       setPatient(response.data.data[0]);
       setTotal(response.data.date3[0].sum);
     } catch (error) {
-      console.error(error);
+      toast.error("정보를 가져오는데 실패했습니다.");
     }
     const IMP = window.IMP;
     IMP.init("imp18267031");
