@@ -3,6 +3,10 @@
     {
       "source": "/:path*",
       "destination": "http://13.125.227.145:8080/:path*"
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://smartchart.vercel.app/:path*"
     }
   ]
 }
