@@ -1,142 +1,111 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
+import styled from "styled-components";
+import { palette } from "../styles/GlobalStyles";
+import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { chatUsername } from "../stores/userInfo";
 
 const ChatComponent = () => {
-  useEffect(() => {
-    const ws = new WebSocket("ws://13.125.227.145/ws/chat"); // WebSocket 서버 주소 및 endpoint에 연결
+  const navigate = useNavigate();
+  const [username, setUsername] = useRecoilState(chatUsername);
 
-    ws.onopen = () => {
-      console.log("WebSocket 연결 성공");
-    };
-
-    ws.onmessage = (event) => {
-      const receivedData = JSON.parse(event.data);
-      // 받은 데이터에 대한 처리
-    };
-    // 컴포넌트가 언마운트될 때 웹 소켓 연결을 닫음
-    return () => {
-      ws.close();
-    };
-  }, []);
-
+  const handleUsernameSubmit = (event) => {
+    event.preventDefault();
+    if (username) {
+      navigate("/chatroom");
+    }
+  };
+  const handleUsername = (e) => {
+    setUsername(e.target.value);
+  };
   return (
-    <>
-      {/* <div id="username-page">
-        <div class="username-page-container">
-          <h1 class="title">Type your username </h1>
-          <h3 class="title">to enter the Chatroom </h3>
+    <Background>
+      <Container>
+        <Wrapper>
+          <h1>Type your username </h1>
+          <h3>to enter the Chatroom </h3>
           <form id="usernameForm" name="usernameForm">
-            <div class="form-group">
-              <input
+            <FormContainer>
+              <Input
                 type="text"
                 id="name"
                 placeholder="Username"
-                autocomplete="off"
-                class="form-control"
+                autoComplete="off"
+                className="form-control"
+                onChange={handleUsername}
               />
-            </div>
-            <div class="form-group">
-              <button type="submit" class="accent username-submit">
+            </FormContainer>
+            <FormContainer>
+              <Button
+                type="submit"
+                className="accent username-submit"
+                onClick={handleUsernameSubmit}
+              >
                 Start Chatting
-              </button>
-            </div>
+              </Button>
+            </FormContainer>
           </form>
-        </div>
-      </div>
-
-      <div id="chat-page" class="hidden">
-        <div class="chat-container">
-          <div class="chat-header">
-            <h2>Medical Consultation</h2>
-          </div>
-          <div class="connecting">Connecting...</div>
-          <ul id="messageArea"></ul>
-          <form id="messageForm" name="messageForm">
-            <div class="form-group">
-              <div class="input-group clearfix">
-                <input
-                  type="text"
-                  id="message"
-                  placeholder="Type a message..."
-                  autocomplete="off"
-                  class="form-control"
-                />
-                <button type="submit" class="primary">
-                  Send
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div> */}
-    </>
+        </Wrapper>
+      </Container>
+    </Background>
   );
 };
 
 export default ChatComponent;
-/** {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-html,body {
-    height: 100%;
-    overflow: hidden;
-}
-
-body {
-    margin: 0;
-    padding: 0;
-    font-weight: 400;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 1rem;
-    line-height: 1.58;
-    color: #333;
-    background-color: #f4f4f4;
-    height: 100%;
-}
-
-.clearfix:after {
-    display: block;
-    content: "";
-    clear: both;
-}
-
-.hidden {
-    display: none;
-}
-
-.form-control {
-    width: 100%;
-    min-height: 38px;
-    font-size: 15px;
-    border: 1px solid #c8c8c8;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-input {
-    padding-left: 10px;
-    outline: none;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-h1 {
-    font-size: 1.7em;
-}
-
-a {
-    color: #6db33f;
-}
-
-button {
-    box-shadow: none;
-    border: 1px solid transparent;
-    font-size: 14px;*/
+const Container = styled.div`
+  text-align: center;
+`;
+const Wrapper = styled.div`
+  background: #fff;
+  box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
+  border-radius: 2px;
+  width: 100%;
+  max-width: 600px;
+  display: inline-block;
+  margin-top: 42px;
+  vertical-align: middle;
+  position: relative;
+  padding: 35px 55px 35px;
+  min-height: 400px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  margin-top: -160px;
+`;
+const FormContainer = styled.div`
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const Input = styled.input`
+  padding-left: 10px;
+  outline: none;
+  width: 100%;
+  height: 40px;
+`;
+const Button = styled.button`
+  border: 1px solid transparent;
+  outline: none;
+  line-height: 100%;
+  white-space: nowrap;
+  padding: 0.6rem 1rem;
+  border-radius: 2px;
+  cursor: pointer;
+  min-height: 38px;
+  background-color: ${palette.primary.blue};
+  color: #fff;
+`;
+const Background = styled.div`
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.58;
+  color: #333;
+  background-color: aliceblue;
+  height: 100%;
+`;
