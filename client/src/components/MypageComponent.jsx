@@ -8,7 +8,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const MypageComponent = () => {
-  const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
+  const [userInfo, setUserInfo] = useState(userInfoAtom);
   const [appointmentList, setAppointmentList] = useState([]);
 
   useEffect(() => {
@@ -18,7 +18,6 @@ const MypageComponent = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          withCredentials: true,
         });
         const appointmentList = response.data.myPageList;
         // 최신 5개만 남기기
@@ -27,7 +26,7 @@ const MypageComponent = () => {
           .sort(
             (a, b) => new Date(b.reservationDate) - new Date(a.reservationDate)
           );
-
+        setUserInfo(response.data.myPage[0]);
         setAppointmentList(latestAppointments);
       } catch (err) {}
     };

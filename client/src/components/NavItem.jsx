@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { CiSquareChevDown } from "react-icons/ci";
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { styled } from "styled-components";
-import { userInfoAtom, userRoleAtom } from "../stores/userInfo";
+import { userRoleAtom } from "../stores/userInfo";
 import patientIcon from "../assets/patient.png";
 import femaleDoctor from "../assets/doctor_female.png";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const NavItem = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
+  const [userInfo, setUserInfo] = useState({
+    name: "",
+    gender: "",
+    age: 0,
+    phoneNumber: 0,
+  });
+  const [hospitalInfo, setHospitalInfo] = useState({});
   const userRole = useRecoilValue(userRoleAtom);
-
   function deleteCookie(name) {
     const currentDate = new Date();
     // 현재날짜 이전 날짜
@@ -37,7 +43,6 @@ const NavItem = () => {
     deleteCookie("session");
     navigate("/");
   };
-
   useEffect(() => {
     const fetchData = async () => {
       if (userRole === "PATIENT") {
@@ -49,7 +54,7 @@ const NavItem = () => {
           });
           setUserInfo(response.data.myPage[0]);
         } catch (err) {
-          console.error(err);
+          toast.error("사용자 정보를 읽어오는데 실패했습니다.");
         }
       } else {
         try {
@@ -58,14 +63,14 @@ const NavItem = () => {
               "Content-Type": "application/json",
             },
           });
-          setUserInfo(response.data.hospitalPage[0]);
+          setHospitalInfo(response.data.hospitalPage[0]);
         } catch (err) {
           console.error(err);
         }
       }
     };
     fetchData();
-  }, []);
+  }, [userRole]);
   return (
     <StyledNavItem>
       <NavItemWrapper>
@@ -97,9 +102,9 @@ const NavItem = () => {
         {!token ? (
           <NameContainer>
             <Icon src={femaleDoctor} alt="여자의사" />
-            <div>{userInfo.hospitalName}</div>
+            <div>{hospitalInfo.hospitalName}</div>
             <CiSquareChevDown onClick={toggleDropdown} />
-            {userInfo.name}
+            {/* {userInfo.name} */}
           </NameContainer>
         ) : (
           <NameContainer>
@@ -111,7 +116,7 @@ const NavItem = () => {
         {/* TODO:드롭다운이 생길부분 */}
         <MenuContent open={isOpen}>
           <MenuLinkContainer>
-            {userRole === "DOCTOR" ? (
+            {userRole.role === "DOCTOR" ? (
               <>
                 <SignoutButton onClick={handleDoctorLogout}>
                   로그아웃
