@@ -5,6 +5,7 @@ import { hospitalAtom } from "../stores/userInfo";
 import Button from "./Button";
 import axios from "axios";
 import { palette } from "../styles/GlobalStyles";
+import { toast } from "react-toastify";
 
 const SearchHospital = () => {
   const [hospitalInfo, setHospitalInfo] = useRecoilState(hospitalAtom);
@@ -40,7 +41,7 @@ const SearchHospital = () => {
 
       setData(response.data.items);
     } catch (err) {
-      console.log(err);
+      toast.error("검색할 수 없습니다.");
     }
   };
 

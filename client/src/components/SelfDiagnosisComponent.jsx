@@ -5,6 +5,7 @@ import { useRecoilState } from "recoil";
 import { answerAtom } from "../stores/answerAtom";
 import { questions } from "../assets/questions";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const SelfDiagnosisComponent = ({ id }) => {
   const [answers, setAnswers] = useRecoilState(answerAtom);
@@ -30,9 +31,8 @@ const SelfDiagnosisComponent = ({ id }) => {
             },
           }
         );
-        console.log("doctor", response);
       } catch (error) {
-        console.error("An error occurred while fetching data:", error);
+        toast.error("데이터를 읽어오는데 실패했습니다.");
       }
     };
 

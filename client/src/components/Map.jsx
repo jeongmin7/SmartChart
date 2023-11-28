@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { toast } from "react-toastify";
 const { kakao } = window;
 
 const Map = ({ setMap, setIsLoading }) => {
@@ -37,12 +38,12 @@ const Map = ({ setMap, setIsLoading }) => {
           setIsLoading(false);
         },
         (error) => {
-          console.error("사용자 위치 가져오기 오류:", error);
+          toast.error("사용자 위치 가져오는데 실패했습니다.");
           setIsLoading(false);
         }
       );
     } else {
-      console.error("지리적 위치 정보를 사용할 수 없습니다.");
+      toast.error("지리적 위치 정보를 사용할 수 없습니다.");
       setIsLoading(false);
     }
 

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "./Button";
 import instance from "./api";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const { kakao } = window;
 
@@ -70,12 +71,12 @@ const MapComponent = ({ setIsLoading }) => {
           setIsLoading(false);
         },
         (error) => {
-          console.error("사용자 위치 가져오기 오류:", error);
+          toast.error("사용자 위치 가져오는데 실패했습니다.");
           setIsLoading(false);
         }
       );
     } else {
-      console.error("지리적 위치 정보를 사용할 수 없습니다.");
+      toast.error("지리적 위치 정보를 사용할 수 없습니다.");
       setIsLoading(false);
     }
 
@@ -91,7 +92,6 @@ const MapComponent = ({ setIsLoading }) => {
     for (const specialty in data) {
       const hospitals = data[specialty];
       hospitals.forEach((hospital) => {
-        // console.log(hospital);
         if (selectedSpecialty === "" || specialty === selectedSpecialty) {
           const markerPosition = new kakao.maps.LatLng(
             addDecimalToString(hospital.mapy),

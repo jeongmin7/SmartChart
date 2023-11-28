@@ -16,4 +16,5 @@ export const path = {
   search: "/searchHospital",
   medicalcaremanagement: "/medicalcaremanagement/:id",
   kakao: "/auth/kakao/callback",
+  chatroom: "/chatroom",
 };

@@ -10,7 +10,13 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { Buttons, ChartContainer, Wrapper } from "./WeeklyChart";
+import {
+  Buttons,
+  ChartContainer,
+  Charts,
+  MainChart,
+  Wrapper,
+} from "./WeeklyChart";
 import useActiveChart from "../../hooks/useActiveChart";
 import RevenueChart from "./RevenueChart";
 import LatestChart from "./LatestChart";
@@ -104,11 +110,17 @@ const MonthlyChart = ({
   return (
     <Wrapper>
       <ChartContainer>
-        <Line data={data} options={options} />
-        {activeChart === "gender" && <PatientGenderTrends data={gender} />}
-        {activeChart === "averageAge" && <AverageAgeChart data={averageAge} />}
-        {activeChart === "revenue" && <RevenueChart basisData={salesMonth} />}
-        {activeChart === "latest" && <LatestChart basisData={recentMonth} />}
+        <Charts>
+          <MainChart>
+            <Line data={data} options={options} />
+          </MainChart>
+          {activeChart === "gender" && <PatientGenderTrends data={gender} />}
+          {activeChart === "averageAge" && (
+            <AverageAgeChart data={averageAge} />
+          )}
+          {activeChart === "revenue" && <RevenueChart basisData={salesMonth} />}
+          {activeChart === "latest" && <LatestChart basisData={recentMonth} />}
+        </Charts>
 
         <Buttons>
           <Button

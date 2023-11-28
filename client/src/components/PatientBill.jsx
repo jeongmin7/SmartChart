@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import axios from "axios";
 import Invoice from "./Invoice";
+import { toast } from "react-toastify";
 
 const PatientBill = ({ id }) => {
   const [detailCost, setDetailCost] = useState([]);
@@ -26,7 +27,7 @@ const PatientBill = ({ id }) => {
         setPatient(response.data.data[0]);
         setTotal(response.data.date3[0].sum);
       } catch (error) {
-        console.error(error);
+        toast.error("데이터를 읽어오는데 실패했습니다.");
       }
     };
     fetchData();

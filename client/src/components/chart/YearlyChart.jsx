@@ -11,7 +11,13 @@ import {
   BarElement,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { Buttons, ChartContainer, Wrapper } from "./WeeklyChart";
+import {
+  Buttons,
+  ChartContainer,
+  Charts,
+  MainChart,
+  Wrapper,
+} from "./WeeklyChart";
 import RevenueChart from "./RevenueChart";
 import LatestChart from "./LatestChart";
 import useActiveChart from "../../hooks/useActiveChart";
@@ -95,9 +101,13 @@ const YearlyChart = ({ datas, salesYear, recentYear }) => {
   return (
     <Wrapper>
       <ChartContainer>
-        <Line data={data} options={options} />
-        {activeChart === "revenue" && <RevenueChart basisData={salesYear} />}
-        {activeChart === "latest" && <LatestChart basisData={recentYear} />}
+        <Charts>
+          <MainChart>
+            <Line data={data} options={options} />
+          </MainChart>
+          {activeChart === "revenue" && <RevenueChart basisData={salesYear} />}
+          {activeChart === "latest" && <LatestChart basisData={recentYear} />}
+        </Charts>
 
         <Buttons>
           <Button

@@ -84,7 +84,7 @@ const SignUpForm = () => {
         .catch((error) => {
           // 오류 처리
           setIsEmailDuplicate(false);
-          console.error(error);
+          toast.error("데이터를 읽어오는데 실패했습니다.");
         });
     }
   };
@@ -170,7 +170,7 @@ const SignUpForm = () => {
             navigate("/");
           })
           .catch(function (error) {
-            console.log(error);
+            console.error(error);
           });
       } else {
         axios
@@ -203,7 +203,7 @@ const SignUpForm = () => {
             navigate("/");
           })
           .catch(function (error) {
-            console.log(error);
+            toast.error("회원가입에 실패하였습니다.");
           });
       }
     } catch (e) {}

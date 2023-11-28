@@ -3,9 +3,6 @@ import { atom } from "recoil";
 export const userInfoAtom = atom({
   key: "userInfo",
   default: {
-    // isDoctor: false,
-    email: "",
-    password: "",
     username: "",
     gender: "",
     age: "",
@@ -29,5 +26,12 @@ export const userRoleAtom = atom({
   key: "userRole",
   default: {
     role: "PATIENT",
+  },
+});
+
+export const chatUsername = atom({
+  key: "chatUsername",
+  default: {
+    username: "",
   },
 });
