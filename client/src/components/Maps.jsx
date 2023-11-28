@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Map from "./Map";
 import Markers from "./Markers";
-import instance from "./api";
 import styled from "styled-components";
 import InfoBox from "./InfoBox";
 import axios from "axios";
@@ -17,7 +16,7 @@ const Maps = ({ setIsLoading }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/patient/reservation-map-view/");
+        const response = await axios.get("/patient/reservation-map-view");
 
         setHospitals(response.data);
       } catch (error) {
@@ -27,6 +26,7 @@ const Maps = ({ setIsLoading }) => {
 
     fetchData();
   }, []);
+  console.log(hospitals);
   const filteredHospitals = selectedSpecialty
     ? hospitals[selectedSpecialty]
     : Object.values(hospitals).flat();
