@@ -10,13 +10,20 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { Buttons, ChartContainer, Wrapper } from "./WeeklyChart";
+import {
+  Buttons,
+  ChartContainer,
+  Charts,
+  MainChart,
+  Wrapper,
+} from "./WeeklyChart";
 import useActiveChart from "../../hooks/useActiveChart";
 import Button from "../Button";
 import RevenueChart from "./RevenueChart";
 import LatestChart from "./LatestChart";
 import axios from "axios";
 import styled from "styled-components";
+import { toast } from "react-toastify";
 
 Chart.register(
   CategoryScale,
@@ -69,7 +76,11 @@ const options = {
 
 const PeriodChart = ({ duration }) => {
   const { activeChart, handleChart } = useActiveChart();
-  const [chartData, setChartData] = useState({});
+  const [chartData, setChartData] = useState({
+    period: [],
+    recent: [],
+    salse: [],
+  });
   const period = chartData.period || [];
   const labels = period.map((item) => item.date);
 
@@ -104,26 +115,31 @@ const PeriodChart = ({ duration }) => {
           })
           .then((res) => setChartData(res.data));
       } catch (error) {
-        console.error(error);
+        toast.error("데이터를 읽어오는데 실패했습니다.");
       }
     };
 
     fetchData();
   }, [duration.endDate, duration.startDate]);
+
   return (
     <Wrapper>
       <ChartContainer>
-        {chartData.period.length === 0 ? (
-          <Nothing>데이터가 없습니다.</Nothing>
+        {chartData.period && chartData.period.length === 0 ? (
+          <Nothing>검색 결과가 없습니다.</Nothing>
         ) : (
           <>
-            <Line options={options} data={data} />
-            {activeChart === "revenue" && (
-              <RevenueChart basisData={chartData.sales} />
-            )}
-            {activeChart === "latest" && (
-              <LatestChart basisData={chartData.recent} />
-            )}
+            <Charts>
+              <MainChart>
+                <Line options={options} data={data} />
+              </MainChart>
+              {activeChart === "revenue" && (
+                <RevenueChart basisData={chartData.sales} />
+              )}
+              {activeChart === "latest" && (
+                <LatestChart basisData={chartData.recent} />
+              )}
+            </Charts>
             <Buttons>
               <Button
                 width="100px"

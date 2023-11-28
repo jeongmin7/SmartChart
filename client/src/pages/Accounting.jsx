@@ -9,6 +9,7 @@ import PeriodChart from "../components/chart/PeriodChart";
 import axios from "axios";
 import Table from "../components/chart/Table";
 import { Container, Header, Wrapper } from "../styles/CommonStyle";
+import { toast } from "react-toastify";
 
 const Accounting = () => {
   const [selectedChart, setSelectedChart] = useState(null);
@@ -101,7 +102,7 @@ const Accounting = () => {
           })
           .then((res) => setData(res.data));
       } catch (err) {
-        console.error(err);
+        toast.error("데이터를 읽어오는데 실패했습니다.");
       }
     };
     fetchData();
@@ -110,46 +111,48 @@ const Accounting = () => {
     <Container>
       <Wrapper>
         <Header>매출관리</Header>
-        <Buttons>
-          <Button onClick={() => handleChartSelection("월별 매출")}>
-            월별 매출
-          </Button>
-          <Button onClick={() => handleChartSelection("주간 매출")}>
-            주간 매출
-          </Button>
-          <Button onClick={() => handleChartSelection("연 매출")}>
-            연 매출
-          </Button>
-        </Buttons>
-        <Buttons second="true">
-          <Button onClick={() => handleChartSelection("일 매출")}>
-            일 매출
-          </Button>
-          <Duration>
-            <InputContainer>
-              <DateInput
-                type="date"
-                name="startDate"
-                value={duration.startDate}
-                onChange={handleDateChange}
-              />
-              ~
-              <DateInput
-                type="date"
-                name="endDate"
-                value={duration.endDate}
-                onChange={handleDateChange}
-              />
-            </InputContainer>
-            <Button
-              onClick={() => handleChartSelection("기간별")}
-              disabled={isSearchButtonDisabled}
-            >
-              검색
+        <ContentContainer>
+          <Buttons>
+            <Button onClick={() => handleChartSelection("월별 매출")}>
+              월별 매출
             </Button>
-          </Duration>
-        </Buttons>
-        {selectedChart}
+            <Button onClick={() => handleChartSelection("주간 매출")}>
+              주간 매출
+            </Button>
+            <Button onClick={() => handleChartSelection("연 매출")}>
+              연 매출
+            </Button>
+          </Buttons>
+          <Buttons second="true">
+            <Button onClick={() => handleChartSelection("일 매출")}>
+              일 매출
+            </Button>
+            <Duration>
+              <InputContainer>
+                <DateInput
+                  type="date"
+                  name="startDate"
+                  value={duration.startDate}
+                  onChange={handleDateChange}
+                />
+                ~
+                <DateInput
+                  type="date"
+                  name="endDate"
+                  value={duration.endDate}
+                  onChange={handleDateChange}
+                />
+              </InputContainer>
+              <Button
+                onClick={() => handleChartSelection("기간별")}
+                disabled={isSearchButtonDisabled}
+              >
+                검색
+              </Button>
+            </Duration>
+          </Buttons>
+          {selectedChart}
+        </ContentContainer>
       </Wrapper>
     </Container>
   );
@@ -157,9 +160,18 @@ const Accounting = () => {
 
 export default Accounting;
 
+const ContentContainer = styled.div`
+  min-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 100px;
+`;
 const Buttons = styled.div`
   display: grid;
-  width: 60%;
+  width: 100%;
   padding: 2rem;
   grid-template-columns: ${({ second }) =>
     second ? "1fr 2fr" : "repeat(3, 1fr)"};

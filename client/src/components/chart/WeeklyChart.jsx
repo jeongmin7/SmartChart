@@ -98,9 +98,13 @@ const WeeklyChart = ({ datas, salesWeek, recentWeek }) => {
   return (
     <Wrapper>
       <ChartContainer>
-        <Line options={options} data={data} />
-        {activeChart === "revenue" && <RevenueChart basisData={salesWeek} />}
-        {activeChart === "latest" && <LatestChart basisData={recentWeek} />}
+        <Charts>
+          <MainChart>
+            <Line options={options} data={data} />
+          </MainChart>
+          {activeChart === "revenue" && <RevenueChart basisData={salesWeek} />}
+          {activeChart === "latest" && <LatestChart basisData={recentWeek} />}
+        </Charts>
         <Buttons>
           <Button
             width="100px"
@@ -124,8 +128,8 @@ const WeeklyChart = ({ datas, salesWeek, recentWeek }) => {
   );
 };
 export const Wrapper = styled.div`
-  width: 50%;
-  height: auto;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -135,6 +139,15 @@ export const ChartContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+export const Charts = styled.div`
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 export const Buttons = styled.div`
   display: flex;
@@ -143,5 +156,8 @@ export const Buttons = styled.div`
   align-items: center;
   gap: 20px;
   margin-top: 20px;
+`;
+export const MainChart = styled.div`
+  width: 60%;
 `;
 export default WeeklyChart;

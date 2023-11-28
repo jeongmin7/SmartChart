@@ -1,6 +1,7 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
 import { Wrapper } from "./WeeklyChart";
+import styled from "styled-components";
 
 const options = {
   responsive: true,
@@ -39,10 +40,14 @@ const RevenueChart = ({ basisData }) => {
     ],
   };
   return (
-    <Wrapper>
+    <SideTableWrapper>
       <Line data={data} options={options} />
-    </Wrapper>
+    </SideTableWrapper>
   );
 };
 
 export default RevenueChart;
+export const SideTableWrapper = styled.div`
+  width: 60%;
+  height: auto;
+`;
