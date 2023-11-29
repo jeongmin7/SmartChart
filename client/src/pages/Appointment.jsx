@@ -80,7 +80,6 @@ const Appointment = () => {
       <Wrapper>
         <Header>병원 예약하기</Header>
 
-        {/* <InfoWrapper> */}
         <FirstColumnHalfWrapper>
           <ColumnDivideWrapper>
             <RowDivideWrapper>
@@ -95,7 +94,7 @@ const Appointment = () => {
           <ColumnDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>나이:</InfoTitle>
-              <InfoValue>{info.patientgAge}</InfoValue>
+              <InfoValue>{info.patientgAge}세</InfoValue>
             </RowDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>전화번호:</InfoTitle>
@@ -116,27 +115,32 @@ const Appointment = () => {
             </RowDivideWrapper>
           </ColumnDivideWrapper>
           <ColumnDivideWrapper>
-            <RowDivideWrapper style={{ paddingRight: "20px" }}>
-              <SelectData availableOption={availableTimes} title="예약시간" />
-            </RowDivideWrapper>
-            <RowDivideWrapper>
-              <Button
-                width="100px"
-                height="30px"
-                padding="0"
-                fontSize="12px"
-                onClick={checkAvaliablity}
-              >
-                예약 가능 조회
-              </Button>
-            </RowDivideWrapper>
+            <SelectTimeContainer>
+              <RowDivideWrapper style={{ paddingRight: "20px" }}>
+                <SelectData availableOption={availableTimes} title="예약시간" />
+              </RowDivideWrapper>
+              <RowDivideWrapper>
+                <Button
+                  width="100px"
+                  height="35px"
+                  padding="0"
+                  borderRadius="10px"
+                  fontSize="12px"
+                  onClick={checkAvaliablity}
+                  disabled={!selectedTime}
+                >
+                  예약 가능 조회
+                </Button>
+              </RowDivideWrapper>
+            </SelectTimeContainer>
           </ColumnDivideWrapper>
         </ColumnHalfWrapper>
         <Button
           width="100px"
-          height="100px"
+          height="45px"
           padding="0"
           fontSize="15px"
+          borderRadius="10px"
           disabled={!checkAvailablity}
           onClick={handleSave}
         >
@@ -155,13 +159,14 @@ const ColumnHalfWrapper = styled.div`
   width: 100%;
   height: 100%;
   padding: 80px 0%;
+  font-size: 20px;
 `;
 
 const ColumnDivideWrapper = styled.div`
   display: flex;
   width: 100%;
   height: 40%;
-  /* background-color: purple; */
+  padding: 10px;
 `;
 
 const FirstColumnHalfWrapper = styled(ColumnHalfWrapper)`
@@ -175,8 +180,7 @@ const RowDivideWrapper = styled.div`
   width: 100%;
   height: 100%;
   font-weight: bold;
-  font-size: 16px;
-  /* background-color: purple; */
+  font-size: 20px;
 `;
 
 const InfoTitle = styled.div`
@@ -185,4 +189,8 @@ const InfoTitle = styled.div`
 
 const InfoValue = styled.div`
   width: 70%;
+`;
+const SelectTimeContainer = styled.div`
+  display: flex;
+  width: 80%;
 `;
