@@ -20,6 +20,7 @@ const NavItem = () => {
   });
   const [hospitalInfo, setHospitalInfo] = useState({});
   const userRole = useRecoilValue(userRoleAtom);
+
   function deleteCookie(name) {
     const currentDate = new Date();
     // 현재날짜 이전 날짜
@@ -45,7 +46,7 @@ const NavItem = () => {
   };
   useEffect(() => {
     const fetchData = async () => {
-      if (userRole === "PATIENT") {
+      if (userRole.role === "PATIENT") {
         try {
           const response = await axios.get("/patient/page-view", {
             headers: {
