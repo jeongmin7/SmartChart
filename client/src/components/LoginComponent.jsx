@@ -202,10 +202,10 @@ const LoginComponent = () => {
     const token = document.cookie.includes("token");
 
     if (session || token) {
-      if (userRole === "DOCTOR") {
+      if (userRole.role === "DOCTOR") {
         navigate("/hospitalPage");
-      } else {
-        navigate("/myPage");
+      } else if (userRole.role === "PATIENT") {
+        navigate("/mypage");
       }
     }
   }, [navigate, userRole]);
