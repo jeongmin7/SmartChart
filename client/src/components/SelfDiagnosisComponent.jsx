@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { answerAtom } from "../stores/answerAtom";
 import { questions } from "../assets/questions";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { userRoleAtom } from "../stores/userInfo";
 
 const SelfDiagnosisComponent = ({ id }) => {
   const [answers, setAnswers] = useRecoilState(answerAtom);
   const [data, setData] = useState([]);
+  const userRole = useRecoilValue(userRoleAtom);
+
   const handleAnswer = (index, value) => {
     const newAnswers = [...answers];
     newAnswers[index] = {
@@ -21,23 +24,25 @@ const SelfDiagnosisComponent = ({ id }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          `/doctor/health-check/`,
-          { patientId: id },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-      } catch (error) {
-        toast.error("데이터를 읽어오는데 실패했습니다.");
-      }
+      if (userRole.role === "DOCTOR")
+        try {
+          const response = await axios.post(
+            `/doctor/health-check/`,
+            { patientId: id },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+        } catch (error) {
+          toast.error("데이터를 읽어오는데 실패했습니다.");
+        }
     };
 
     fetchData();
   }, []);
+
   return (
     <Table>
       <Subject>
