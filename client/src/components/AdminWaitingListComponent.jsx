@@ -140,9 +140,8 @@ const ColumnContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
-  min-width: 1000px;
-  min-height: 700px;
-  max-width: 100%; /* 최대 너비를 설정합니다. */
+  min-width: 1400px;
+  min-height: 800px;
   overflow-x: auto;
 `;
 
