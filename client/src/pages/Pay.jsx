@@ -19,6 +19,7 @@ const Pay = () => {
     setSelectedItemId(itemId);
     setIsModalOpen(!isModalOpen);
   };
+  console.log(list);
 
   useEffect(() => {
     const fetchData = async () => {
