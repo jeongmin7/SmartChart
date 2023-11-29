@@ -1,16 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Button from "./Button";
 import { palette } from "../styles/GlobalStyles";
+import { userRoleAtom } from "../stores/userInfo";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { invoiceAtom } from "../stores/invoiceAtom";
 
-const Invoice = ({ id, patientInfo, cost, prevCost, isDoctor, sum }) => {
+const Invoice = ({
+  id,
+  patientInfo,
+  cost,
+  prevCost,
+  sum,
+  patientDetailCost,
+}) => {
   // 옵션에서 선택한 치료내역
+
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedFields, setSelectedFields] = useState([]);
+  const [copiedValue, setCopiedValue] = useRecoilState(invoiceAtom);
+  const userRole = useRecoilValue(userRoleAtom);
+
+  const copySelectedValue = () => {
+    const copiedValue = [...selectedFields];
+    setCopiedValue(copiedValue);
+  };
+  useEffect(copySelectedValue, [selectedFields]);
+  const isDoctor = userRole.role === "DOCTOR";
+  const prevTotalCost = prevCost.reduce(
+    (acc, current) => acc + current.cost,
+    0
+  );
   const totalCost = selectedFields.reduce(
     (total, item) => total + parseInt(item.cost),
     0
   );
+
+  const total = prevTotalCost + totalCost;
   // 옵션에서 선택한 치료내역
   const handleSelectChange = (event) => {
     setSelectedValue(event.target.value);
@@ -29,7 +55,11 @@ const Invoice = ({ id, patientInfo, cost, prevCost, isDoctor, sum }) => {
     if (selectedItem) {
       setSelectedFields([
         ...selectedFields,
-        { treatment: selectedValue, cost: selectedItem.cost },
+        {
+          reservationId: id,
+          treatment: selectedValue,
+          cost: selectedItem.cost,
+        },
       ]);
     }
   };
@@ -82,88 +112,7 @@ const Invoice = ({ id, patientInfo, cost, prevCost, isDoctor, sum }) => {
         <Section>치료 내역서</Section>
       </SectionHeader>
       <GridContainer detail="true">
-        {/* {prevCost.length !== 0 ? (
-          isDoctor ? (
-            //TODO: 의사일 경우
-
-            <div>
-              {prevCost.map(({ treatment, cost }, index) => (
-                <GridItem key={index} type="text" title="true" header="true">
-                  <StyledInput title="true">{treatment}</StyledInput>
-                  <StyledInput>{cost}원</StyledInput>
-                </GridItem>
-              ))}
-              <GridItem className="noBorderBottom" header="true">
-                <StyledInput title="true">총금액</StyledInput>
-                <StyledInput>{total[0].sum}원</StyledInput>
-              </GridItem>
-            </div>
-          ) : (
-            //TODO: 환자일경우
-            <div>
-              {prevCost.map(({ treatment, cost }, index) => (
-                <GridItem key={index} type="text" title="true" header>
-                  <StyledInput title="true">{treatment}</StyledInput>
-                  <StyledInput>{cost}원</StyledInput>
-                </GridItem>
-              ))}
-              <GridItem className="noBorderBottom" header>
-                <StyledInput title="true">총금액</StyledInput>
-                <StyledInput>{sum}원</StyledInput>
-              </GridItem>
-            </div>
-          )
-        ) : isDoctor ? ( */}
         {isDoctor ? (
-          //   selectedFields.map((field, index) => (
-          //     <GridItem header key={index}>
-          //       {/* 내역 */}
-          //       <StyledInput type="text" title="true">
-          //         {index + 1 === selectedFields.length && (
-          //           <ListBox>
-          //             {/* 옵션 선택하는 부분 */}
-          //             <PayList
-          //               value={selectedValue}
-          //               onChange={handleSelectChange}
-          //             >
-          //               <option value="">선택하세요</option>
-          //               {getTreatmentOptions().map((option, index) => (
-          //                 <option key={index} value={option}>
-          //                   {option}
-          //                 </option>
-          //               ))}
-          //             </PayList>
-          //             <Button
-          //               width="80px"
-          //               height="25px"
-          //               fontSize="15px"
-          //               padding="0"
-          //               borderRadius="10px"
-          //               onClick={addInputField}
-          //             >
-          //               추가
-          //             </Button>
-          //           </ListBox>
-          //         )}
-          //         <div>{field.treatment}</div>
-          //         <ListBox className="buttonBox">
-          //           <Button
-          //             width="43px"
-          //             height="25px"
-          //             fontSize="15px"
-          //             padding="0"
-          //             borderRadius="10px"
-          //             onClick={() => addInputField("delete", index)}
-          //           >
-          //             제거
-          //           </Button>
-          //         </ListBox>
-          //       </StyledInput>
-          //       <StyledInput type="text">{field.cost}원</StyledInput>
-          //     </GridItem>
-
-          //   ))
-          // )
           <>
             {selectedFields.map((field, index) => (
               <GridItem header key={index}>
@@ -212,84 +161,69 @@ const Invoice = ({ id, patientInfo, cost, prevCost, isDoctor, sum }) => {
                 <StyledInput type="text">{field.cost}원</StyledInput>
               </GridItem>
             ))}
-            {isDoctor && (selectedFields.length === 0 || !prevCost) && (
-              <GridItem header>
-                <StyledInput type="text" title="true">
-                  <PayList value={selectedValue} onChange={handleSelectChange}>
-                    <option value="">선택하세요</option>
-                    {getTreatmentOptions().map((option, index) => (
-                      <option key={index} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </PayList>
-                  <Button
-                    width="43px"
-                    height="25px"
-                    fontSize="15px"
-                    padding="0"
-                    onClick={addInputField}
-                    disabled={!selectedValue}
-                  >
-                    등록
-                  </Button>
-                </StyledInput>
-                <StyledInput type="text" />
-              </GridItem>
-            )}
-            {/* prevCost 표시 */}
             {prevCost.map((detail, index) => (
               <GridItem key={index} type="text" title="true" header>
                 <StyledInput title="true">{detail.treatment}</StyledInput>
                 <StyledInput>{detail.cost}원</StyledInput>
               </GridItem>
             ))}
+            {/* 닥터면서 추가한  치료가 없을 때  */}
+            {isDoctor && selectedFields.length === 0 && (
+              <>
+                <GridItem header>
+                  <StyledInput type="text" title="true">
+                    <PayList
+                      value={selectedValue}
+                      onChange={handleSelectChange}
+                    >
+                      <option value="">선택하세요</option>
+                      {getTreatmentOptions().map((option, index) => (
+                        <option key={index} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </PayList>
+                    <Button
+                      width="43px"
+                      height="25px"
+                      fontSize="15px"
+                      padding="0"
+                      onClick={addInputField}
+                      disabled={!selectedValue}
+                    >
+                      등록
+                    </Button>
+                  </StyledInput>
+
+                  <StyledInput type="text" />
+                </GridItem>
+              </>
+            )}
+            <GridItem className="noBorderBottom" header>
+              <Title>총금액</Title>
+              {!selectedFields && <Content>0원</Content>}
+              {selectedFields && prevTotalCost ? (
+                <Content>{total}</Content>
+              ) : (
+                <Content>{totalCost}원</Content>
+              )}
+            </GridItem>
           </>
         ) : (
+          // 환자일 경우
           <div>
-            {prevCost.map(({ treatment, cost }, index) => (
+            {patientDetailCost.map(({ treatment, cost }, index) => (
               <GridItem key={index} type="text" title="true" header>
                 <StyledInput title="true">{treatment}</StyledInput>
                 <StyledInput>{cost}원</StyledInput>
               </GridItem>
             ))}
             <GridItem className="noBorderBottom" header>
-              <StyledInput title="true">총금액</StyledInput>
-              <StyledInput>{sum}원</StyledInput>
+              <Title>총금액</Title>
+              <Content>{sum}원</Content>
             </GridItem>
           </div>
         )}
-        {/* {isDoctor && (selectedFields.length === 0 || !prevCost) && (
-          <GridItem header>
-            <StyledInput type="text" title="true">
-              <PayList value={selectedValue} onChange={handleSelectChange}>
-                <option value="">선택하세요</option>
-                {getTreatmentOptions().map((option, index) => (
-                  <option key={index} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </PayList>
-              <Button
-                width="43px"
-                height="25px"
-                fontSize="15px"
-                padding="0"
-                onClick={addInputField}
-                disabled={!selectedValue}
-              >
-                등록
-              </Button>
-            </StyledInput>
-            <StyledInput type="text" />
-          </GridItem>
-        )} */}
-        {
-          <GridItem className="noBorderBottom">
-            <Title>총금액</Title>
-            <Content>{totalCost}원</Content>
-          </GridItem>
-        }
       </GridContainer>
     </Wrapper>
   );
@@ -302,8 +236,8 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   width: 80%;
-  height: 100%;
-  max-width: 1500px;
+  height: auto;
+  max-width: 1800px;
   border: 2px solid ${palette.primary.black};
 `;
 

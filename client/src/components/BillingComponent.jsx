@@ -36,6 +36,7 @@ const BillingComponent = () => {
 
   const [patientInfo, setPatientInfo] = useState([]);
   const [cost, setCost] = useState([]);
+  const [prevCost, setPrevCost] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,6 +44,7 @@ const BillingComponent = () => {
         const response = await axios.get(`/doctor/cost-view/${id}`);
         setPatientInfo(response.data.data[0]);
         setCost(response.data.data2);
+        setPrevCost(response.data.data3);
       } catch (error) {
         toast.error("데이터를 읽어오는데 실패했습니다.");
       }
@@ -75,11 +77,14 @@ const Container = styled.section`
   align-items: center;
   width: 100%;
   min-width: 1300px;
-  min-height: calc(100vh - 150px);
+  min-height: 900px;
+  position: relative;
 `;
 
 const Header = styled.div`
   font-weight: bold;
   margin-bottom: 20px;
   font-size: 25px;
+  position: absolute;
+  top: 100px;
 `;

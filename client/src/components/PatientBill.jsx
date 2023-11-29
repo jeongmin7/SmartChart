@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { styled } from "styled-components";
 import axios from "axios";
 import Invoice from "./Invoice";
 import { toast } from "react-toastify";
+import { Container, Header } from "../styles/CommonStyle";
 
 const PatientBill = ({ id }) => {
   const [detailCost, setDetailCost] = useState([]);
   const [patient, setPatient] = useState({});
   const [total, setTotal] = useState(0);
-  const isDoctor = false;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,30 +36,14 @@ const PatientBill = ({ id }) => {
     <Container>
       <Header>의료비 청구</Header>
       <Invoice
-        isDoctor={isDoctor}
         detailCost={detailCost}
         patientInfo={patient}
         sum={total}
         id={id}
+        patientDetailCost={detailCost}
       />
     </Container>
   );
 };
 
 export default PatientBill;
-
-const Container = styled.section`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  min-width: 1300px;
-  min-height: calc(100vh - 150px);
-`;
-
-const Header = styled.div`
-  font-weight: bold;
-  margin-bottom: 20px;
-  font-size: 25px;
-`;
