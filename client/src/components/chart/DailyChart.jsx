@@ -168,6 +168,12 @@ const options = {
       },
     },
   },
+  controller: {
+    bar: {
+      categoryPercentage: 0.5,
+      barPercentage: 0.9,
+    },
+  },
 };
 
 const DailyChart = ({ datas, salesDate, recentDate }) => {
