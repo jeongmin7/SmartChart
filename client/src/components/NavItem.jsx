@@ -57,7 +57,7 @@ const NavItem = () => {
         } catch (err) {
           toast.error("사용자 정보를 읽어오는데 실패했습니다.");
         }
-      } else {
+      } else if (userRole.role === "DOCTOR") {
         try {
           const response = await axios.get("/doctor/hospital-view", {
             headers: {
