@@ -4,9 +4,26 @@ import Button from "../components/Button";
 import Modal from "../components/Modal";
 import TreatmentAndCost from "../components/TreatmentAndCost";
 import styled from "styled-components";
+import { useRecoilValue } from "recoil";
+import { invoiceAtom } from "../stores/invoiceAtom";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const BillingContainer = () => {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const invoiceDetail = useRecoilValue(invoiceAtom);
+  console.log(invoiceDetail, 111);
+  const handleSaveButton = () => {
+    try {
+      axios.post(`/doctor/treatment_statement`, invoiceDetail);
+      toast.success("저장되었습니다.");
+      navigate("/adminAppointment");
+    } catch (error) {
+      toast.error("저장되지 않았습니다.");
+    }
+  };
 
   const handleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -15,7 +32,7 @@ const BillingContainer = () => {
     <Container>
       <BillingComponent />
       <Buttons>
-        <Button borderRadius="15px" width="100px">
+        <Button borderRadius="15px" width="100px" onClick={handleSaveButton}>
           저장
         </Button>
         <Button onClick={handleModal}>기본 치료비 책정하기</Button>
@@ -39,7 +56,7 @@ const Container = styled.div`
 const Buttons = styled.div`
   display: flex;
   gap: 100px;
-  margin: 10px 0;
   justify-content: center;
   align-items: center;
+  margin-top: 20px;
 `;
