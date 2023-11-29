@@ -114,9 +114,9 @@ const MonthlyChart = ({
           <MainChart>
             <Line data={data} options={options} />
           </MainChart>
-          {activeChart === "gender" && <PatientGenderTrends data={gender} />}
+          {activeChart === "gender" && <PatientGenderTrends datas={gender} />}
           {activeChart === "averageAge" && (
-            <AverageAgeChart data={averageAge} />
+            <AverageAgeChart datas={averageAge} />
           )}
           {activeChart === "revenue" && <RevenueChart basisData={salesMonth} />}
           {activeChart === "latest" && <LatestChart basisData={recentMonth} />}

@@ -2,19 +2,20 @@ import React from "react";
 import styled from "styled-components";
 
 const Table = ({ tableData }) => {
+  console.log(tableData);
   return (
     <TableContainer>
       <TableHeader>
         <TableCell>날짜</TableCell>
         <TableCell>환자수</TableCell> <TableCell>총 수입</TableCell>
         {/* 여성환자수, 남성환자수, 평균나이 필수 조건이 아닌 경우에만 렌더링 */}
-        {tableData.some((data) => data.femaleCount) && (
+        {tableData.some((data) => "femaleCount" in data) && (
           <TableCell>여성 환자</TableCell>
         )}
-        {tableData.some((data) => data.maleCount) && (
+        {tableData.some((data) => "maleCount" in data) && (
           <TableCell>남성 환자</TableCell>
         )}
-        {tableData.some((data) => data.averageAge) && (
+        {tableData.some((data) => "averageAge" in data) && (
           <TableCell>평균나이</TableCell>
         )}
       </TableHeader>
@@ -24,11 +25,21 @@ const Table = ({ tableData }) => {
           {data.date && <TableCell>{data.date}</TableCell>}
           {data.year_MONTH && <TableCell>{data.year_MONTH}</TableCell>}
           {data.year && <TableCell>{data.year}</TableCell>}
-          <TableCell>{data.patientCount}</TableCell>
-          {data.femalePatients && <TableCell>{data.femaleCount}</TableCell>}
-          {data.malePatients && <TableCell>{data.maleCount}</TableCell>}
-          {data.averageAge && <TableCell>{data.averageAge}</TableCell>}
-          <TableCell>{data.sum}</TableCell>
+          {typeof data.femaleCount === "number" && (
+            <TableCell>{data.patientCount}명</TableCell>
+          )}
+          {typeof data.femaleCount === "number" && (
+            <TableCell>{data.sum}원</TableCell>
+          )}
+          {typeof data.femaleCount === "number" && (
+            <TableCell>{data.femaleCount}명</TableCell>
+          )}
+          {typeof data.maleCount === "number" && (
+            <TableCell>{data.maleCount}명</TableCell>
+          )}
+          {typeof data.averageAge === "number" && (
+            <TableCell>{data.averageAge}세</TableCell>
+          )}
         </TableRow>
       ))}
     </TableContainer>
@@ -60,6 +71,7 @@ const TableHeader = styled(TableRow)`
   font-weight: bold;
   background-color: #f0f0f0;
   display: flex;
+  padding: 8px;
 `;
 
 const TableCell = styled.div`

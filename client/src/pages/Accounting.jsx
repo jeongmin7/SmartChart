@@ -78,7 +78,7 @@ const Accounting = () => {
               gender={data.genderMonth}
               averageAge={data.averageAgeMonth}
             />
-            <Table tableData={data.month} />
+            <Table tableData={data.genderMonth} />
           </>
         );
         break;
@@ -168,7 +168,9 @@ const ContentContainer = styled.div`
   align-items: center;
   position: absolute;
   top: 100px;
+  flex-grow: 1;
 `;
+
 const Buttons = styled.div`
   display: grid;
   width: 100%;

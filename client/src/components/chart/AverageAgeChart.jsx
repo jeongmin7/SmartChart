@@ -18,10 +18,10 @@ Chart.register(
   LineElement,
   Title,
   Tooltip,
-  Legend,
+  Legend
 );
 
-export const options = {
+const options = {
   responsive: true,
   plugins: {
     legend: {
@@ -32,40 +32,20 @@ export const options = {
     },
   },
 };
-const datas = [
-  {
-    sum: 800,
-    year_MONTH: "2013-08",
-    averageAge: 30,
-    patientCount: 2,
-  },
-  {
-    sum: 180000,
-    year_MONTH: "2023-07",
-    averageAge: 12,
-    patientCount: 2,
-  },
-  {
-    sum: 1620400,
-    year_MONTH: "2023-08",
-    averageAge: 18,
-    patientCount: 3,
-  },
-];
 
-const labels = datas.map((item) => item.year_MONTH);
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "평균 나이",
-      data: datas.map((item) => item.averageAge),
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-  ],
-};
-const AverageAgeChart = () => {
+const AverageAgeChart = ({ datas }) => {
+  const labels = datas.map((item) => item.year_MONTH);
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "평균 나이",
+        data: datas.map((item) => item.averageAge),
+        borderColor: "rgb(53, 162, 235)",
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
+      },
+    ],
+  };
   return (
     <Wrapper>
       <Line options={options} data={data} />
