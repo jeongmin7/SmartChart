@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
   BarElement,
+  BarController,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { Wrapper } from "./WeeklyChart";
@@ -21,7 +22,8 @@ Chart.register(
   Title,
   Tooltip,
   Legend,
-  BarElement
+  BarElement,
+  BarController
 );
 
 const PatientGenderTrends = ({ datas }) => {

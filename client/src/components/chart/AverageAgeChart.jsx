@@ -7,6 +7,8 @@ import {
   Title,
   Tooltip,
   Legend,
+  BarController,
+  BarElement,
 } from "chart.js";
 import { Wrapper } from "./WeeklyChart";
 import { Line } from "react-chartjs-2";
@@ -18,7 +20,9 @@ Chart.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  BarController,
+  BarElement
 );
 
 const options = {
