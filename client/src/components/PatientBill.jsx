@@ -34,7 +34,6 @@ const PatientBill = ({ id }) => {
 
   return (
     <Container>
-      <Header>의료비 청구</Header>
       <Invoice
         detailCost={detailCost}
         patientInfo={patient}
