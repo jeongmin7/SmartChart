@@ -5,14 +5,11 @@ import { Link, useLocation } from "react-router-dom";
 
 import { path } from "../modules/define/path";
 import NavItem from "../components/NavItem";
-import { useRecoilValue } from "recoil";
-import { userInfoAtom, userRoleAtom } from "../stores/userInfo";
 
 const NavBar = () => {
   const pathname = useLocation().pathname;
   const [mobileMenu, setMobileMenu] = useState(false);
-  //   const userRole = useRecoilValue(userRoleAtom);
-  // (userRole.role);
+
   const handleMenu = () => {
     setMobileMenu(!mobileMenu);
   };
