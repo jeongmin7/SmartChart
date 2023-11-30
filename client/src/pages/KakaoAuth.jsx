@@ -10,7 +10,7 @@ const KakaoAuth = () => {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          "https://smartchart.vercel.app/auth/kakao/callback",
+          "http://localhost:3000/auth/kakao/callback",
           { code }
         );
         console.log(response);
