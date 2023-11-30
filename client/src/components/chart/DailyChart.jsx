@@ -9,7 +9,9 @@ import {
   Tooltip,
   Legend,
   BarElement,
+  BarController,
 } from "chart.js";
+
 import { Line } from "react-chartjs-2";
 import {
   Buttons,
@@ -31,105 +33,9 @@ Chart.register(
   Title,
   Tooltip,
   Legend,
-  BarElement
+  BarElement,
+  BarController
 );
-
-// const recentDate = [
-//   {
-//     sum: 400,
-//     date: "2023-08-09",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 20000,
-//     date: "2023-08-08",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 1600000,
-//     date: "2023-08-04",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 140000,
-//     date: "2023-07-09",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 40000,
-//     date: "2023-07-08",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 800,
-//     date: "2013-08-09",
-//     patientCount: 2,
-//   },
-// ];
-// const salesDate = [
-//   {
-//     sum: 1600000,
-//     date: "2023-08-04",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 140000,
-//     date: "2023-07-09",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 40000,
-//     date: "2023-07-08",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 20000,
-//     date: "2023-08-08",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 800,
-//     date: "2013-08-09",
-//     patientCount: 2,
-//   },
-//   {
-//     sum: 400,
-//     date: "2023-08-09",
-//     patientCount: 1,
-//   },
-// ];
-// const datas = [
-//   {
-//     sum: 800,
-//     date: "2013-08-09",
-//     patientCount: 2,
-//   },
-//   {
-//     sum: 40000,
-//     date: "2023-07-08",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 140000,
-//     date: "2023-07-09",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 1600000,
-//     date: "2023-08-04",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 20000,
-//     date: "2023-08-08",
-//     patientCount: 1,
-//   },
-//   {
-//     sum: 400,
-//     date: "2023-08-09",
-//     patientCount: 1,
-//   },
-// ];
 
 const options = {
   plugins: {

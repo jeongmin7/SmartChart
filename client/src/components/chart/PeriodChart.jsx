@@ -8,6 +8,8 @@ import {
   Title,
   Tooltip,
   Legend,
+  BarController,
+  BarElement,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import {
@@ -32,7 +34,9 @@ Chart.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  BarElement,
+  BarController
 );
 
 const options = {
