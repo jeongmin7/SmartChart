@@ -25,12 +25,10 @@ const Table = ({ tableData }) => {
           {data.date && <TableCell>{data.date}</TableCell>}
           {data.year_MONTH && <TableCell>{data.year_MONTH}</TableCell>}
           {data.year && <TableCell>{data.year}</TableCell>}
-          {typeof data.femaleCount === "number" && (
+          {typeof data.patientCount === "number" && (
             <TableCell>{data.patientCount}명</TableCell>
           )}
-          {typeof data.femaleCount === "number" && (
-            <TableCell>{data.sum}원</TableCell>
-          )}
+          {typeof data.sum === "number" && <TableCell>{data.sum}원</TableCell>}
           {typeof data.femaleCount === "number" && (
             <TableCell>{data.femaleCount}명</TableCell>
           )}
