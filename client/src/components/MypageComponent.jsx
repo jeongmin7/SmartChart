@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import Button from "./Button";
 import { palette } from "../styles/GlobalStyles";
-import { useRecoilState } from "recoil";
 import { userInfoAtom } from "../stores/userInfo";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useRecoilState } from "recoil";
 
 const MypageComponent = () => {
-  const [userInfo, setUserInfo] = useState(userInfoAtom);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
   const [appointmentList, setAppointmentList] = useState([]);
 
   useEffect(() => {
@@ -32,6 +32,7 @@ const MypageComponent = () => {
     };
     fetchData();
   }, []);
+
   const cancelReservation = async (id) => {
     const reservationId = String(id);
     try {

@@ -4,13 +4,12 @@ import Button from "../components/Button";
 import { palette } from "../styles/GlobalStyles";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useRecoilState } from "recoil";
+import { hospitalAtom } from "../stores/userInfo";
 
 const HospitalPage = () => {
-  const [hospitalInfo, setHospitalInfo] = useState({
-    hospitalName: "",
-    hospitalPhoneNumber: "",
-    hospitalIntroduce: "",
-  });
+  const [hospitalInfo, setHospitalInfo] = useRecoilState(hospitalAtom);
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get("/doctor/hospital-view", {

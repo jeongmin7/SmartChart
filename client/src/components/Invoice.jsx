@@ -27,10 +27,8 @@ const Invoice = ({
   };
   useEffect(copySelectedValue, [selectedFields]);
   const isDoctor = userRole.role === "DOCTOR";
-  const prevTotalCost = prevCost.reduce(
-    (acc, current) => acc + current.cost,
-    0
-  );
+  const prevTotalCost =
+    prevCost && prevCost.reduce((acc, current) => acc + current.cost, 0);
   const totalCost = selectedFields.reduce(
     (total, item) => total + parseInt(item.cost),
     0
@@ -237,7 +235,7 @@ const Wrapper = styled.div`
   justify-content: center;
   width: 80%;
   height: auto;
-  max-width: 1800px;
+  max-width: 2000px;
   border: 2px solid ${palette.primary.black};
 `;
 

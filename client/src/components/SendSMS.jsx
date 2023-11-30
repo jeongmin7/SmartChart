@@ -3,9 +3,13 @@ import styled from "styled-components";
 import Button from "./Button";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useRecoilValue } from "recoil";
+import { hospitalAtom } from "../stores/userInfo";
 
 function SendSMS({ SMSInfo }) {
   const [content, setContent] = useState("");
+  const hospitalName = useRecoilValue(hospitalAtom).hospitalName;
+  console.log(hospitalName);
 
   const sendSMS = () => {
     try {
@@ -24,8 +28,8 @@ function SendSMS({ SMSInfo }) {
     <Container>
       <Header>문자 전송하기</Header>
       <Body>
-        <HospitalName>병원이름</HospitalName>
-        {/* //TODO: 병원이름 수정 */}
+        <HospitalName>{hospitalName}</HospitalName>
+
         <TextInput
           type="text"
           placeholder="수신인 전화번호는 (-)없이 기입해주시기 바랍니다."

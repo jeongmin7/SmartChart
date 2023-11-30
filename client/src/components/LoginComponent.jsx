@@ -112,6 +112,7 @@ const LoginComponent = () => {
           setIsLoading(false);
           navigate("/hospitalpage");
           setUserRole({ role: response.data.role });
+          localStorage.setItem("userRole", response.data.role);
           const session = response.data.session;
 
           document.cookie = `session=${session}; expires=${expirationDate.toUTCString()}; path=/`;
@@ -163,6 +164,7 @@ const LoginComponent = () => {
           setIsLoading(false);
           navigate("/mypage");
           setUserRole({ role: response.data.role });
+          localStorage.setItem("userRole", response.data.role);
         }
       } catch (error) {
         if (error.response && error.response.status === 405) {
