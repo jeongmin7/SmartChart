@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { CiSquareChevDown } from "react-icons/ci";
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { styled } from "styled-components";
 import { userRoleAtom } from "../stores/userInfo";
 import patientIcon from "../assets/patient.png";
@@ -18,8 +18,15 @@ const NavItem = () => {
     age: 0,
     phoneNumber: 0,
   });
-  const [hospitalInfo, setHospitalInfo] = useState({});
-  const userRole = useRecoilValue(userRoleAtom);
+  const [hospitalInfo, setHospitalInfo] = useState({
+    name: "",
+    address: "",
+    mapx: "",
+    mapy: "",
+    tel: "",
+    category: "",
+  });
+  const [userRole, setUserRole] = useRecoilState(userRoleAtom);
 
   function deleteCookie(name) {
     const currentDate = new Date();
@@ -44,34 +51,43 @@ const NavItem = () => {
     deleteCookie("session");
     navigate("/");
   };
+
   useEffect(() => {
-    const fetchData = async () => {
-      if (userRole.role === "PATIENT") {
-        try {
-          const response = await axios.get("/patient/page-view", {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          setUserInfo(response.data.myPage[0]);
-        } catch (err) {
-          toast.error("사용자 정보를 읽어오는데 실패했습니다.");
-        }
-      } else if (userRole.role === "DOCTOR") {
-        try {
-          const response = await axios.get("/doctor/hospital-view", {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          setHospitalInfo(response.data.hospitalPage[0]);
-        } catch (err) {
-          console.error(err);
-        }
+    const storedUserRole = localStorage.getItem("userRole");
+    if (storedUserRole) {
+      setUserRole({ role: storedUserRole });
+
+      // 변경된 userRole적용
+      fetchData(storedUserRole);
+    }
+  }, [setUserRole]);
+
+  const fetchData = async (role) => {
+    if (role === "PATIENT") {
+      try {
+        const response = await axios.get("/patient/page-view", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        setUserInfo(response.data.myPage[0]);
+      } catch (err) {
+        toast.error("사용자 정보를 읽어오는데 실패했습니다.");
       }
-    };
-    fetchData();
-  }, [userRole]);
+    } else if (role === "DOCTOR") {
+      try {
+        const response = await axios.get("/doctor/hospital-view", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        setHospitalInfo(response.data.hospitalPage[0]);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
   return (
     <StyledNavItem>
       <NavItemWrapper>
