@@ -4,9 +4,17 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 const Modal = ({ isOpen, children, handleModal }) => {
   if (!isOpen) return null;
 
+  const handleWrapperClick = (e) => {
+    handleModal();
+  };
+
+  const handleContentClick = (e) => {
+    e.stopPropagation();
+  };
+
   return (
-    <ModalWrapper>
-      <ModalContent>
+    <ModalWrapper onClick={handleWrapperClick}>
+      <ModalContent onClick={handleContentClick}>
         <CloseButton onClick={handleModal}>
           <AiOutlineCloseCircle size={20} />
         </CloseButton>
@@ -38,12 +46,12 @@ const ModalContent = styled.div`
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  max-height: 80%; /* 스크롤 가능하도록 하는 설정 */
-  overflow-y: auto; /* 스크롤 가능하도록 하는 설정 */
+  max-height: 80%;
+  overflow-y: auto;
 `;
 
 const ModalScrollableContent = styled.div`
-  flex-grow: 1; /* 스크롤 가능하도록 하는 설정 */
+  flex-grow: 1;
 `;
 
 const CloseButton = styled.button`
