@@ -14,6 +14,7 @@ const Pay = () => {
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [patient, setPatient] = useState({});
   const [total, setTotal] = useState(0);
+  const [id, setId] = useState(0);
 
   const handleModal = (itemId) => {
     setSelectedItemId(itemId);
@@ -48,9 +49,13 @@ const Pay = () => {
       );
       setPatient(response.data.data[0]);
       setTotal(response.data.date3[0].sum);
+      setId(id);
+      kakaoPay();
     } catch (error) {
       toast.error("정보를 가져오는데 실패했습니다.");
     }
+  };
+  const kakaoPay = () => {
     const IMP = window.IMP;
     IMP.init("imp18267031");
 
@@ -89,11 +94,18 @@ const Pay = () => {
               alert(error.message);
             });
         } else {
-          alert("결제 실패");
+          alert("결제 실패1");
         }
       }
     );
   };
+  useEffect(() => {
+    // total이 들어왔고, patient 객체있어야 카카오로 요청
+    if (total > 0 && patient && Object.keys(patient).length > 0) {
+      kakaoPay(id, total, patient);
+    }
+  }, [total, patient]);
+
   return (
     <Container>
       <Wrapper>
