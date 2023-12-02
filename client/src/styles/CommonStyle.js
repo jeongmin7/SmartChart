@@ -148,9 +148,7 @@ export const Container = styled.section`
 
 export const Wrapper = styled.div`
   display: flex;
-  width: 80%;
-  min-height: 1000px;
-  min-width: 500px;
+  flex: 1;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -158,7 +156,6 @@ export const Wrapper = styled.div`
   border-radius: 15px;
   position: relative;
   border: 1px solid ${palette.gray.border};
-  flex: 1;
 `;
 export const Header = styled.div`
   font-weight: bold;

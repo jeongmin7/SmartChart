@@ -19,7 +19,6 @@ const Pay = () => {
     setSelectedItemId(itemId);
     setIsModalOpen(!isModalOpen);
   };
-  console.log(list);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,18 +33,6 @@ const Pay = () => {
 
     fetchData();
   }, []);
-
-  const columns = [
-    { name: "", width: "3%" },
-    { name: "예약번호", width: "8%" },
-    { name: "병원명", width: "13%" },
-    { name: "진료날짜", width: "13%" },
-    { name: "환자 성명", width: "12%" },
-    { name: "총 금액", width: "13%" },
-    { name: "진료비 납부상태", width: "13%" },
-    { name: "진료비 보기", width: "13%" },
-    { name: "진료비 내기", width: "13%" },
-  ];
 
   const handlePayment = async (id) => {
     try {
@@ -111,119 +98,116 @@ const Pay = () => {
     <Container>
       <Wrapper>
         <Header>진료비</Header>
-        <List>
-          <AppointmentListTitle>
-            {columns.map((column, index) => (
-              <ListRowDivideWrapper width={column.width} index={index}>
-                {column.name}
-              </ListRowDivideWrapper>
-            ))}
-          </AppointmentListTitle>
-          <AppointmentListBody>
+        <TableContainer>
+          <TableHeader>
+            <TableCell>예약번호</TableCell>
+            <TableCell>병원명</TableCell>
+            <TableCell>진료날짜</TableCell>
+            <TableCell>환자 성명</TableCell>
+            <TableCell>총 금액</TableCell>
+            <TableCell>진료비 납부상태</TableCell>
+            <TableCell>진료비 보기</TableCell>
+            <TableCell>진료비 내기</TableCell>
+          </TableHeader>
+
+          <TableBody>
             {list.map((item, itemIndex) => (
-              <ListWrapper key={itemIndex}>
-                {columns.map((column, index) => (
-                  <ListRowDivideWrapper
-                    width={column.width}
-                    index={index}
-                    key={index}
+              <TableRow key={itemIndex}>
+                <div>{item.id}</div>
+                <div>{item.hospitalName}</div>
+                <div>{item.reservationDate}</div>
+                <div>{item.name}</div>
+                <div>{item.sum}원</div>
+                <div>{item.patientPaymentStatus}</div>
+                <ButtonContainer>
+                  <Button
+                    width="80px"
+                    fontSize="12px"
+                    padding="5px"
+                    borderRadius="7px"
+                    onClick={() => handleModal(item.id)}
                   >
-                    {index === 0 ? (
-                      String(itemIndex + 1)
-                    ) : index === 1 ? (
-                      <div>{item.id}</div>
-                    ) : index === 2 ? (
-                      <div>{item.hospitalName}</div>
-                    ) : index === 3 ? (
-                      <div>{item.reservationDate}</div>
-                    ) : index === 4 ? (
-                      <div>{item.name}</div>
-                    ) : index === 5 ? (
-                      <div>{item.sum}원</div>
-                    ) : index === 6 ? (
-                      <div>{item.patientPaymentStatus}</div>
-                    ) : index === 7 ? (
-                      <Button
-                        width="80px"
-                        fontSize="12px"
-                        padding="5px"
-                        borderRadius="7px"
-                        onClick={() => handleModal(item.id)}
-                      >
-                        진료비 보기
-                      </Button>
-                    ) : index === 8 ? (
-                      <Button
-                        width="80px"
-                        fontSize="12px"
-                        padding="5px"
-                        borderRadius="7px"
-                        onClick={() => handlePayment(item.id)}
-                      >
-                        진료비 내기
-                      </Button>
-                    ) : (
-                      column.name
-                    )}
-                  </ListRowDivideWrapper>
-                ))}
-              </ListWrapper>
+                    진료비 보기
+                  </Button>
+                </ButtonContainer>
+                <ButtonContainer>
+                  <Button
+                    width="80px"
+                    fontSize="12px"
+                    padding="5px"
+                    borderRadius="7px"
+                    onClick={() => handlePayment(item.id)}
+                  >
+                    진료비 내기
+                  </Button>
+                </ButtonContainer>
+              </TableRow>
             ))}
-            <Modal isOpen={isModalOpen} handleModal={handleModal}>
-              <PatientBill id={selectedItemId} />
-            </Modal>
-          </AppointmentListBody>
-        </List>
+          </TableBody>
+        </TableContainer>
+        <Modal isOpen={isModalOpen} handleModal={handleModal}>
+          <PatientBill id={selectedItemId} />
+        </Modal>
       </Wrapper>
     </Container>
   );
 };
-
 export default Pay;
 
-const List = styled.div`
+const TableContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 60%;
-  height: auto;
   margin: 30px 0;
+  width: 1000px;
 `;
 
-const AppointmentListTitle = styled.div`
+const TableHeader = styled.div`
   display: flex;
   width: 100%;
   height: 20%;
   background-color: ${palette.gray.light};
   border-top: 1px solid ${palette.gray.border};
   border-bottom: 1px solid ${palette.gray.border};
-  padding: 5px;
+  padding: 10px;
+  & > div {
+    flex: 1;
+    padding: 5px;
+  }
 `;
-const AppointmentListBody = styled.div`
+
+const TableBody = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 20%;
-  border-bottom: 1px solid ${palette.gray.border};
   padding: 5px;
 `;
 
-const ListRowDivideWrapper = styled.div`
+const TableRow = styled.div`
+  display: flex;
+  margin: 5px 0px;
+  & > div {
+    flex: 1;
+    padding: 5px;
+    align-items: center;
+    text-align: center;
+  }
+`;
+
+const TableCell = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: ${(props) =>
-    (props.index === 0 || props.index === 5 || props.index === 6) && "center"};
-  width: ${(props) => (props.width ? props.width : "100%")};
+  justify-content: center;
   height: 100%;
   font-weight: bold;
   font-size: 16px;
   border-left: ${(props) =>
     props.index !== 0 && `1px solid ${palette.gray.border}`};
-  padding-left: ${(props) =>
-    props.index !== 0 && props.index !== 5 && props.index !== 6 && "10px"};
+  white-space: nowrap;
 `;
-
-const ListWrapper = styled.div`
+const ButtonContainer = styled.div`
+  flex: 1;
   display: flex;
-  margin: 5px 0px;
+  justify-content: center;
+  align-items: center;
 `;
