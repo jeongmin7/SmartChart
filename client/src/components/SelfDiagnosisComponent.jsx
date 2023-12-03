@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { answerAtom } from "../stores/answerAtom";
 import { questions } from "../assets/questions";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { userRoleAtom } from "../stores/userInfo";
 
 const SelfDiagnosisComponent = ({ id }) => {
   const [answers, setAnswers] = useRecoilState(answerAtom);
   const [data, setData] = useState([]);
-  const userRole = useRecoilValue(userRoleAtom);
+  const localStorageUserRole = localStorage.getItem("userRole");
 
   const handleAnswer = (index, value) => {
     const newAnswers = [...answers];
@@ -24,17 +23,12 @@ const SelfDiagnosisComponent = ({ id }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (userRole.role === "DOCTOR")
+      if (localStorageUserRole === "DOCTOR")
         try {
-          const response = await axios.post(
-            `/doctor/health-check/`,
-            { patientId: id },
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
+          const response = await axios.post(`/doctor/health-check/`, {
+            patientId: id,
+          });
+          setData(response.data.data);
           if (response.data.data.length === 0) {
             toast.error("환자가 아직 체크하지 않았습니다.");
           }
@@ -52,12 +46,11 @@ const SelfDiagnosisComponent = ({ id }) => {
         <Title>기본 건강 체크</Title>
         <Body>
           {data.length !== 0
-            ? data.map(({ question, questionId, answer }) => (
-                <div key={questionId}>
+            ? data.map(({ questionNumber, answer, idx }) => (
+                <div key={idx}>
                   <SubTitle>
-                    {questionId}. {question}
+                    {questionNumber}. {questions[questionNumber - 1].question}
                   </SubTitle>
-
                   <div>
                     <Label>
                       <input
@@ -81,7 +74,7 @@ const SelfDiagnosisComponent = ({ id }) => {
                       <input
                         type="radio"
                         value="모름"
-                        defaultChecked={answer === "awareness"}
+                        defaultChecked={answer === "unawareness"}
                         style={{ marginRight: "30px" }}
                       />
                       모름
