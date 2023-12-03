@@ -181,7 +181,7 @@ const AdminAppointmentComponent = () => {
                         isOpen={appointmentModals[index]}
                         handleModal={() => handleModal(index)}
                       >
-                        <SelfDiagnosisComponent id={appointment.id} />
+                        <SelfDiagnosisComponent id={appointment.patientId} />
                       </Modal>
                     </Td>
                   </tr>
