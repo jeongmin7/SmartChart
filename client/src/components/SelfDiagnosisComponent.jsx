@@ -20,6 +20,7 @@ const SelfDiagnosisComponent = ({ id }) => {
     };
     setAnswers(newAnswers);
   };
+  console.log(id);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,17 +38,20 @@ const SelfDiagnosisComponent = ({ id }) => {
             }
           );
           setData(response.data.data);
-          console.log(response.data);
           if (response.data.data.length === 0) {
             toast.error("환자가 아직 체크하지 않았습니다.");
           }
         } catch (error) {
           toast.error(error);
+          console.error(error);
         }
+      else {
+        console.log(localStorageUserRole, "userrole이 의사가 아니다?");
+      }
     };
 
     fetchData();
-  }, []);
+  }, [id, localStorageUserRole]);
 
   return (
     <Table>
