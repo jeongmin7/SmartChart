@@ -48,7 +48,7 @@ const LoginComponent = () => {
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [emailAddress, setEmailAddress] = useState("");
   const [userRole, setUserRole] = useRecoilState(userRoleAtom);
-
+  const localStorageUserRole = localStorage.getItem("userRole");
   const onChange = (e) => {
     const {
       target: { name, value },
@@ -197,20 +197,19 @@ const LoginComponent = () => {
         toast.success("이메일로 비밀번호 찾기 요청을 보냈습니다.");
       });
   };
-
   // "/"페이지 접근 막기
   useEffect(() => {
     const session = document.cookie.includes("session");
     const token = document.cookie.includes("token");
 
     if (session || token) {
-      if (userRole.role === "DOCTOR") {
+      if (localStorageUserRole === "DOCTOR") {
         navigate("/hospitalPage");
-      } else if (userRole.role === "PATIENT") {
+      } else if (localStorageUserRole === "PATIENT") {
         navigate("/mypage");
       }
     }
-  }, [navigate, userRole]);
+  }, [localStorageUserRole, navigate]);
 
   return (
     <>
