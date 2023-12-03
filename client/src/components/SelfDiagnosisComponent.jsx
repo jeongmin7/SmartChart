@@ -25,15 +25,24 @@ const SelfDiagnosisComponent = ({ id }) => {
     const fetchData = async () => {
       if (localStorageUserRole === "DOCTOR")
         try {
-          const response = await axios.post(`/doctor/health-check/`, {
-            patientId: id,
-          });
+          const response = await axios.post(
+            `/doctor/health-check/`,
+            {
+              patientId: id,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
           setData(response.data.data);
+          console.log(response.data);
           if (response.data.data.length === 0) {
             toast.error("환자가 아직 체크하지 않았습니다.");
           }
         } catch (error) {
-          toast.error("데이터를 읽어오는데 실패했습니다.");
+          toast.error(error);
         }
     };
 
