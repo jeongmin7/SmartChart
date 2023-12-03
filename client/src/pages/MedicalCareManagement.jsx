@@ -42,15 +42,21 @@ const MedicalCareManagement = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`/doctor/treatment-view/${id}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      setPatientInfo(response.data.data[0]);
+      try {
+        const response = await axios.get(`/doctor/treatment-view/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        setPatientInfo(response.data.data[0]);
+      } catch (error) {
+        console.error(error);
+      }
     };
+
     fetchData();
-  }, []);
+  }, [id]);
+
   return (
     <Container>
       <Header>진료관리</Header>
