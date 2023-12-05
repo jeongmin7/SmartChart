@@ -185,6 +185,8 @@ const Accounting = () => {
 export default Accounting;
 
 const ContentContainer = styled.div`
+  min-width: 1000px;
+  max-height: 1000px;
   display: flex;
   flex-direction: column;
   justify-content: center;

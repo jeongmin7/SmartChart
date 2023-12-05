@@ -7,7 +7,7 @@
 
 ### 반영 브랜치
 
-> feat/login -> dev
+> jeongmin ->front
 
 ### 변경 사항
 

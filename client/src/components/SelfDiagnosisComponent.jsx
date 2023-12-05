@@ -50,6 +50,7 @@ const SelfDiagnosisComponent = ({ id }) => {
           toast.error(error);
           console.error(error);
         }
+
       }
     };
 

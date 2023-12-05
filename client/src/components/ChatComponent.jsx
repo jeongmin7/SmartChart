@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+
 import { over } from "stompjs";
 import SockJS from "sockjs-client";
 import styled from "styled-components";
@@ -45,6 +46,7 @@ const ChatApp = () => {
     var hash = 0;
     for (var i = 0; i < messageSender.length; i++) {
       hash = 31 * hash + messageSender.charCodeAt(i);
+
     }
     var index = Math.abs(hash % colors.length);
     return colors[index];
@@ -67,6 +69,7 @@ const ChatApp = () => {
       );
     });
   };
+
 
   const sendMessage = () => {
     if (stompClient) {
@@ -91,6 +94,7 @@ const ChatApp = () => {
         messagesContainerRef.current.scrollHeight;
     }
   };
+
 
   useEffect(() => {
     return () => {
@@ -121,6 +125,7 @@ const ChatApp = () => {
             <SubmitButton onClick={connect} disabled={!username}>
               채팅 참여
             </SubmitButton>
+
           </ConnectionForm>
         )}
         {isConnecting && <div>연결 중...</div>}
@@ -128,6 +133,7 @@ const ChatApp = () => {
           <ChatContainer>
             <ChatContent>
               <MessagesContainer ref={messagesContainerRef}>
+
                 {messages.map((msg, index) => (
                   <MessageRow
                     key={index}
