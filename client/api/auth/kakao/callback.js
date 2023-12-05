@@ -7,6 +7,6 @@ module.exports = async (req, res) => {
     destination = `${process.env.REACT_APP_API_KAKAO_URL}?code=${query.code}`;
   }
 
-  res.writeHead(301, { Location: destination });
+  res.writeHead(302, { Location: destination });
   res.end();
 };
