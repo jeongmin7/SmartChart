@@ -34,7 +34,6 @@ const RoutesCollection = () => {
       <Route path={path.hospitalPage} element={<HospitalPage />} />
       <Route path={path.adminAppointment} element={<AdminAppointment />} />
       <Route path={path.adminWaitingList} element={<AdminWaitingList />} />
-      <Route path={path.teleConsult} element={<Chat />} />
       <Route path={path.accounting} element={<Accounting />} />
       <Route path={path.billing} element={<Billing />} />
       <Route path={path.search} element={<SearchHospital />} />
