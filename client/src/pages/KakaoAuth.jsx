@@ -9,7 +9,9 @@ const KakaoAuth = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post("/auth/kakao/callback", { code });
+        const response = await axios.post("/auth/kakao/callback", {
+          code: code,
+        });
         console.log(response);
         console.log(code);
         navigate("/mypage");
