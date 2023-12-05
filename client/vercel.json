@@ -2,9 +2,7 @@
   "rewrites": [
     {
       "source": "/auth/kakao/callback",
-      "function": {
-        "name": "redirectBasedOnQueryParam"
-      }
+      "destination": "/api/auth/kakao/callback"
     },
 
     {
