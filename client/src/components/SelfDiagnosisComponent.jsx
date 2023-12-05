@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { answerAtom } from "../stores/answerAtom";
 import { questions } from "../assets/questions";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { userRoleAtom } from "../stores/userInfo";
+import Loader from "./Loader";
 
 const SelfDiagnosisComponent = ({ id }) => {
   const [answers, setAnswers] = useRecoilState(answerAtom);
   const [data, setData] = useState([]);
-  const userRole = useRecoilValue(userRoleAtom);
+  const localStorageUserRole = localStorage.getItem("userRole");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAnswer = (index, value) => {
     const newAnswers = [...answers];
@@ -21,43 +22,52 @@ const SelfDiagnosisComponent = ({ id }) => {
     };
     setAnswers(newAnswers);
   };
+  console.log(id);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (userRole.role === "DOCTOR")
+      if (localStorageUserRole === "DOCTOR") {
+        setIsLoading(true);
+
         try {
           const response = await axios.post(
-            `/doctor/health-check/`,
-            { patientId: id },
+            `/doctor/health-check`,
+            {
+              patientId: id,
+            },
             {
               headers: {
                 "Content-Type": "application/json",
               },
             }
           );
+          setData(response.data.data);
           if (response.data.data.length === 0) {
             toast.error("환자가 아직 체크하지 않았습니다.");
           }
+          setIsLoading(false);
         } catch (error) {
-          toast.error("데이터를 읽어오는데 실패했습니다.");
+          toast.error(error);
+          console.error(error);
         }
+      }
     };
 
     fetchData();
-  }, []);
+  }, [id, localStorageUserRole]);
 
   return (
     <Table>
       <Subject>
         <Title>기본 건강 체크</Title>
+        {isLoading && <Loader />}
         <Body>
           {data.length !== 0
-            ? data.map(({ question, questionId, answer }) => (
-                <div key={questionId}>
+            ? data.map(({ questionNumber, answer, idx }) => (
+                <div key={idx}>
                   <SubTitle>
-                    {questionId}. {question}
+                    {questionNumber}. {questions[questionNumber - 1].question}
                   </SubTitle>
-
                   <div>
                     <Label>
                       <input
@@ -81,7 +91,7 @@ const SelfDiagnosisComponent = ({ id }) => {
                       <input
                         type="radio"
                         value="모름"
-                        defaultChecked={answer === "awareness"}
+                        defaultChecked={answer === "unawareness"}
                         style={{ marginRight: "30px" }}
                       />
                       모름
