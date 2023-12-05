@@ -12,7 +12,6 @@
           "key": "code"
         }
       ],
-      "permanent": false,
       "destination": "https://smartchart.vercel.app/auth/kakao/callback/:code*"
     },
 
