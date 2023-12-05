@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { css, styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
-import instance from "../components/api";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "../components/Button";
 import axios from "axios";
@@ -43,15 +42,21 @@ const MedicalCareManagement = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await instance.get(`/doctor/treatment-view/${id}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      setPatientInfo(response.data.data[0]);
+      try {
+        const response = await axios.get(`/doctor/treatment-view/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        setPatientInfo(response.data.data[0]);
+      } catch (error) {
+        console.error(error);
+      }
     };
+
     fetchData();
-  }, []);
+  }, [id]);
+
   return (
     <Container>
       <Header>진료관리</Header>
