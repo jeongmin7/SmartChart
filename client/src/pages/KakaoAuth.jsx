@@ -9,10 +9,7 @@ const KakaoAuth = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post(
-          "https://smartchart.vercel.app/auth/kakao/callback",
-          { code }
-        );
+        const response = await axios.post("/auth/kakao/callback", { code });
         console.log(response);
         console.log(code);
         navigate("/mypage");
@@ -21,7 +18,7 @@ const KakaoAuth = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [code]);
 
   return <div>KakaoAuth</div>;
 };
