@@ -24,14 +24,4 @@ module.exports = function (app) {
       ws: true,
     })
   );
-  app.use(
-    "/auth/kakao/callback",
-    createProxyMiddleware({
-      target: process.env.REACT_APP_API_URL,
-      changeOrigin: true,
-      pathRewrite: {
-        "^/auth/kakao/callback": "/oauth2/authorization/kakao",
-      },
-    })
-  );
 };

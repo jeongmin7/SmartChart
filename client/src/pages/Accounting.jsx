@@ -18,6 +18,9 @@ const Accounting = () => {
     startDate: "",
     endDate: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [wrapperHeight, setWrapperHeight] = useState(800);
+  const [selectedButton, setSelectedButton] = useState(null);
 
   const handleDateChange = (e) => {
     const { name, value } = e.target;
@@ -89,10 +92,13 @@ const Accounting = () => {
       default:
         setSelectedChart(null);
     }
+    setSelectedButton(chartType);
+    setWrapperHeight("auto");
   };
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       try {
         await axios
           .get("/doctor/month-sales-view", {
@@ -101,6 +107,7 @@ const Accounting = () => {
             },
           })
           .then((res) => setData(res.data));
+        setIsLoading(false);
       } catch (err) {
         toast.error("데이터를 읽어오는데 실패했습니다.");
       }
@@ -109,22 +116,38 @@ const Accounting = () => {
   }, []);
   return (
     <Container>
-      <Wrapper>
+      <Wrapper
+        style={{
+          height: wrapperHeight,
+        }}
+      >
         <Header>매출관리</Header>
         <ContentContainer>
           <Buttons>
-            <Button onClick={() => handleChartSelection("월별 매출")}>
+            <Button
+              onClick={() => handleChartSelection("월별 매출")}
+              selected={selectedButton === "월별 매출"}
+            >
               월별 매출
             </Button>
-            <Button onClick={() => handleChartSelection("주간 매출")}>
+            <Button
+              onClick={() => handleChartSelection("주간 매출")}
+              selected={selectedButton === "주간 매출"}
+            >
               주간 매출
             </Button>
-            <Button onClick={() => handleChartSelection("연 매출")}>
+            <Button
+              onClick={() => handleChartSelection("연 매출")}
+              selected={selectedButton === "연 매출"}
+            >
               연 매출
             </Button>
           </Buttons>
           <Buttons second="true">
-            <Button onClick={() => handleChartSelection("일 매출")}>
+            <Button
+              onClick={() => handleChartSelection("일 매출")}
+              selected={selectedButton === "일 매출"}
+            >
               일 매출
             </Button>
             <Duration>
@@ -146,6 +169,7 @@ const Accounting = () => {
               <Button
                 onClick={() => handleChartSelection("기간별")}
                 disabled={isSearchButtonDisabled}
+                selected={selectedButton === "기간별"}
               >
                 검색
               </Button>
@@ -167,9 +191,7 @@ const ContentContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  top: 100px;
-  flex-grow: 1;
+  margin-top: 50px;
 `;
 
 const Buttons = styled.div`
@@ -181,7 +203,8 @@ const Buttons = styled.div`
   gap: 20px;
 `;
 const Button = styled.button`
-  background-color: ${({ disabled }) => (disabled ? "#b0b0b0" : "#1798e1")};
+  background-color: ${({ disabled, selected }) =>
+    selected ? "#0d5d91" : disabled ? "#b0b0b0" : palette.primary.blue};
   border: none;
   padding: 0.5rem 1rem;
   color: ${({ disabled }) => (disabled ? "#666" : palette.white)};

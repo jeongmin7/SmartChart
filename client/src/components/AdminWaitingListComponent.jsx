@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import axios from "axios";
 import { Header, Wrapper, Container } from "../styles/CommonStyle";
+import Loader from "./Loader";
 
 const AdminWaitingListComponent = () => {
   const [appointment, setAppointment] = useState([]);
@@ -20,8 +21,11 @@ const AdminWaitingListComponent = () => {
     진료중: [],
     완료: [],
   });
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       try {
         const response = await axios.get("/doctor/waiting-list-view", {
           headers: {
@@ -44,6 +48,7 @@ const AdminWaitingListComponent = () => {
           진료중: [],
           완료: [],
         });
+        setIsLoading(false);
       } catch (error) {
         console.error(error);
       }
@@ -105,6 +110,7 @@ const AdminWaitingListComponent = () => {
       <Wrapper>
         <Header>환자 대기 관리</Header>
         <ColumnContainer>
+          {isLoading && <Loader />}
           <Today>{today}</Today>
           <Columns>
             {Object.keys(tasks).map((status) => (
@@ -140,9 +146,9 @@ const ColumnContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
-  min-width: 1400px;
-  min-height: 800px;
+  min-width: 1000px;
   overflow-x: auto;
+  margin-top: 100px;
 `;
 
 const Today = styled.div`
