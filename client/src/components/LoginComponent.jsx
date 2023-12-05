@@ -322,7 +322,9 @@ const LoginComponent = () => {
             disabled={error?.length > 0}
           />
           {!isDoctor && (
-            <Kakao href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=338b152f34fe502634c3e709272cd726&redirect_uri=https://smartchart.vercel.app/auth/kakao/callback">
+            <Kakao
+              href={`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=338b152f34fe502634c3e709272cd726&redirect_uri=${process.env.REACT_APP_API_KAKAO_REDIRECT_URL}`}
+            >
               <img src={kakao} alt="카카오 로그인" />
             </Kakao>
           )}
