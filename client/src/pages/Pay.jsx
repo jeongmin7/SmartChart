@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import Button from "../components/Button";
@@ -7,6 +7,7 @@ import PatientBill from "../components/PatientBill";
 import axios from "axios";
 import { Container, Header, Wrapper } from "../styles/CommonStyle";
 import { toast } from "react-toastify";
+import Loader from "../components/Loader";
 
 const Pay = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,25 +15,27 @@ const Pay = () => {
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [patient, setPatient] = useState({});
   const [total, setTotal] = useState(0);
+  const [id, setId] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleModal = (itemId) => {
     setSelectedItemId(itemId);
     setIsModalOpen(!isModalOpen);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("/patient/cost-view", {});
-
-        setList(response.data.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get("/patient/cost-view", {});
+      setList(response.data.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
   }, []);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handlePayment = async (id) => {
     try {
@@ -48,9 +51,13 @@ const Pay = () => {
       );
       setPatient(response.data.data[0]);
       setTotal(response.data.date3[0].sum);
+      setId(id);
+      kakaoPay();
     } catch (error) {
       toast.error("정보를 가져오는데 실패했습니다.");
     }
+  };
+  const kakaoPay = () => {
     const IMP = window.IMP;
     IMP.init("imp18267031");
 
@@ -73,7 +80,6 @@ const Pay = () => {
             amount: rsp.paid_amount,
             reservationId: id,
           };
-
           fetch("/patient/vertifyIamport", {
             method: "POST",
             headers: {
@@ -89,16 +95,25 @@ const Pay = () => {
               alert(error.message);
             });
         } else {
-          alert("결제 실패");
+          alert("결제 실패1");
         }
       }
     );
   };
+  useEffect(() => {
+    // total이 들어왔고, patient 객체있어야 카카오로 요청
+    if (total > 0 && patient && Object.keys(patient).length > 0) {
+      kakaoPay(id, total, patient);
+    }
+  }, [total, patient]);
+
   return (
     <Container>
       <Wrapper>
         <Header>진료비</Header>
         <TableContainer>
+          {isLoading && <Loader />}
+
           <TableHeader>
             <TableCell>예약번호</TableCell>
             <TableCell>병원명</TableCell>
@@ -137,6 +152,7 @@ const Pay = () => {
                     padding="5px"
                     borderRadius="7px"
                     onClick={() => handlePayment(item.id)}
+                    disabled={item.patientPaymentStatus === "완료"}
                   >
                     진료비 내기
                   </Button>
