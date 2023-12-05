@@ -9,6 +9,10 @@
       "destination": "http://13.125.227.145:8080/patient/:path*"
     },
     {
+      "source": "/auth/kakao/callback/:path*",
+      "destination": "http://13.125.227.145:8080/auth/kakao/callback/:path*"
+    },
+    {
       "source": "/ws/chat/:path*",
       "destination": "http://13.125.227.145:8080/ws/chat/:path*"
     },
