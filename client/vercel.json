@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/auth/kakao/callback",
-      "destination": "http://13.125.227.145:8080/auth/kakao/callback/"
+      "destination": "http://13.125.227.145:8080/auth/kakao/callback"
     },
     {
       "source": "/auth/kakao/callback/:code*",
@@ -15,6 +15,7 @@
       "permanent": false,
       "destination": "https://smartchart.vercel.app/auth/kakao/callback/:code*"
     },
+
     {
       "source": "/doctor/:path*",
       "destination": "http://13.125.227.145:8080/doctor/:path*"
