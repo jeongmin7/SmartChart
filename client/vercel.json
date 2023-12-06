@@ -4,14 +4,9 @@
       "source": "/auth/kakao/callback/:code*",
       "destination": "https://smartchart.vercel.app/auth/kakao/callback/:code*"
     },
-
     {
-      "source": "/oauth2/authorization/kakao/:code*",
-      "destination": "https://smartchart.vercel.app/oauth2/authorization/kakao/:code*"
-    },
-    {
-      "source": "/code",
-      "destination": "http://13.125.227.145:8080/code"
+      "source": "/code/:path*",
+      "destination": "http://13.125.227.145:8080/code/:path*"
     },
 
     {

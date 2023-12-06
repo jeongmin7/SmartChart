@@ -9,6 +9,12 @@ import axios from "axios";
 import { Container, Header, Wrapper } from "../styles/CommonStyle";
 import { toast } from "react-toastify";
 import Loader from "./Loader";
+import {
+  TableHeader,
+  TableContainer,
+  TableRow,
+  TableCell,
+} from "../styles/TableStyle";
 
 const AdminAppointmentComponent = () => {
   const navigate = useNavigate();
@@ -95,7 +101,7 @@ const AdminAppointmentComponent = () => {
           <Search>
             <LabelContainer>
               <LabelWrapper>
-                <label>날짜 검색:</label>
+                <SearchLabel>날짜 검색:</SearchLabel>
                 <Input
                   type="date"
                   value={searchDate}
@@ -103,7 +109,7 @@ const AdminAppointmentComponent = () => {
                 />
               </LabelWrapper>
               <LabelWrapper>
-                <label>환자명 검색:</label>
+                <SearchLabel>환자명 검색:</SearchLabel>
                 <Input
                   type="text"
                   value={searchUsername}
@@ -113,84 +119,80 @@ const AdminAppointmentComponent = () => {
             </LabelContainer>
           </Search>
           {filteredAppointments.length > 0 ? (
-            <Table>
-              <thead>
-                <tr>
-                  <Th>예약번호</Th>
-                  <Th>환자명</Th>
-                  <Th>날짜</Th>
-                  <Th>시간</Th>
-                  <Th>전화번호</Th>
-                  <Th>예약확정 체크하기</Th>
-                  <Th>진료비 청구 체크하기</Th>
-                  <Th></Th>
-                  <Th></Th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredAppointments.map((appointment, index) => (
-                  <tr key={appointment.id}>
-                    <Td>{appointment.id}</Td>
-                    <Td>{appointment.name}</Td>
-                    <Td>{appointment.reservationDate}</Td>
-                    <Td>{appointment.reservationTime}</Td>
-                    <Td>{appointment.phoneNumber}</Td>
-                    <Td>
-                      <Button
-                        width="120px"
-                        height="30px"
-                        padding="0"
-                        fontSize="12px"
-                        onClick={() => handleSMSModal({ appointment })}
-                      >
-                        예약 확정 문자
-                      </Button>
-                    </Td>
-                    <Td>
-                      <Button
-                        width="130px"
-                        height="30px"
-                        padding="0"
-                        fontSize="12px"
-                        onClick={() => handleClickBillingButton(appointment)}
-                      >
-                        진료비 청구하기
-                      </Button>
-                    </Td>
-                    <Td>
-                      <Button
-                        width="100px"
-                        height="30px"
-                        padding="0"
-                        fontSize="12px"
-                        onClick={() =>
-                          navigate(`/medicalcaremanagement/${appointment.id}`)
-                        }
-                      >
-                        진료관리 가기
-                      </Button>
-                    </Td>
-                    <Td>
-                      <Button
-                        width="100px"
-                        height="30px"
-                        padding="0"
-                        fontSize="12px"
-                        onClick={() => handleModal(index)}
-                      >
-                        건강체크 확인
-                      </Button>
-                      <Modal
-                        isOpen={appointmentModals[index]}
-                        handleModal={() => handleModal(index)}
-                      >
-                        <SelfDiagnosisComponent id={appointment.patientId} />
-                      </Modal>
-                    </Td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
+            <TableContainer>
+              <TableHeader>
+                <TableCell>예약번호</TableCell>
+                <TableCell>환자명</TableCell>
+                <TableCell>날짜</TableCell>
+                <TableCell>시간</TableCell>
+                <TableCell>전화번호</TableCell>
+                <TableCell>예약확정 체크</TableCell>
+                <TableCell>진료비 청구</TableCell>
+                <TableCell>진료관리</TableCell>
+                <TableCell>건강체크</TableCell>
+              </TableHeader>
+              {filteredAppointments.map((appointment, index) => (
+                <TableRow key={appointment.id}>
+                  <TableCell>{appointment.id}</TableCell>
+                  <TableCell>{appointment.name}</TableCell>
+                  <TableCell>{appointment.reservationDate}</TableCell>
+                  <TableCell>{appointment.reservationTime}</TableCell>
+                  <TableCell>{appointment.phoneNumber}</TableCell>
+                  <TableCell>
+                    <Button
+                      padding="5px 10px"
+                      fontSize="11px"
+                      borderRadius="5px"
+                      whiteSpace="nowrap"
+                      onClick={() => handleSMSModal({ appointment })}
+                    >
+                      예약 확정 문자
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      padding="5px 10px"
+                      fontSize="11px"
+                      borderRadius="5px"
+                      whiteSpace="nowrap"
+                      onClick={() => handleClickBillingButton(appointment)}
+                    >
+                      진료비 청구
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      padding="5px 10px"
+                      fontSize="11px"
+                      borderRadius="5px"
+                      whiteSpace="nowrap"
+                      onClick={() =>
+                        navigate(`/medicalcaremanagement/${appointment.id}`)
+                      }
+                    >
+                      진료관리
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      padding="5px 10px"
+                      fontSize="11px"
+                      borderRadius="5px"
+                      whiteSpace="nowrap"
+                      onClick={() => handleModal(index)}
+                    >
+                      건강체크
+                    </Button>
+                    <Modal
+                      isOpen={appointmentModals[index]}
+                      handleModal={() => handleModal(index)}
+                    >
+                      <SelfDiagnosisComponent id={appointment.patientId} />
+                    </Modal>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableContainer>
           ) : (
             <div>
               <h4>검색 결과가 없습니다.</h4>
@@ -207,13 +209,14 @@ const Search = styled.div`
   width: 80%;
   justify-content: space-between;
   padding: 2rem;
-  min-width: 700px;
+  min-width: 800px;
 `;
 const LabelContainer = styled.div`
   display: flex;
   padding: 1.5rem;
   justify-content: space-between;
   margin-right: 5rem;
+  margin-top: 50px;
   width: 100%;
   &:last-child {
     margin-right: 0;
@@ -226,27 +229,13 @@ const LabelWrapper = styled.div`
   justify-content: space-around;
   width: 100%;
 `;
+const SearchLabel = styled.label`
+  font-weight: 600;
+`;
 
 const Input = styled.input`
   width: 60%;
-`;
-const Table = styled.table`
-  border: 1px solid gray;
-  width: 80%;
-  margin-top: 2rem;
-  white-space: nowrap;
-`;
-
-const Th = styled.th`
-  border: 1px solid gray;
-  padding: 8px;
-  background-color: #f5f5f5;
-`;
-
-const Td = styled.td`
-  border: 1px solid gray;
-  padding: 8px;
-  text-align: center;
+  height: 30px;
 `;
 
 const ResultContainer = styled.div`
@@ -255,6 +244,7 @@ const ResultContainer = styled.div`
   justify-content: space-around;
   align-items: center;
   min-height: 600px;
+  width: 100%;
 `;
 
 export default AdminAppointmentComponent;

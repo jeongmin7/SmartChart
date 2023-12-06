@@ -46,7 +46,6 @@ const ChatApp = () => {
     var hash = 0;
     for (var i = 0; i < messageSender.length; i++) {
       hash = 31 * hash + messageSender.charCodeAt(i);
-
     }
     var index = Math.abs(hash % colors.length);
     return colors[index];
@@ -69,7 +68,6 @@ const ChatApp = () => {
       );
     });
   };
-
 
   const sendMessage = () => {
     if (stompClient) {
@@ -94,7 +92,6 @@ const ChatApp = () => {
         messagesContainerRef.current.scrollHeight;
     }
   };
-
 
   useEffect(() => {
     return () => {
@@ -125,15 +122,13 @@ const ChatApp = () => {
             <SubmitButton onClick={connect} disabled={!username}>
               채팅 참여
             </SubmitButton>
-
           </ConnectionForm>
         )}
-        {isConnecting && <div>연결 중...</div>}
+        {isConnecting && <ChatContainer>연결 중...</ChatContainer>}
         {connected && (
           <ChatContainer>
             <ChatContent>
               <MessagesContainer ref={messagesContainerRef}>
-
                 {messages.map((msg, index) => (
                   <MessageRow
                     key={index}
@@ -156,16 +151,16 @@ const ChatApp = () => {
                   </MessageRow>
                 ))}
               </MessagesContainer>
-              <InputContainer>
-                <MessageInput
-                  type="text"
-                  placeholder="메시지를 입력하세요"
-                  value={currentMessage}
-                  onChange={(e) => setCurrentMessage(e.target.value)}
-                />
-                <SendButton onClick={sendMessage}>전송</SendButton>
-              </InputContainer>
             </ChatContent>
+            <InputContainer>
+              <MessageInput
+                type="text"
+                placeholder="메시지를 입력하세요"
+                value={currentMessage}
+                onChange={(e) => setCurrentMessage(e.target.value)}
+              />
+              <SendButton onClick={sendMessage}>전송</SendButton>
+            </InputContainer>
           </ChatContainer>
         )}
       </Wrapper>
@@ -189,8 +184,10 @@ const Avatar = styled.div`
 `;
 const MessagesContainer = styled.div`
   padding: 10px;
-  height: 100%;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 `;
 const MessageRow = styled.div`
   display: flex;
@@ -258,12 +255,15 @@ const ChatContainer = styled.div`
   width: 1000px;
   height: 800px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
 `;
 
 const ChatContent = styled.div`
   width: 100%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
 `;
 const InputContainer = styled.div`
   display: flex;
@@ -271,7 +271,6 @@ const InputContainer = styled.div`
   align-items: center;
   width: 100%;
   margin-top: 20px;
-  background-color: antiquewhite;
 `;
 
 const MessageInput = styled.input`
