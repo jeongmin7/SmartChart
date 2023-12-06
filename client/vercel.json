@@ -6,8 +6,8 @@
     },
 
     {
-      "source": "/auth/kakao/callback",
-      "destination": "http://13.125.227.145:8080/auth/kakao/callback"
+      "source": "/code",
+      "destination": "http://13.125.227.145:8080/code"
     },
 
     {
