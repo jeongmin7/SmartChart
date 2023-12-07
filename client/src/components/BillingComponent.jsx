@@ -55,18 +55,15 @@ export default BillingComponent;
 const Container = styled.section`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   width: 100%;
   min-width: 1300px;
   min-height: 900px;
-  position: relative;
 `;
 
 const Header = styled.div`
   font-weight: bold;
   margin-bottom: 20px;
   font-size: 25px;
-  position: absolute;
-  top: 100px;
+  margin-top: 100px;
 `;
