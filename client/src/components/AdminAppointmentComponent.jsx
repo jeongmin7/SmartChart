@@ -122,7 +122,7 @@ const AdminAppointmentComponent = () => {
           {filteredAppointments.length > 0 ? (
             <TableContainer>
               <TableHeader>
-                <TableCell>예약번호</TableCell>
+                <TableCell id={true}>예약번호</TableCell>
                 <TableCell>환자명</TableCell>
                 <TableCell>날짜</TableCell>
                 <TableCell>시간</TableCell>
@@ -134,7 +134,7 @@ const AdminAppointmentComponent = () => {
               </TableHeader>
               {filteredAppointments.map((appointment, index) => (
                 <TableRow key={appointment.id}>
-                  <TableCell>{appointment.id}</TableCell>
+                  <TableCell id={true}>{appointment.id}</TableCell>
                   <TableCell>{appointment.name}</TableCell>
                   <TableCell>{appointment.reservationDate}</TableCell>
                   <TableCell>{appointment.reservationTime}</TableCell>
@@ -149,6 +149,11 @@ const AdminAppointmentComponent = () => {
                     >
                       예약 확정 문자
                     </Button>
+                    <Status
+                      isIncomplete={appointment.reservationStatus === "미완료"}
+                    >
+                      {appointment.reservationStatus}
+                    </Status>
                   </TableCell>
                   <TableCell>
                     <Button
@@ -160,6 +165,11 @@ const AdminAppointmentComponent = () => {
                     >
                       진료비 청구
                     </Button>
+                    <Status
+                      isIncomplete={appointment.paymentStatus === "미완료"}
+                    >
+                      {appointment.paymentStatus}
+                    </Status>
                   </TableCell>
                   <TableCell>
                     <Button
@@ -246,6 +256,11 @@ const ResultContainer = styled.div`
   align-items: center;
   min-height: 600px;
   width: 100%;
+`;
+const Status = styled.div`
+  color: ${(props) => (props.isIncomplete ? "red" : "")};
+  font-weight: 600;
+  font-size: 11px;
 `;
 
 export default AdminAppointmentComponent;

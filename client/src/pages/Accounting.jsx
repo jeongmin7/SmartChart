@@ -13,7 +13,22 @@ import { toast } from "react-toastify";
 
 const Accounting = () => {
   const [selectedChart, setSelectedChart] = useState(null);
-  const [data, setData] = useState({});
+  const [data, setData] = useState({
+    recentMonth: [],
+    salesDate: [],
+    salesWeek: [],
+    recentDate: [],
+    salesYear: [],
+    recentWeek: [],
+    averageAgeMonth: [],
+    recentYear: [],
+    genderMonth: [],
+    salesMonth: [],
+    year: [],
+    month: [],
+    week: [],
+    date: [],
+  });
   const [duration, setDuration] = useState({
     startDate: "",
     endDate: "",
@@ -100,21 +115,27 @@ const Accounting = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        await axios
-          .get("/doctor/month-sales-view", {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          })
-          .then((res) => setData(res.data));
+        const response = await axios.get("/doctor/month-sales-view", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        setData(response.data);
         setIsLoading(false);
+        console.log(data);
       } catch (err) {
         toast.error("데이터를 읽어오는데 실패했습니다.");
         setIsLoading(false);
       }
     };
+
     fetchData();
   }, []);
+  useEffect(() => {
+    handleChartSelection("월별 매출");
+  }, [data]);
+
+  console.log(data);
   return (
     <Container>
       <Wrapper
