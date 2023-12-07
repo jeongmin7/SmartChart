@@ -47,6 +47,7 @@ const Appointment = () => {
         setIsLoading(false);
       } catch (error) {
         console.error(error);
+        setIsLoading(false);
       }
     };
 
@@ -66,6 +67,7 @@ const Appointment = () => {
       setIsLoading(false);
     } catch (error) {
       toast.error("예약불가능한 시간입니다.");
+      setIsLoading(false);
     }
   };
   const handleSave = () => {
@@ -81,6 +83,7 @@ const Appointment = () => {
       setIsLoading(false);
     } catch (error) {
       toast.error("예약이 되지 않았습니다.");
+      setIsLoading(false);
     }
   };
   return (

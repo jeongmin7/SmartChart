@@ -31,6 +31,7 @@ const PatientBill = ({ id }) => {
         setIsLoading(false);
       } catch (error) {
         toast.error("데이터를 읽어오는데 실패했습니다.");
+        setIsLoading(false);
       }
     };
     fetchData();

@@ -33,7 +33,10 @@ const MypageComponent = () => {
         setUserInfo(response.data.myPage[0]);
         setAppointmentList(latestAppointments);
         setIsLoading(false);
-      } catch (err) {}
+      } catch (err) {
+        toast.error("에러 발생");
+        setIsLoading(false);
+      }
     };
     fetchData();
   }, []);
@@ -58,6 +61,7 @@ const MypageComponent = () => {
       setIsLoading(false);
     } catch (err) {
       toast.error("예약 취소 중 오류가 발생했습니다.");
+      setIsLoading(false);
     }
   };
 
@@ -80,6 +84,7 @@ const MypageComponent = () => {
       setIsLoading(false);
     } catch (error) {
       toast.error("관리자에게 문의해주세요");
+      setIsLoading(false);
     }
   };
 

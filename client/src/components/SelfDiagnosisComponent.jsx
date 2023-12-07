@@ -48,9 +48,8 @@ const SelfDiagnosisComponent = ({ id }) => {
           setIsLoading(false);
         } catch (error) {
           toast.error(error);
-          console.error(error);
+          setIsLoading(false);
         }
-
       }
     };
 
