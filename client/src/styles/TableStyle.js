@@ -28,9 +28,9 @@ export const TableHeader = styled(TableRow)`
 `;
 
 export const TableCell = styled.div`
-  flex: 1;
+  flex: ${(props) => (props.id ? "0 0 45px" : "1")};
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   white-space: nowrap;
 `;
