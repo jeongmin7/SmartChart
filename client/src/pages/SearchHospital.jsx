@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import { palette } from "../styles/GlobalStyles";
 import Loader from "../components/Loader";
 import Maps from "../components/Maps";
-import { Wrapper } from "../styles/CommonStyle";
+import { Container, Wrapper } from "../styles/CommonStyle";
 
 const SearchHospital = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -21,17 +21,6 @@ const SearchHospital = () => {
 };
 
 export default SearchHospital;
-const Container = styled.section`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: calc(100vh - 100px);
-  min-width: 950px;
-  min-height: 800px;
-  padding-top: 50px;
-`;
 
 const Header = styled.div`
   /* background-color: red; */

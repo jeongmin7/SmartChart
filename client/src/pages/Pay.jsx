@@ -172,7 +172,7 @@ export default Pay;
 const TableContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 30px 0;
+  margin: 60px 0;
   width: 1000px;
 `;
 

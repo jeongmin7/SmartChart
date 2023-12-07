@@ -19,8 +19,8 @@ const ChatIcon = () => {
 export default ChatIcon;
 const Icon = styled(Link)`
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 10px;
+  right: 10px;
   font-size: 4rem;
   color: #333;
 `;

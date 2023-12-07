@@ -7,7 +7,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useRecoilState } from "recoil";
 import Loader from "./Loader";
-import { Wrapper } from "../styles/CommonStyle";
+import { Container, Wrapper } from "../styles/CommonStyle";
 
 const MypageComponent = () => {
   const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
@@ -89,7 +89,7 @@ const MypageComponent = () => {
   };
 
   return (
-    <MypageContainer>
+    <Container>
       <Wrapper>
         <Header>마이페이지</Header>
         {isLoading && <Loader />}
@@ -179,35 +179,12 @@ const MypageComponent = () => {
           </TableContainer>
         </ColumnHalfWrapper>
       </Wrapper>
-    </MypageContainer>
+    </Container>
   );
 };
 
 export default MypageComponent;
 
-const MypageContainer = styled.section`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: calc(100vh - 100px);
-  min-width: 950px;
-  min-height: 800px;
-`;
-
-const MypageWrapper = styled.div`
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  align-items: center;
-  width: 40%;
-  height: 80%;
-  min-width: 950px;
-  min-height: 800px;
-  padding: 100px 0;
-  border: 1px solid ${palette.gray.border};
-`;
 const Tip = styled.div`
   font-size: 11px;
   display: flex;
@@ -231,7 +208,7 @@ const ColumnHalfWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100%;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 `;
 
 const ColumnDivideWrapper = styled.div`

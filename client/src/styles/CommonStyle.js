@@ -143,10 +143,17 @@ export const Container = styled.section`
   justify-content: center;
   align-items: center;
   min-width: 900px;
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 190px);
   height: auto;
   position: relative;
   overflow-y: auto;
+
+  /* 
+  
+
+  height: calc(100vh - 100px);
+  min-width: 950px;
+  min-height: 800px; */
 `;
 export const Wrapper = styled.div`
   display: flex;
