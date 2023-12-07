@@ -125,10 +125,11 @@ const MypageComponent = () => {
           </Tip>
         </FirstColumnHalfWrapper>
         <Button
-          width="100px"
-          height="100px"
+          width="60px"
+          height="30px"
           padding="10px"
           fontSize="15px"
+          borderRadius="5px"
           onClick={handleUpdate}
         >
           Update

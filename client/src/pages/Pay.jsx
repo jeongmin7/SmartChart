@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { palette } from "../styles/GlobalStyles";
-import Button from "../components/Button";
 import Modal from "../components/Modal";
 import PatientBill from "../components/PatientBill";
 import axios from "axios";
@@ -39,6 +38,7 @@ const Pay = () => {
   }, [fetchData]);
 
   const handlePayment = async (id) => {
+    console.log(id);
     try {
       const response = await axios.post(
         "/patient/cost",
@@ -129,20 +129,18 @@ const Pay = () => {
           <TableBody>
             {list.map((item, itemIndex) => (
               <TableRow key={itemIndex}>
-                <div>{item.id}</div>
-                <div>{item.hospitalName}</div>
-                <div>{item.reservationDate}</div>
-                <div>{item.name}</div>
-                <div>{item.sum}원</div>
-                <div>{item.patientPaymentStatus}</div>
+                <TableCell>{item.id}</TableCell>
+                <TableCell>{item.hospitalName}</TableCell>
+                <TableCell>{item.reservationDate}</TableCell>
+                <TableCell>{item.name}</TableCell>
+                <TableCell>{item.sum}원</TableCell>
+                <TableCell
+                  isInComplete={item.patientPaymentStatus === "미완료"}
+                >
+                  {item.patientPaymentStatus}
+                </TableCell>
                 <ButtonContainer>
-                  <Button
-                    width="80px"
-                    fontSize="12px"
-                    padding="5px"
-                    borderRadius="7px"
-                    onClick={() => handleModal(item.id)}
-                  >
+                  <Button onClick={() => handleModal(item.id)}>
                     진료비 보기
                   </Button>
                 </ButtonContainer>
@@ -152,8 +150,8 @@ const Pay = () => {
                     fontSize="12px"
                     padding="5px"
                     borderRadius="7px"
-                    onClick={() => handlePayment(item.id)}
                     disabled={item.patientPaymentStatus === "완료"}
+                    onClick={() => handlePayment(item.id)}
                   >
                     진료비 내기
                   </Button>
@@ -218,13 +216,27 @@ const TableCell = styled.div`
   height: 100%;
   font-weight: bold;
   font-size: 16px;
-  border-left: ${(props) =>
-    props.index !== 0 && `1px solid ${palette.gray.border}`};
   white-space: nowrap;
+  color: ${({ isInComplete }) => (isInComplete ? "red" : "")};
 `;
 const ButtonContainer = styled.div`
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+const Button = styled.button`
+  background-color: ${({ disabled }) =>
+    disabled ? "#b0b0b0" : palette.primary.blue};
+  border: none;
+  border-radius: 7px;
+  padding: 5px;
+  color: ${({ disabled }) => (disabled ? "#666" : palette.white)};
+  font-weight: 700;
+  display: flex;
+  width: 80px;
+  font-size: 12px;
+  justify-content: center;
+  align-items: center;
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
 `;
