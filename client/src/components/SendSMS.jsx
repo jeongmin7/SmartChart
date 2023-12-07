@@ -34,6 +34,7 @@ function SendSMS({ SMSInfo }) {
           type="text"
           placeholder="수신인 전화번호는 (-)없이 기입해주시기 바랍니다."
           defaultValue={SMSInfo.phoneNumber}
+          readOnly
         />
         <Textarea
           placeholder="내용"
