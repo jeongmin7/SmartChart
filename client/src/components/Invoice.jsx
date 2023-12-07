@@ -210,12 +210,13 @@ const Invoice = ({
         ) : (
           // 환자일 경우
           <div>
-            {patientDetailCost.map(({ treatment, cost }, index) => (
-              <GridItem key={index} type="text" title="true" header>
-                <StyledInput title="true">{treatment}</StyledInput>
-                <StyledInput>{cost}원</StyledInput>
-              </GridItem>
-            ))}
+            {userRole === "PATIENT" &&
+              patientDetailCost.map(({ treatment, cost }, index) => (
+                <GridItem key={index} type="text" title="true" header>
+                  <StyledInput title="true">{treatment}</StyledInput>
+                  <StyledInput>{cost}원</StyledInput>
+                </GridItem>
+              ))}
             <GridItem className="noBorderBottom" header>
               <Title>총금액</Title>
               <Content>{sum}원</Content>
