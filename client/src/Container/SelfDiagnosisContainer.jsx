@@ -23,7 +23,9 @@ const SelfDiagnosisContainer = () => {
       toast.success("성공적으로 저장되었습니다.");
       navigate("/mypage");
     } catch (err) {
-      console.error(err);
+      if (err.response.data.status === 500) {
+        toast.error("문항을 다 체크하셨는지 다시 한번 확인해주세요");
+      }
     }
   };
   return (

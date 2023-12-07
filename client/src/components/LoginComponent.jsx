@@ -120,6 +120,7 @@ const LoginComponent = () => {
       } catch (error) {
         if (error.response || error.response.status === 405) {
           toast.error("이메일, 비밀번호, 환자구별을 확인해주세요");
+          setIsLoading(false);
         }
       }
 
@@ -169,8 +170,10 @@ const LoginComponent = () => {
       } catch (error) {
         if (error.response && error.response.status === 405) {
           toast.error("이메일, 비밀번호, 환자구별을 확인해주세요");
+          setIsLoading(false);
         }
         toast.error("데이터를 읽어오는데 실패했습니다.");
+        setIsLoading(false);
       }
     }
   };
