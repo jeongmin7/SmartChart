@@ -109,8 +109,6 @@ const MonthlyChart = ({
     ],
   };
 
-  useEffect(() => {}, []);
-
   return (
     <Wrapper>
       <ChartContainer>
