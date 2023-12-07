@@ -150,7 +150,7 @@ export const Container = styled.section`
 `;
 export const Wrapper = styled.div`
   display: flex;
-  position: absolute;
+  overflow: hidden;
   top: 100px;
   flex-direction: column;
   align-items: center;
