@@ -155,10 +155,7 @@ const LoginComponent = ({
             disabled={error?.length > 0}
           />
           {!isDoctor && (
-            <Kakao
-              href={`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_KAKAO_LOGIN}&redirect_uri=${process.env.REACT_APP_API_URL}/auth/kakao/callback&response_type=code
-              `}
-            >
+            <Kakao href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=338b152f34fe502634c3e709272cd726&redirect_uri=http://13.125.227.145:8080/auth/kakao/callback&response_type=code">
               <img src={kakao} alt="카카오 로그인" />
             </Kakao>
           )}
