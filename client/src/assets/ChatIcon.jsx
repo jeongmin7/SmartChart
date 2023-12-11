@@ -23,4 +23,5 @@ const Icon = styled(Link)`
   right: 10px;
   font-size: 4rem;
   color: #333;
+  z-index: 1;
 `;

@@ -1,12 +1,12 @@
-import React, { lazy, Suspense, useState } from "react";
+import React, { Suspense, useState } from "react";
 import { styled } from "styled-components";
-import { palette } from "../styles/GlobalStyles";
 import Loader from "../components/Loader";
 import Maps from "../components/Maps";
 import { Container, Wrapper } from "../styles/CommonStyle";
 
-const SearchHospital = () => {
+const MakeAppointmentComponent = () => {
   const [isLoading, setIsLoading] = useState(true);
+
   return (
     <Suspense fallback={<Loader />}>
       <Container>
@@ -16,12 +16,12 @@ const SearchHospital = () => {
           <Maps setIsLoading={setIsLoading} />
         </Wrapper>
       </Container>
+      /
     </Suspense>
   );
 };
 
-export default SearchHospital;
-
+export default MakeAppointmentComponent;
 const Header = styled.div`
   /* background-color: red; */
   font-weight: bold;

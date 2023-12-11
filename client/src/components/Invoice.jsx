@@ -20,7 +20,6 @@ const Invoice = ({
   const [selectedFields, setSelectedFields] = useState([]);
   const [copiedValue, setCopiedValue] = useRecoilState(invoiceAtom);
   const userRole = useRecoilValue(userRoleAtom);
-
   const copySelectedValue = () => {
     const copiedValue = [...selectedFields];
     setCopiedValue(copiedValue);
@@ -210,7 +209,7 @@ const Invoice = ({
         ) : (
           // 환자일 경우
           <div>
-            {userRole === "PATIENT" &&
+            {userRole.role === "PATIENT" &&
               patientDetailCost.map(({ treatment, cost }, index) => (
                 <GridItem key={index} type="text" title="true" header>
                   <StyledInput title="true">{treatment}</StyledInput>
