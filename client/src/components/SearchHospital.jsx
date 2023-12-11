@@ -50,7 +50,12 @@ const SearchHospital = () => {
       <div>병원 등록하기</div>
       <Section>
         <DoctorInput type="text" onChange={onChange} />
-        <Button width="90px" height="40px" onClick={handleSearch}>
+        <Button
+          width="90px"
+          height="40px"
+          onClick={handleSearch}
+          whiteSpace="noWrap"
+        >
           검색하기
         </Button>
       </Section>
