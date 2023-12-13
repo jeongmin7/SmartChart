@@ -45,7 +45,7 @@ const LoginComponent = ({
   setIsRememberMe,
 }) => {
   return (
-    <>
+    <Container>
       {isLoading && <Loader />}
       <Form onSubmit={userLogin}>
         <LogoContainer>
@@ -153,6 +153,7 @@ const LoginComponent = ({
             type="submit"
             value="로그인"
             disabled={error?.length > 0}
+            isDoctor={isDoctor}
           />
           {!isDoctor && (
             <Kakao
@@ -163,12 +164,15 @@ const LoginComponent = ({
           )}
         </LoginWrapper>
       </Form>
-    </>
+    </Container>
   );
 };
 
 export default LoginComponent;
 
+const Container = styled.div`
+  margin-top: 150px;
+`;
 const Kakao = styled.a`
   cursor: pointer;
 `;
@@ -176,7 +180,6 @@ const LoginButton = styled.input`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 300px;
   height: 48px;
   padding: 10px 10px;
   border-radius: 0.3rem;
@@ -189,6 +192,7 @@ const LoginButton = styled.input`
   background-color: #1798e1;
   color: white;
   font-weight: 600;
+  width: ${(props) => (props.isDoctor ? "800px" : "300px")};
 `;
 const LoginWrapper = styled.div`
   /* min-width: 640px; */

@@ -16,7 +16,6 @@ const MakeAppointmentComponent = () => {
           <Maps setIsLoading={setIsLoading} />
         </Wrapper>
       </Container>
-      /
     </Suspense>
   );
 };

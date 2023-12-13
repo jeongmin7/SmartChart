@@ -5,8 +5,9 @@ import { userRoleAtom } from "../stores/userInfo";
 import { useRecoilState } from "recoil";
 import axios from "axios";
 import LoginComponent from "../components/LoginComponent";
+import styled from "styled-components";
 
-const LoginFormContainer = () => {
+const LoginContainer = () => {
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -191,26 +192,33 @@ const LoginFormContainer = () => {
   }, [localStorageUserRole, navigate]);
 
   return (
-    <LoginComponent
-      email={email}
-      password={password}
-      error={error}
-      isRememberMe={isRememberMe}
-      setIsRememberMe={setIsRememberMe}
-      setEmailAddress={setEmailAddress}
-      isDoctor={isDoctor}
-      isLoading={isLoading}
-      findPassword={findPassword}
-      isValidEmail={isValidEmail}
-      emailAddress={emailAddress}
-      onChange={onChange}
-      handleRadioChange={handleRadioChange}
-      checkEmailValidity={checkEmailValidity}
-      handlePassword={handlePassword}
-      userLogin={userLogin}
-      findPasswordButton={findPasswordButton}
-    />
+    <Container>
+      <LoginComponent
+        email={email}
+        password={password}
+        error={error}
+        isRememberMe={isRememberMe}
+        setIsRememberMe={setIsRememberMe}
+        setEmailAddress={setEmailAddress}
+        isDoctor={isDoctor}
+        isLoading={isLoading}
+        findPassword={findPassword}
+        isValidEmail={isValidEmail}
+        emailAddress={emailAddress}
+        onChange={onChange}
+        handleRadioChange={handleRadioChange}
+        checkEmailValidity={checkEmailValidity}
+        handlePassword={handlePassword}
+        userLogin={userLogin}
+        findPasswordButton={findPasswordButton}
+      />
+    </Container>
   );
 };
 
-export default LoginFormContainer;
+export default LoginContainer;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+`;
