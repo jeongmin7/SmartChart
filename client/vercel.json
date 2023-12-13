@@ -13,8 +13,8 @@
       "destination": "http://13.125.227.145:8080/ws/chat/:path*"
     },
     {
-      "src": "/auth/kakao/callback(.*)",
-      "dest": "https://smartchart.vercel.app/auth/kakao/callback$1"
+      "source": "/auth/kakao/callback(.*)",
+      "destination": "https://smartchart.vercel.app/auth/kakao/callback$1"
     },
     {
       "source": "/(.*)",
