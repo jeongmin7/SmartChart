@@ -33,6 +33,7 @@ const Pay = ({
           </TableHeader>
 
           <TableBody>
+            {list.length === 0 && <Nothing>내역이 없습니다.</Nothing>}
             {list.map((item, itemIndex) => (
               <TableRow key={itemIndex}>
                 <TableCell>{item.id}</TableCell>
@@ -145,4 +146,12 @@ const Button = styled.button`
   justify-content: center;
   align-items: center;
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+`;
+export const Nothing = styled.div`
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 18px;
 `;
