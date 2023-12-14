@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useRecoilState } from "recoil";
 import Loader from "./Loader";
 import { Container, Wrapper } from "../styles/CommonStyle";
+import { Nothing } from "./PayComponent";
 
 const MypageComponent = ({
   userInfo,
@@ -101,9 +102,7 @@ const MypageComponent = ({
                 ))}
               </>
             ) : (
-              <TableRow>
-                <TableCell>예약 내역이 없습니다.</TableCell>
-              </TableRow>
+              <Nothing>예약 내역이 없습니다.</Nothing>
             )}
           </TableContainer>
         </ColumnHalfWrapper>
