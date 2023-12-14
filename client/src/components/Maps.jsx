@@ -5,7 +5,7 @@ import styled from "styled-components";
 import InfoBox from "./InfoBox";
 import axios from "axios";
 
-const Maps = ({ setIsLoading }) => {
+const Maps = ({ setIsLoading, isLoading }) => {
   const [map, setMap] = useState(null);
   // 선택한 병원
   const [currentHospital, setCurrentHospital] = useState(null);
@@ -90,7 +90,7 @@ const Maps = ({ setIsLoading }) => {
           치과
         </Option>
       </Options>
-      <Map setMap={setMap} setIsLoading={setIsLoading} />
+      <Map setMap={setMap} setIsLoading={setIsLoading} isLoading={isLoading} />
       <Markers
         map={map}
         setCurrentHospital={setCurrentHospital}

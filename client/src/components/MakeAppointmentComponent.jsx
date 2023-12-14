@@ -8,15 +8,12 @@ const MakeAppointmentComponent = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <Suspense fallback={<Loader />}>
-      <Container>
-        {isLoading && <Loader />}
-        <Wrapper>
-          <Header>병원 검색하기</Header>
-          <Maps setIsLoading={setIsLoading} />
-        </Wrapper>
-      </Container>
-    </Suspense>
+    <Container>
+      <Wrapper>
+        <Header>병원 검색하기</Header>
+        <Maps setIsLoading={setIsLoading} isLoading={isLoading} />
+      </Wrapper>
+    </Container>
   );
 };
 
