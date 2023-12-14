@@ -72,7 +72,7 @@ const LoginContainer = () => {
     if (isDoctor) {
       try {
         const response = await axios.post(
-          "/doctor/login",
+          `${process.env.REACT_APP_API_URL}/doctor/login`,
           {
             email: email,
             password: password,
@@ -111,7 +111,7 @@ const LoginContainer = () => {
     } else {
       try {
         const response = await axios.post(
-          "/patient/login",
+          `${process.env.REACT_APP_API_URL}/patient/login`,
           {
             email: email,
             password: password,
