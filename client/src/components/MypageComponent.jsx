@@ -1,11 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { styled } from "styled-components";
 import Button from "./Button";
 import { palette } from "../styles/GlobalStyles";
-import { userInfoAtom } from "../stores/userInfo";
-import axios from "axios";
-import { toast } from "react-toastify";
-import { useRecoilState } from "recoil";
 import Loader from "./Loader";
 import { Container, Wrapper } from "../styles/CommonStyle";
 import { Nothing } from "./PayComponent";
@@ -32,7 +28,11 @@ const MypageComponent = ({
             </RowDivideWrapper>
             <RowDivideWrapper>
               <InfoTitle>성별:</InfoTitle>
-              <div>{userInfo.gender}</div>
+              {userInfo.gender === null ? (
+                <div> 성별을 정정해주세요 </div>
+              ) : (
+                <div>{userInfo.gender}</div>
+              )}
             </RowDivideWrapper>
           </ColumnDivideWrapper>
           <ColumnDivideWrapper>
