@@ -1,0 +1,24 @@
+{
+  "rewrites": [
+    {
+      "source": "/doctor/:path*",
+      "destination": "https://smartchart.shop/doctor/:path*"
+    },
+    {
+      "source": "/patient/:path*",
+      "destination": "https://smartchart.shop/patient/:path*"
+    },
+    {
+      "source": "/ws/chat/:path*",
+      "destination": "https://smartchart.shop/ws/chat/:path*"
+    },
+    {
+      "source": "/auth/kakao/:path*",
+      "destination": "https://smartchart.vercel.app/auth/kakao/callback/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
+}
