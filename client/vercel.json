@@ -12,10 +12,7 @@
       "source": "/ws/chat/:path*",
       "destination": "https://smartchart.shop/ws/chat/:path*"
     },
-    {
-      "source": "/auth/kakao/:path*",
-      "destination": "https://smartchart.vercel.app/auth/kakao/callback/:path*"
-    },
+
     {
       "source": "/(.*)",
       "destination": "/"
