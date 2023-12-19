@@ -155,13 +155,6 @@ const LoginComponent = ({
             disabled={error?.length > 0}
             isDoctor={isDoctor}
           />
-          {!isDoctor && (
-            <Kakao
-              href={`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=338b152f34fe502634c3e709272cd726&redirect_uri=${process.env.REACT_APP_API_KAKAO_URL}&response_type=code`}
-            >
-              <img src={kakao} alt="카카오 로그인" />
-            </Kakao>
-          )}
         </LoginWrapper>
       </Form>
     </Container>
@@ -173,9 +166,7 @@ export default LoginComponent;
 const Container = styled.div`
   margin-top: 150px;
 `;
-const Kakao = styled.a`
-  cursor: pointer;
-`;
+
 const LoginButton = styled.input`
   display: flex;
   justify-content: center;
@@ -184,18 +175,15 @@ const LoginButton = styled.input`
   padding: 10px 10px;
   border-radius: 0.3rem;
   border: 1px solid lightgray;
-  /* max-width: 300px; */
-  /* float: right; */
   margin: 0 auto;
   cursor: pointer;
   font-size: 16px;
   background-color: #1798e1;
   color: white;
   font-weight: 600;
-  width: ${(props) => (props.isDoctor ? "800px" : "300px")};
+  width: 800px;
 `;
 const LoginWrapper = styled.div`
-  /* min-width: 640px; */
   max-width: 680px;
   display: flex;
   flex-direction: row;
