@@ -136,6 +136,7 @@ export const SignupLink = styled(Link)`
 `;
 export const Password = styled.div`
   color: ${palette.gray.dark};
+  cursor: pointer;
 `;
 export const Container = styled.section`
   display: flex;

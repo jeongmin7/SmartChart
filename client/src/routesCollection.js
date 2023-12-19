@@ -36,7 +36,6 @@ const RoutesCollection = () => {
       <Route path={path.accounting} element={<Accounting />} />
       <Route path={path.billing} element={<Billing />} />
       <Route path={path.search} element={<MakeAppointment />} />
-      <Route path={path.kakao} element={<KakaoAuth />} />
 
       <Route
         path={path.medicalcaremanagement}
