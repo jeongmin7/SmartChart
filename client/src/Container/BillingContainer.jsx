@@ -8,21 +8,25 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { invoiceAtom } from "../stores/invoiceAtom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { billingStatusAtom } from "../stores/billingStatusAtom";
 
 const BillingContainer = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const reservationId = location.state.id;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const invoiceDetail = useRecoilValue(invoiceAtom);
-  const [isCompltedBills, setIsCompltedBills] =
-    useRecoilState(billingStatusAtom);
+  const [billingStatus, setBillingStatus] = useRecoilState(billingStatusAtom);
 
   const handleSaveButton = () => {
     try {
       axios.post(`/doctor/treatment_statement`, invoiceDetail);
       toast.success("저장되었습니다.");
-      setIsCompltedBills((prev) => !prev);
+      setBillingStatus((prevStatus) => ({
+        ...prevStatus,
+        [reservationId]: true,
+      }));
       navigate("/adminAppointment");
     } catch (error) {
       toast.error("저장되지 않았습니다.");

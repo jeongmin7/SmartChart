@@ -20,6 +20,7 @@ const AdminAppointmentContainer = () => {
   );
   const [isLoading, setIsLoading] = useState(false);
   const isCompletedBills = useRecoilValue(billingStatusAtom);
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -100,6 +101,7 @@ const AdminAppointmentContainer = () => {
       handleModal={handleModal}
       handleSMSModal={handleSMSModal}
       setIsSend={setIsSend}
+      isCompletedBills={isCompletedBills}
     />
   );
 };

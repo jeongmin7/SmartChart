@@ -30,6 +30,7 @@ const AdminAppointmentComponent = ({
   handleSMSModal,
   setIsSMSModalOpen,
   setIsSend,
+  isCompletedBills,
 }) => {
   const navigate = useNavigate();
 
@@ -109,7 +110,10 @@ const AdminAppointmentComponent = ({
                       fontSize="11px"
                       borderRadius="5px"
                       whiteSpace="nowrap"
-                      disabled={appointment.paymentStatus === "완료"}
+                      disabled={
+                        appointment.paymentStatus === "완료" ||
+                        isCompletedBills[appointment.id]
+                      }
                       onClick={() => handleClickBillingButton(appointment)}
                     >
                       진료비 청구
