@@ -16,6 +16,7 @@ const AppointmentComponent = ({
   selectedDate,
   checkAvaliablity,
   handleSave,
+  isAppointmentPossible,
 }) => {
   return (
     <Container>
@@ -83,7 +84,7 @@ const AppointmentComponent = ({
           padding="0"
           fontSize="15px"
           borderRadius="10px"
-          disabled={!checkAvailablity}
+          disabled={!checkAvailablity || !isAppointmentPossible}
           onClick={handleSave}
         >
           예약하기

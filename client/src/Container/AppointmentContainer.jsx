@@ -25,6 +25,7 @@ const AppointmentContainer = () => {
   const selectedDate = useRecoilValue(dateAtom);
   const selectedTime = useRecoilValue(selectedOptionState);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAppointmentPossible, setIsAppointmentPossible] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,19 +49,25 @@ const AppointmentContainer = () => {
     fetchData();
   }, []);
 
-  const checkAvaliablity = () => {
+  const checkAvaliablity = async () => {
     const data = {
-      reservationDate: selectedDate,
+      doctorId: Number(id),
+      reservationDate: new Date(selectedDate).toISOString().split("T")[0],
       reservationTime: selectedTime,
     };
+
     setIsLoading(true);
-    try {
-      const response = axios.post("/patient/check-reservation", data);
-      setCheckAvailablity(true);
-      toast.success("예약 가능한 시간입니다.");
+
+    const response = await axios.post("/patient/check-reservation", data);
+    setCheckAvailablity(true);
+    if (response.data.code === 200) {
+      toast.success(response.data.message);
+
+      setIsAppointmentPossible(true);
       setIsLoading(false);
-    } catch (error) {
-      toast.error("예약불가능한 시간입니다.");
+    } else if (response.data.code === 409) {
+      toast.error(response.data.message);
+      setIsAppointmentPossible(false);
       setIsLoading(false);
     }
   };
@@ -90,6 +97,7 @@ const AppointmentContainer = () => {
       selectedDate={selectedDate}
       checkAvaliablity={checkAvaliablity}
       handleSave={handleSave}
+      isAppointmentPossible={isAppointmentPossible}
     />
   );
 };
