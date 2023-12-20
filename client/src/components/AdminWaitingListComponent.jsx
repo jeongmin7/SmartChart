@@ -12,7 +12,6 @@ const AdminWaitingListComponent = ({
   handleDragOver,
   handleDrop,
 }) => {
-  console.log(tasks);
   return (
     <Container>
       <Wrapper>
