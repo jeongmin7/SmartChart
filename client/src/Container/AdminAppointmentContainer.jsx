@@ -3,6 +3,8 @@ import AdminAppointmentComponent from "../components/AdminAppointmentComponent";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { billingStatusAtom } from "../stores/billingStatusAtom";
+import { useRecoilValue } from "recoil";
 
 const AdminAppointmentContainer = () => {
   const navigate = useNavigate();
@@ -10,13 +12,14 @@ const AdminAppointmentContainer = () => {
   const [searchDate, setSearchDate] = useState("");
   const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [isSMSModalOpen, setIsSMSModalOpen] = useState(false);
+  const [isSend, setIsSend] = useState(false);
   const [SMSInfo, setSMSInfo] = useState({});
   const [appointments, setAppointments] = useState([]);
   const [appointmentModals, setAppointmentModals] = useState(
     appointments.map(() => false)
   );
   const [isLoading, setIsLoading] = useState(false);
-
+  const isCompletedBills = useRecoilValue(billingStatusAtom);
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -35,7 +38,8 @@ const AdminAppointmentContainer = () => {
     };
 
     fetchData();
-  }, []);
+  }, [isSend, isCompletedBills]);
+  console.log(isCompletedBills);
 
   const handleUsernameChange = (event) => {
     setSearchUsername(event.target.value);
@@ -85,6 +89,7 @@ const AdminAppointmentContainer = () => {
       searchDate={searchDate}
       filteredAppointments={filteredAppointments}
       isSMSModalOpen={isSMSModalOpen}
+      setIsSMSModalOpen={setIsSMSModalOpen}
       SMSInfo={SMSInfo}
       appointments={appointments}
       appointmentModals={appointmentModals}
@@ -94,6 +99,7 @@ const AdminAppointmentContainer = () => {
       handleClickBillingButton={handleClickBillingButton}
       handleModal={handleModal}
       handleSMSModal={handleSMSModal}
+      setIsSend={setIsSend}
     />
   );
 };

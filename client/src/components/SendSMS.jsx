@@ -6,22 +6,23 @@ import { toast } from "react-toastify";
 import { useRecoilValue } from "recoil";
 import { hospitalAtom } from "../stores/userInfo";
 
-function SendSMS({ SMSInfo }) {
+function SendSMS({ SMSInfo, setIsSMSModalOpen, setIsSend }) {
   const [content, setContent] = useState("");
   const hospitalName = useRecoilValue(hospitalAtom).hospitalName;
-  console.log(hospitalName);
 
-  const sendSMS = () => {
-    try {
-      axios.post("/doctor/reservation-text", {
-        reservationId: SMSInfo.id,
-        recipientPhoneNumber: SMSInfo.phoneNumber,
-        content: content,
-      });
+  const sendSMS = async () => {
+    const response = await axios.post("/doctor/reservation-text", {
+      reservationId: SMSInfo.id,
+      recipientPhoneNumber: SMSInfo.phoneNumber,
+      content: content,
+    });
+    if (response.data.statusCode === "202") {
       toast.success("성공적으로 문자를 전송하였습니다.");
-    } catch (error) {
-      toast.error("문자를 전송하느데 실패했습니다.");
+      setIsSend((prev) => !prev);
+    } else {
+      toast.error("문자 발송에 실패했습니다.");
     }
+    setIsSMSModalOpen(false);
   };
 
   return (

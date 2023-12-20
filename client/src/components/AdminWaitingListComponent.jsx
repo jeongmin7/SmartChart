@@ -12,6 +12,7 @@ const AdminWaitingListComponent = ({
   handleDragOver,
   handleDrop,
 }) => {
+  console.log(tasks);
   return (
     <Container>
       <Wrapper>
@@ -33,7 +34,10 @@ const AdminWaitingListComponent = ({
                     draggable
                     onDragStart={(e) => handleDragStart(e, appointment, status)}
                   >
-                    <DateText>{appointment.reservationDate}</DateText>
+                    <CardTitle>
+                      <DateText>{appointment.reservationDate}</DateText>
+                      <div>{appointment.waitingStatus}</div>
+                    </CardTitle>
                     <Info>
                       <StyledP>{appointment.patientName}</StyledP>
                       <StyledP>{appointment.reservationTime}</StyledP>
@@ -106,12 +110,17 @@ const Appointment = styled.div`
   background-color: ${palette.gray.dark};
   border: 1px solid ${palette.gray.border};
   border-radius: 5px;
+  &:hover {
+    cursor: pointer;
+  }
 `;
-
-const DateText = styled.p`
-  font-weight: bold;
-  font-size: 1rem;
+const CardTitle = styled.div`
+  display: flex;
   color: #fff;
+  justify-content: space-between;
+  font-weight: 600;
+`;
+const DateText = styled.p`
   background-color: ${palette.gray.dark};
   margin-bottom: 5px;
 `;

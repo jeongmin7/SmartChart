@@ -12,14 +12,13 @@ const MedicalCareManagement = () => {
   const id = params.id;
   const [patientInfo, setPatientInfo] = useState({});
   const [medicalNote, setMedicalNote] = useState({
-    reservationId: id,
     medicalHistory: "",
     mainSymptoms: "",
     currentSymptoms: "",
     treatmentPlan: "",
     note: "",
   });
-
+  const [receivedNote, setReceivedNote] = useState({});
   const onChange = (event) => {
     const { name, value } = event.target;
 
@@ -32,7 +31,14 @@ const MedicalCareManagement = () => {
   const handleSubmit = async () => {
     try {
       await axios
-        .post("/doctor/treatment", medicalNote)
+        .post("/doctor/treatment", {
+          reservationId: id,
+          medicalHistory: medicalNote.medicalHistory,
+          mainSymptoms: medicalNote.mainSymptoms,
+          currentSymptoms: medicalNote.currentSymptoms,
+          treatmentPlan: medicalNote.treatmentPlan,
+          note: medicalNote.note,
+        })
         .then((res) => toast.success("저장되었습니다."))
         .then(navigate("/adminAppointment"));
     } catch (error) {
@@ -48,7 +54,9 @@ const MedicalCareManagement = () => {
             "Content-Type": "application/json",
           },
         });
+
         setPatientInfo(response.data.data[0]);
+        setReceivedNote(response.data.data2);
       } catch (error) {
         console.error(error);
       }
@@ -101,32 +109,52 @@ const MedicalCareManagement = () => {
           <TopSection>
             <Title>환자의 과거 병력</Title>
             <Content>
-              <TextArea name="medicalHistory" onChange={onChange} />
+              <TextArea
+                name="medicalHistory"
+                onChange={onChange}
+                value={receivedNote[0]?.medicalHistory || ""}
+              />
             </Content>
           </TopSection>
           <TopSection>
             <Title>환자가 내원한 이유와 환자의 주요 증상</Title>
             <Content>
-              <TextArea name="mainSymptoms" onChange={onChange} />
+              <TextArea
+                name="mainSymptoms"
+                onChange={onChange}
+                value={receivedNote[0]?.mainSymptoms || ""}
+              />
             </Content>
           </TopSection>
           <TopSection>
             <Title>현재 증상</Title>
             <Content>
-              <TextArea name="currentSymptoms" onChange={onChange} />
+              <TextArea
+                name="currentSymptoms"
+                onChange={onChange}
+                value={receivedNote[0]?.currentSymptoms || ""}
+              />
             </Content>
           </TopSection>
           <TopSection>
             <Title>치료계획</Title>
             <Content>
-              <TextArea name="treatmentPlan" onChange={onChange} />
+              <TextArea
+                name="treatmentPlan"
+                onChange={onChange}
+                value={receivedNote[0]?.treatmentPlan || ""}
+              />
             </Content>
           </TopSection>
         </TopContainer>
         <BottomContainer>
           <Title>비고</Title>
           <Content>
-            <TextArea name="note" onChange={onChange} />
+            <TextArea
+              name="note"
+              onChange={onChange}
+              value={medicalNote?.note || ""}
+            />
           </Content>
         </BottomContainer>
       </BigContainer>
