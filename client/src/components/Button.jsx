@@ -17,8 +17,14 @@ const Button = ({
   alignSelf,
   whiteSpace,
   fontweight,
+  onClick,
   ...restProps
 }) => {
+  const handleClick = () => {
+    if (!disabled) {
+      onClick && onClick();
+    }
+  };
   const style = {
     backgroundColor: bgColor || "",
     color: fgColor || "",
@@ -34,7 +40,13 @@ const Button = ({
   };
 
   return (
-    <ButtonS type={type} style={style} {...restProps} disabled={disabled} />
+    <ButtonS
+      type={type}
+      style={style}
+      {...restProps}
+      disabled={disabled}
+      onClick={handleClick}
+    />
   );
 };
 
