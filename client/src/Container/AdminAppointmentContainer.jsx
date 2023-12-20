@@ -3,6 +3,8 @@ import AdminAppointmentComponent from "../components/AdminAppointmentComponent";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { billingStatusAtom } from "../stores/billingStatusAtom";
+import { useRecoilValue } from "recoil";
 
 const AdminAppointmentContainer = () => {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ const AdminAppointmentContainer = () => {
     appointments.map(() => false)
   );
   const [isLoading, setIsLoading] = useState(false);
+  const isCompletedBills = useRecoilValue(billingStatusAtom);
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -35,7 +38,8 @@ const AdminAppointmentContainer = () => {
     };
 
     fetchData();
-  }, [isSend]);
+  }, [isSend, isCompletedBills]);
+  console.log(isCompletedBills);
 
   const handleUsernameChange = (event) => {
     setSearchUsername(event.target.value);

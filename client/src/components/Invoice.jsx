@@ -14,8 +14,6 @@ const Invoice = ({
   sum,
   patientDetailCost,
 }) => {
-  // 옵션에서 선택한 치료내역
-
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedFields, setSelectedFields] = useState([]);
   const [copiedValue, setCopiedValue] = useRecoilState(invoiceAtom);
@@ -158,12 +156,12 @@ const Invoice = ({
                 <StyledInput type="text">{field.cost}원</StyledInput>
               </GridItem>
             ))}
-            {prevCost.map((detail, index) => (
+            {/* {prevCost.map((detail, index) => (
               <GridItem key={index} type="text" title="true" header>
                 <StyledInput title="true">{detail.treatment}</StyledInput>
                 <StyledInput>{detail.cost}원</StyledInput>
               </GridItem>
-            ))}
+            ))} */}
             {/* 닥터면서 추가한  치료가 없을 때  */}
             {isDoctor && selectedFields.length === 0 && (
               <>
@@ -198,11 +196,10 @@ const Invoice = ({
             )}
             <GridItem className="noBorderBottom" header>
               <Title>총금액</Title>
-              {selectedFields.length === 0 && <Content>0원</Content>}
-              {selectedFields.length > 0 && prevTotalCost ? (
-                <Content>{total}</Content>
+              {selectedFields.length === 0 ? (
+                <Content>0원</Content>
               ) : (
-                <Content>{totalCost}원</Content>
+                <Content>{total}</Content>
               )}
             </GridItem>
           </>
