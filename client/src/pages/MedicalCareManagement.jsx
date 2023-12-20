@@ -19,6 +19,7 @@ const MedicalCareManagement = () => {
     note: "",
   });
   const [receivedNote, setReceivedNote] = useState({});
+
   const onChange = (event) => {
     const { name, value } = event.target;
 
@@ -112,7 +113,7 @@ const MedicalCareManagement = () => {
               <TextArea
                 name="medicalHistory"
                 onChange={onChange}
-                value={receivedNote[0]?.medicalHistory || ""}
+                defaultValue={receivedNote[0]?.medicalHistory || ""}
               />
             </Content>
           </TopSection>
@@ -122,7 +123,7 @@ const MedicalCareManagement = () => {
               <TextArea
                 name="mainSymptoms"
                 onChange={onChange}
-                value={receivedNote[0]?.mainSymptoms || ""}
+                defaultValue={receivedNote[0]?.mainSymptoms || ""}
               />
             </Content>
           </TopSection>
@@ -132,7 +133,7 @@ const MedicalCareManagement = () => {
               <TextArea
                 name="currentSymptoms"
                 onChange={onChange}
-                value={receivedNote[0]?.currentSymptoms || ""}
+                defaultValue={receivedNote[0]?.currentSymptoms || ""}
               />
             </Content>
           </TopSection>
@@ -142,7 +143,7 @@ const MedicalCareManagement = () => {
               <TextArea
                 name="treatmentPlan"
                 onChange={onChange}
-                value={receivedNote[0]?.treatmentPlan || ""}
+                defaultValue={receivedNote[0]?.treatmentPlan || ""}
               />
             </Content>
           </TopSection>
@@ -153,7 +154,7 @@ const MedicalCareManagement = () => {
             <TextArea
               name="note"
               onChange={onChange}
-              value={medicalNote?.note || ""}
+              defaultValue={receivedNote[0]?.note || ""}
             />
           </Content>
         </BottomContainer>
