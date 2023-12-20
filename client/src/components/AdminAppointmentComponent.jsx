@@ -28,6 +28,8 @@ const AdminAppointmentComponent = ({
   handleClickBillingButton,
   handleModal,
   handleSMSModal,
+  setIsSMSModalOpen,
+  setIsSend,
 }) => {
   const navigate = useNavigate();
 
@@ -37,7 +39,11 @@ const AdminAppointmentComponent = ({
         <Header>예약관리</Header>
         {isLoading && <Loader />}
         <Modal isOpen={isSMSModalOpen} handleModal={handleSMSModal}>
-          <SendSMS SMSInfo={SMSInfo} />
+          <SendSMS
+            SMSInfo={SMSInfo}
+            setIsSMSModalOpen={setIsSMSModalOpen}
+            setIsSend={setIsSend}
+          />
         </Modal>
         <ResultContainer>
           <Search>
