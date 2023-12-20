@@ -182,6 +182,7 @@ const Container = styled.div`
   align-items: center;
   width: 100vw;
   height: calc(100vh - 100px);
+
   min-width: 950px;
   min-height: 700px;
 `;
@@ -194,7 +195,7 @@ const Header = styled.div`
 `;
 
 const SmallContainer = styled.div`
-  width: 70%;
+  width: 1500px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(2, 1fr);
@@ -223,12 +224,13 @@ const Label = styled.div`
 
 const Value = styled.div`
   flex: 1;
+  font-weight: 600;
 `;
 
 const BigContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 70%;
+  width: 1500px;
   height: 100%;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -263,13 +265,16 @@ const Title = styled.div`
 const Content = styled.div`
   flex: 8;
   padding: 10px;
+  height: 100%;
 `;
 
 const BottomContainer = styled.div`
   flex: 1;
   border: 1px solid #333;
-  min-height: 200px;
   margin-top: 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 const TextArea = styled.textarea`
   width: 100%;

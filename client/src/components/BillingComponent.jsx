@@ -58,7 +58,7 @@ const Container = styled.section`
   align-items: center;
   width: 100%;
   min-width: 1300px;
-  min-height: 900px;
+  height: auto;
 `;
 
 const Header = styled.div`

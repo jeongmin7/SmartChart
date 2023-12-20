@@ -194,6 +194,19 @@ const Invoice = ({
                 </GridItem>
               </>
             )}
+            {selectedFields.length === 0 ? (
+              <>
+                <GridItem header>
+                  <StyledInput type="text" />
+                </GridItem>
+                <GridItem header>
+                  <StyledInput type="text" />
+                </GridItem>
+                <GridItem header>
+                  <StyledInput type="text" />
+                </GridItem>
+              </>
+            ) : null}
             <GridItem className="noBorderBottom" header>
               <Title>총금액</Title>
               {selectedFields.length === 0 ? (

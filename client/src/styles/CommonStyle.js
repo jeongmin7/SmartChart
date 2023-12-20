@@ -160,7 +160,9 @@ export const Wrapper = styled.div`
   padding: 40px 10px 10px 10px;
   border: 1px solid ${palette.gray.border};
   border-radius: 20px;
+  min-height: 800px;
   height: auto;
+  overflow-y: auto;
 `;
 
 export const Header = styled.div`
