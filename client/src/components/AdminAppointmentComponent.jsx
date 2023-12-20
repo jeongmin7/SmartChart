@@ -86,6 +86,7 @@ const AdminAppointmentComponent = ({
                       fontSize="11px"
                       borderRadius="5px"
                       whiteSpace="nowrap"
+                      disabled={appointment.reservationStatus === "완료"}
                       onClick={() => handleSMSModal({ appointment })}
                     >
                       예약 확정 문자
@@ -102,6 +103,7 @@ const AdminAppointmentComponent = ({
                       fontSize="11px"
                       borderRadius="5px"
                       whiteSpace="nowrap"
+                      disabled={appointment.paymentStatus === "완료"}
                       onClick={() => handleClickBillingButton(appointment)}
                     >
                       진료비 청구
