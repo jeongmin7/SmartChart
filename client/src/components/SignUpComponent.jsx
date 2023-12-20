@@ -75,10 +75,15 @@ const SignUpComponent = ({
             marginB="20px"
             fontweight="700"
             onClick={emailCheck}
-            disabled={userInfo.email && emailError?.length > 0}
+            disabled={
+              !userInfo.email ||
+              userInfo.email.length === 0 ||
+              emailError?.length > 0
+            }
           >
             중복확인
           </Button>
+          {console.log(userInfo.email)}
         </Section>
 
         {emailError && emailError?.length > 0 && <Error>{emailError}</Error>}
