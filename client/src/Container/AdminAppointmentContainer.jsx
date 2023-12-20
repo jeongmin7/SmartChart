@@ -10,13 +10,13 @@ const AdminAppointmentContainer = () => {
   const [searchDate, setSearchDate] = useState("");
   const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [isSMSModalOpen, setIsSMSModalOpen] = useState(false);
+  const [isSend, setIsSend] = useState(false);
   const [SMSInfo, setSMSInfo] = useState({});
   const [appointments, setAppointments] = useState([]);
   const [appointmentModals, setAppointmentModals] = useState(
     appointments.map(() => false)
   );
   const [isLoading, setIsLoading] = useState(false);
-
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -35,7 +35,7 @@ const AdminAppointmentContainer = () => {
     };
 
     fetchData();
-  }, []);
+  }, [isSend]);
 
   const handleUsernameChange = (event) => {
     setSearchUsername(event.target.value);
@@ -85,6 +85,7 @@ const AdminAppointmentContainer = () => {
       searchDate={searchDate}
       filteredAppointments={filteredAppointments}
       isSMSModalOpen={isSMSModalOpen}
+      setIsSMSModalOpen={setIsSMSModalOpen}
       SMSInfo={SMSInfo}
       appointments={appointments}
       appointmentModals={appointmentModals}
@@ -94,6 +95,7 @@ const AdminAppointmentContainer = () => {
       handleClickBillingButton={handleClickBillingButton}
       handleModal={handleModal}
       handleSMSModal={handleSMSModal}
+      setIsSend={setIsSend}
     />
   );
 };
