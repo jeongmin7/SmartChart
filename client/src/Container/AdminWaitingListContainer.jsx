@@ -85,6 +85,9 @@ const AdminWaitingListContainer = () => {
       );
 
       if (existingAppointmentIndex !== -1) {
+        // 변경된 waiting상태를 적용
+        appointment.waitingStatus = targetStatus;
+
         const updatedTasks = {
           ...tasks,
           [status]: tasks[status].filter((apt) => apt.id !== appointment.id),
@@ -107,6 +110,7 @@ const AdminWaitingListContainer = () => {
       }
     }
   };
+
   return (
     <AdminWaitingListComponent
       today={today}
