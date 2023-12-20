@@ -24,14 +24,14 @@ const Invoice = ({
   };
   useEffect(copySelectedValue, [selectedFields]);
   const isDoctor = userRole.role === "DOCTOR";
-  const prevTotalCost =
-    prevCost && prevCost.reduce((acc, current) => acc + current.cost, 0);
+  // const prevTotalCost =
+  //   prevCost && prevCost.reduce((acc, current) => acc + current.cost, 0);
   const totalCost = selectedFields.reduce(
     (total, item) => total + parseInt(item.cost),
     0
   );
 
-  const total = prevTotalCost + totalCost;
+  const total = totalCost;
   // 옵션에서 선택한 치료내역
   const handleSelectChange = (event) => {
     setSelectedValue(event.target.value);
