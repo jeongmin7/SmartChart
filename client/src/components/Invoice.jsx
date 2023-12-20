@@ -198,8 +198,8 @@ const Invoice = ({
             )}
             <GridItem className="noBorderBottom" header>
               <Title>총금액</Title>
-              {!selectedFields && <Content>0원</Content>}
-              {selectedFields && prevTotalCost ? (
+              {selectedFields.length === 0 && <Content>0원</Content>}
+              {selectedFields.length > 0 && prevTotalCost ? (
                 <Content>{total}</Content>
               ) : (
                 <Content>{totalCost}원</Content>
@@ -210,12 +210,14 @@ const Invoice = ({
           // 환자일 경우
           <div>
             {userRole.role === "PATIENT" &&
+              patientDetailCost &&
               patientDetailCost.map(({ treatment, cost }, index) => (
                 <GridItem key={index} type="text" title="true" header>
                   <StyledInput title="true">{treatment}</StyledInput>
                   <StyledInput>{cost}원</StyledInput>
                 </GridItem>
               ))}
+
             <GridItem className="noBorderBottom" header>
               <Title>총금액</Title>
               <Content>{sum}원</Content>
