@@ -37,7 +37,9 @@ const Pay = ({
             {list.map((item, itemIndex) => (
               <TableRow key={itemIndex}>
                 <TableCell>{item.id}</TableCell>
-                <TableCell>{item.hospitalName}</TableCell>
+                <TableCell textLength={item.hospitalName.length}>
+                  {item.hospitalName}
+                </TableCell>
                 <TableCell>{item.reservationDate}</TableCell>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.sum}원</TableCell>
@@ -124,6 +126,9 @@ const TableCell = styled.div`
   font-weight: bold;
   font-size: 16px;
   white-space: nowrap;
+  font-size: ${({ textLength }) => (textLength > 9 ? "12px" : "16px")};
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: ${({ isInComplete }) => (isInComplete ? "red" : "")};
 `;
 const ButtonContainer = styled.div`
