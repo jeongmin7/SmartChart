@@ -56,7 +56,7 @@ const AccountingContainer = () => {
               salesWeek={data.salesWeek}
               recentWeek={data.recentWeek}
             />
-            <Table tableData={data.week} />
+            <Table selectedChart={selectedChart} tableData={data.week} />
           </>
         );
         break;
@@ -68,7 +68,7 @@ const AccountingContainer = () => {
               salesYear={data.salesYear}
               recentYear={data.recentYear}
             />
-            <Table tableData={data.year} />
+            <Table selectedChart={selectedChart} tableData={data.year} />
           </>
         );
         break;
@@ -80,7 +80,7 @@ const AccountingContainer = () => {
               recentDate={data.recentDate}
               salesDate={data.salesDate}
             />
-            <Table tableData={data.date} />
+            <Table selectedChart={selectedChart} tableData={data.date} />
           </>
         );
         break;
@@ -94,7 +94,7 @@ const AccountingContainer = () => {
               gender={data.genderMonth}
               averageAge={data.averageAgeMonth}
             />
-            <Table tableData={data.genderMonth} />
+            <Table selectedChart={selectedChart} tableData={data.genderMonth} />
           </>
         );
         break;
@@ -120,7 +120,6 @@ const AccountingContainer = () => {
         });
         setData(response.data);
         setIsLoading(false);
-        console.log(data);
       } catch (err) {
         toast.error("데이터를 읽어오는데 실패했습니다.");
         setIsLoading(false);
