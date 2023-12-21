@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Button from "./Button";
@@ -13,6 +13,8 @@ import {
   TableRow,
   TableCell,
 } from "../styles/TableStyle";
+import Pagination from "./Pagination";
+import { PageNumber } from "./MypageComponent";
 
 const AdminAppointmentComponent = ({
   searchUsername,
@@ -33,6 +35,15 @@ const AdminAppointmentComponent = ({
   isCompletedBills,
 }) => {
   const navigate = useNavigate();
+  const itemsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(filteredAppointments.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const displayedList = filteredAppointments.slice(startIndex, endIndex);
+  const handlePage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <Container>
@@ -67,96 +78,111 @@ const AdminAppointmentComponent = ({
               </LabelWrapper>
             </LabelContainer>
           </Search>
-          {filteredAppointments.length > 0 ? (
-            <TableContainer>
-              <TableHeader>
-                <TableCell id={true}>예약번호</TableCell>
-                <TableCell>환자명</TableCell>
-                <TableCell>날짜</TableCell>
-                <TableCell>시간</TableCell>
-                <TableCell>전화번호</TableCell>
-                <TableCell>예약확정 체크</TableCell>
-                <TableCell>진료비 청구</TableCell>
-                <TableCell>진료관리</TableCell>
-                <TableCell>건강체크</TableCell>
-              </TableHeader>
-              {filteredAppointments.map((appointment, index) => (
-                <TableRow key={appointment.id}>
-                  <TableCell id={true}>{appointment.id}</TableCell>
-                  <TableCell>{appointment.name}</TableCell>
-                  <TableCell>{appointment.reservationDate}</TableCell>
-                  <TableCell>{appointment.reservationTime}</TableCell>
-                  <TableCell>{appointment.phoneNumber}</TableCell>
-                  <TableCell>
-                    <Button
-                      padding="5px 10px"
-                      fontSize="11px"
-                      borderRadius="5px"
-                      whiteSpace="nowrap"
-                      disabled={appointment.reservationStatus === "완료"}
-                      onClick={() => handleSMSModal({ appointment })}
-                    >
-                      예약 확정 문자
-                    </Button>
-                    <Status
-                      isIncomplete={appointment.reservationStatus === "미완료"}
-                    >
-                      {appointment.reservationStatus}
-                    </Status>
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      padding="5px 10px"
-                      fontSize="11px"
-                      borderRadius="5px"
-                      whiteSpace="nowrap"
-                      disabled={
-                        appointment.paymentStatus === "완료" ||
-                        isCompletedBills[appointment.id]
-                      }
-                      onClick={() => handleClickBillingButton(appointment)}
-                    >
-                      진료비 청구
-                    </Button>
-                    <Status
-                      isIncomplete={appointment.paymentStatus === "미완료"}
-                    >
-                      {appointment.paymentStatus}
-                    </Status>
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      padding="5px 10px"
-                      fontSize="11px"
-                      borderRadius="5px"
-                      whiteSpace="nowrap"
-                      onClick={() =>
-                        navigate(`/medicalcaremanagement/${appointment.id}`)
-                      }
-                    >
-                      진료관리
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      padding="5px 10px"
-                      fontSize="11px"
-                      borderRadius="5px"
-                      whiteSpace="nowrap"
-                      onClick={() => handleModal(index)}
-                    >
-                      건강체크
-                    </Button>
-                    <Modal
-                      isOpen={appointmentModals[index]}
-                      handleModal={() => handleModal(index)}
-                    >
-                      <SelfDiagnosisComponent id={appointment.patientId} />
-                    </Modal>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableContainer>
+          {displayedList.length > 0 ? (
+            <>
+              <TableContainer>
+                <TableHeader>
+                  <TableCell id={true}>예약번호</TableCell>
+                  <TableCell>환자명</TableCell>
+                  <TableCell>날짜</TableCell>
+                  <TableCell>시간</TableCell>
+                  <TableCell>전화번호</TableCell>
+                  <TableCell>예약확정 체크</TableCell>
+                  <TableCell>진료비 청구</TableCell>
+                  <TableCell>진료관리</TableCell>
+                  <TableCell>건강체크</TableCell>
+                </TableHeader>
+                {displayedList.map((appointment, index) => (
+                  <TableRow key={appointment.id}>
+                    <TableCell id={true}>{appointment.id}</TableCell>
+                    <TableCell>{appointment.name}</TableCell>
+                    <TableCell>{appointment.reservationDate}</TableCell>
+                    <TableCell>{appointment.reservationTime}</TableCell>
+                    <TableCell>{appointment.phoneNumber}</TableCell>
+                    <TableCell>
+                      <Button
+                        padding="5px 10px"
+                        fontSize="11px"
+                        borderRadius="5px"
+                        whiteSpace="nowrap"
+                        disabled={appointment.reservationStatus === "완료"}
+                        onClick={() => handleSMSModal({ appointment })}
+                      >
+                        예약 확정 문자
+                      </Button>
+                      <Status
+                        isIncomplete={
+                          appointment.reservationStatus === "미완료"
+                        }
+                      >
+                        {appointment.reservationStatus}
+                      </Status>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        padding="5px 10px"
+                        fontSize="11px"
+                        borderRadius="5px"
+                        whiteSpace="nowrap"
+                        disabled={
+                          appointment.paymentStatus === "완료" ||
+                          isCompletedBills[appointment.id]
+                        }
+                        onClick={() => handleClickBillingButton(appointment)}
+                      >
+                        진료비 청구
+                      </Button>
+                      <Status
+                        isIncomplete={appointment.paymentStatus === "미완료"}
+                      >
+                        {appointment.paymentStatus}
+                      </Status>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        padding="5px 10px"
+                        fontSize="11px"
+                        borderRadius="5px"
+                        whiteSpace="nowrap"
+                        onClick={() =>
+                          navigate(`/medicalcaremanagement/${appointment.id}`)
+                        }
+                      >
+                        진료관리
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        padding="5px 10px"
+                        fontSize="11px"
+                        borderRadius="5px"
+                        whiteSpace="nowrap"
+                        onClick={() => handleModal(index)}
+                      >
+                        건강체크
+                      </Button>
+                      <Modal
+                        isOpen={appointmentModals[index]}
+                        handleModal={() => handleModal(index)}
+                      >
+                        <SelfDiagnosisComponent id={appointment.patientId} />
+                      </Modal>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableContainer>
+              <Pagination>
+                {Array.from({ length: totalPages }).map((_, index) => (
+                  <PageNumber
+                    key={index + 1}
+                    onClick={() => handlePage(index + 1)}
+                    isActive={currentPage === index + 1}
+                  >
+                    {index + 1}
+                  </PageNumber>
+                ))}
+              </Pagination>
+            </>
           ) : (
             <div>
               <h4>검색 결과가 없습니다.</h4>

@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled } from "styled-components";
 import Button from "./Button";
 import { palette } from "../styles/GlobalStyles";
 import Loader from "./Loader";
 import { Container, Wrapper } from "../styles/CommonStyle";
 import { Nothing } from "./PayComponent";
+import Pagination from "./Pagination";
 
 const MypageComponent = ({
   userInfo,
@@ -14,6 +15,15 @@ const MypageComponent = ({
   handleUpdate,
   cancelReservation,
 }) => {
+  const itemsPerPage = 5;
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(appointmentList.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const displayedList = appointmentList.slice(startIndex, endIndex);
+  const handlePage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
   return (
     <Container>
       <Wrapper>
@@ -55,16 +65,18 @@ const MypageComponent = ({
           </Tip>
         </FirstColumnHalfWrapper>
         <Button
-          width="60px"
-          height="30px"
+          width="80px"
+          height="40px"
           padding="10px"
           fontSize="15px"
           borderRadius="5px"
+          marginTop="30px"
           onClick={handleUpdate}
         >
           Update
         </Button>
         <ColumnHalfWrapper>
+          <Title>진료내역</Title>
           <TableContainer>
             <TableHeader>
               <TableCell>예약번호</TableCell>
@@ -74,9 +86,9 @@ const MypageComponent = ({
               <TableCell>예약 상태</TableCell>
               <TableCell>예약 취소</TableCell>
             </TableHeader>
-            {appointmentList.length > 0 ? (
+            {displayedList.length > 0 ? (
               <>
-                {appointmentList.map((item, index) => (
+                {displayedList.map((item, index) => (
                   <TableRow key={index}>
                     <TableCell>{item.id}</TableCell>
                     <TableCell>{item.hospitalName}</TableCell>
@@ -106,6 +118,17 @@ const MypageComponent = ({
             )}
           </TableContainer>
         </ColumnHalfWrapper>
+        <Pagination>
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <PageNumber
+              key={index + 1}
+              onClick={() => handlePage(index + 1)}
+              isActive={currentPage === index + 1}
+            >
+              {index + 1}
+            </PageNumber>
+          ))}
+        </Pagination>
       </Wrapper>
     </Container>
   );
@@ -136,7 +159,7 @@ const ColumnHalfWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100%;
-  margin-bottom: 20px;
+  margin-top: 30px;
 `;
 
 const ColumnDivideWrapper = styled.div`
@@ -171,6 +194,12 @@ const InfoValue = styled.input`
   border: none;
 `;
 
+const Title = styled.div`
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+`;
 const TableContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -185,14 +214,15 @@ const TableRow = styled.div`
   justify-content: space-between;
   padding: 8px;
   border-bottom: 1px solid #ccc;
-
+  font-weight: 500;
   &:last-child {
     border-bottom: none;
   }
 `;
 
 const TableHeader = styled(TableRow)`
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 18px;
   background-color: #f0f0f0;
   display: flex;
   padding: 8px;
@@ -204,4 +234,28 @@ const TableCell = styled.div`
   align-items: center;
   justify-content: center;
   color: ${(props) => (props.isIncomplete ? "#FF0000" : "")};
+  &:first-child {
+    flex: 0.5;
+  }
+  &:nth-child(2) {
+    flex: 2;
+  }
+  &:nth-child(3),
+  &:nth-child(4),
+  &:nth-child(5) {
+    flex: 1.2;
+  }
+`;
+
+export const PageNumber = styled.div`
+  margin: 0 5px;
+  padding: 5px;
+  cursor: pointer;
+  background-color: ${({ isActive }) =>
+    isActive ? `${palette.gray.light}` : `#fff`};
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #ddd;
+  }
 `;
