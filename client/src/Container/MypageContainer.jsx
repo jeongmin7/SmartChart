@@ -20,12 +20,9 @@ const MypageContainer = () => {
           },
         });
         const appointmentList = response.data.myPageList;
-        // 최신 5개만 남기기
-        const latestAppointments = appointmentList
-          .slice(-5)
-          .sort(
-            (a, b) => new Date(b.reservationDate) - new Date(a.reservationDate)
-          );
+        const latestAppointments = appointmentList.sort(
+          (a, b) => new Date(b.reservationDate) - new Date(a.reservationDate)
+        );
         setUserInfo(response.data.myPage[0]);
         setAppointmentList(latestAppointments);
         setIsLoading(false);
