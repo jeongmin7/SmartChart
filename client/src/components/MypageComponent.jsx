@@ -247,7 +247,7 @@ const TableCell = styled.div`
   }
 `;
 
-const PageNumber = styled.div`
+export const PageNumber = styled.div`
   margin: 0 5px;
   padding: 5px;
   cursor: pointer;

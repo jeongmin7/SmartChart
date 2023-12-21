@@ -33,4 +33,15 @@ export const TableCell = styled.div`
   align-items: center;
   justify-content: space-around;
   white-space: nowrap;
+  &:nth-child(1) {
+    flex: 0.5;
+  }
+  &:nth-child(3),
+  &:nth-child(4) {
+    flex: 0.8;
+  }
+  &:nth-child(8),
+  &:nth-child(9) {
+    flex: 0.7;
+  }
 `;
