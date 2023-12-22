@@ -16,7 +16,7 @@ const Pay = ({
   selectedItemId,
   isModalOpen,
 }) => {
-  const itemsPerPage = 12;
+  const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(list.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
