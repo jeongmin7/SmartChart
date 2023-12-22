@@ -38,16 +38,10 @@ const BillingContainer = () => {
   };
   return (
     <Container>
-      <BillingComponent />
-      <Buttons>
-        <Button borderRadius="15px" width="100px" onClick={handleSaveButton}>
-          저장
-        </Button>
-        <Button onClick={handleModal}>기본 치료비 책정하기</Button>
-        <Modal isOpen={isModalOpen} handleModal={handleModal}>
-          <TreatmentAndCost />
-        </Modal>
-      </Buttons>
+      <BillingComponent
+        handleModal={handleModal}
+        handleSaveButton={handleSaveButton}
+      />
     </Container>
   );
 };

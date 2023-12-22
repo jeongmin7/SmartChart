@@ -2,28 +2,28 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Button from "./Button";
 import { palette } from "../styles/GlobalStyles";
-import { userRoleAtom } from "../stores/userInfo";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { invoiceAtom } from "../stores/invoiceAtom";
 
 const Invoice = ({
   id,
   patientInfo,
   cost,
-  prevCost,
   sum,
   patientDetailCost,
+  setSelectedFields,
+  selectedFields,
+  isDoctor,
+  userRole,
 }) => {
   const [selectedValue, setSelectedValue] = useState("");
-  const [selectedFields, setSelectedFields] = useState([]);
   const [copiedValue, setCopiedValue] = useRecoilState(invoiceAtom);
-  const userRole = useRecoilValue(userRoleAtom);
+
   const copySelectedValue = () => {
     const copiedValue = [...selectedFields];
     setCopiedValue(copiedValue);
   };
   useEffect(copySelectedValue, [selectedFields]);
-  const isDoctor = userRole.role === "DOCTOR";
   // const prevTotalCost =
   //   prevCost && prevCost.reduce((acc, current) => acc + current.cost, 0);
   const totalCost = selectedFields.reduce(
