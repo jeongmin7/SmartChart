@@ -16,7 +16,7 @@ const Modal = ({ isOpen, children, handleModal }) => {
     <ModalWrapper onClick={handleWrapperClick}>
       <ModalContent onClick={handleContentClick}>
         <CloseButton onClick={handleModal}>
-          <AiOutlineCloseCircle size={20} />
+          <AiOutlineCloseCircle size={40} />
         </CloseButton>
         <ModalScrollableContent>{children}</ModalScrollableContent>
       </ModalContent>
@@ -55,9 +55,6 @@ const ModalScrollableContent = styled.div`
 `;
 
 const CloseButton = styled.button`
-  position: absolute;
-  top: 3px;
-  right: 3px;
   align-self: flex-end;
   background-color: transparent;
   border: none;
