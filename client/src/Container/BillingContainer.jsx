@@ -10,7 +10,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 import { billingStatusAtom } from "../stores/billingStatusAtom";
-
 const BillingContainer = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -18,7 +17,6 @@ const BillingContainer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const invoiceDetail = useRecoilValue(invoiceAtom);
   const [billingStatus, setBillingStatus] = useRecoilState(billingStatusAtom);
-
   const handleSaveButton = () => {
     try {
       axios.post(`/doctor/treatment_statement`, invoiceDetail);
@@ -32,22 +30,26 @@ const BillingContainer = () => {
       toast.error("저장되지 않았습니다.");
     }
   };
-
   const handleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
   return (
     <Container>
-      <BillingComponent
-        handleModal={handleModal}
-        handleSaveButton={handleSaveButton}
-      />
+      <BillingComponent />
+      <Buttons>
+        <Button borderRadius="15px" width="100px" onClick={handleSaveButton}>
+          저장
+        </Button>
+        <Button onClick={handleModal}>기본 치료비 책정하기</Button>
+        <Modal isOpen={isModalOpen} handleModal={handleModal}>
+          <TreatmentAndCost />
+        </Modal>
+      </Buttons>
     </Container>
   );
 };
 
 export default BillingContainer;
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
