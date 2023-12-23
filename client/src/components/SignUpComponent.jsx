@@ -55,35 +55,35 @@ const SignUpComponent = ({
         <Section email="true">
           <div style={{ flex: 1 }}>
             <Label htmlFor="email">이메일</Label>
-            <Input
-              type="text"
-              name="email"
-              id="email"
-              required
-              value={userInfo.email}
-              onChange={onChange}
-              marginB="5px"
-              width="98%"
-            />
+            <InputWithButton>
+              <Input
+                type="text"
+                name="email"
+                id="email"
+                required
+                value={userInfo.email}
+                onChange={onChange}
+                width="98%"
+              />
+              <Button
+                width="80px"
+                height="40px"
+                padding="0"
+                fontSize="12px"
+                borderRadius="5px"
+                marginB="0px"
+                fontweight="700"
+                onClick={emailCheck}
+                disabled={
+                  !userInfo.email ||
+                  userInfo.email.length === 0 ||
+                  emailError?.length > 0
+                }
+              >
+                중복확인
+              </Button>
+            </InputWithButton>
           </div>
-          <Button
-            width="80px"
-            height="40px"
-            padding="0"
-            fontSize="12px"
-            borderRadius="5px"
-            marginB="20px"
-            fontweight="700"
-            onClick={emailCheck}
-            disabled={
-              !userInfo.email ||
-              userInfo.email.length === 0 ||
-              emailError?.length > 0
-            }
-          >
-            중복확인
-          </Button>
-          {console.log(userInfo.email)}
         </Section>
 
         {emailError && emailError?.length > 0 && <Error>{emailError}</Error>}
@@ -192,4 +192,10 @@ const Wrapper = styled.div`
   justify-content: center;
   margin: auto;
   padding: 2rem;
+`;
+const InputWithButton = styled.div`
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
 `;
