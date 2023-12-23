@@ -6,6 +6,7 @@ import Button from "./Button";
 import axios from "axios";
 import { palette } from "../styles/GlobalStyles";
 import { toast } from "react-toastify";
+import Input from "./Input";
 
 const SearchHospital = () => {
   const [hospitalInfo, setHospitalInfo] = useRecoilState(hospitalAtom);
@@ -47,18 +48,21 @@ const SearchHospital = () => {
 
   return (
     <>
-      <div>병원 등록하기</div>
-      <Section>
-        <DoctorInput type="text" onChange={onChange} />
-        <Button
-          width="90px"
-          height="40px"
-          onClick={handleSearch}
-          whiteSpace="noWrap"
-        >
-          검색하기
-        </Button>
-      </Section>
+      <div style={{ fontWeight: "500" }}>병원 등록하기</div>
+      <InputWithButton>
+        <Section>
+          <DoctorInput type="text" onChange={onChange} />
+          <Button
+            width="50px"
+            height="30px"
+            onClick={handleSearch}
+            whiteSpace="noWrap"
+            borderRadius="7px"
+          >
+            검색
+          </Button>
+        </Section>
+      </InputWithButton>
       {data.map((hospital, index) => (
         <HospitalItem
           key={index}
@@ -76,7 +80,7 @@ const SearchHospital = () => {
             borderRadius="8px"
             onClick={() => handleSelectHospital(hospital)}
           >
-            확인
+            선택
           </Button>
         </HospitalItem>
       ))}
@@ -92,9 +96,7 @@ const DoctorInput = styled.input`
   font-size: 16px;
   border-radius: 0.3rem;
   border: 1px solid lightgray;
-  width: 96%;
   max-width: 680px;
-  margin-bottom: 5px;
 `;
 const Section = styled.div`
   display: flex;
@@ -120,4 +122,10 @@ const HospitalName = styled.div`
 `;
 const HospitalInfo = styled.div`
   font-size: 16px;
+`;
+const InputWithButton = styled.div`
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: 10px;
 `;

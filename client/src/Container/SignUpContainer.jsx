@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import SignUpComponent from "../components/SignUpComponent";
 
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { hospitalAtom } from "../stores/userInfo";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +15,7 @@ const SignUpContainer = () => {
   const [isEmailDuplicate, setIsEmailDuplicate] = useState(false);
 
   const [isDoctor, setIsDoctor] = useState(false);
-  const hospitalInfo = useRecoilValue(hospitalAtom);
+  const [hospitalInfo, setHospitalInfo] = useRecoilState(hospitalAtom);
 
   const emailCheck = async () => {
     setIsEmailDuplicate(true);
@@ -128,7 +128,37 @@ const SignUpContainer = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
+
+    // 필수 정보 확인
+    let requiredFields = [
+      "email",
+      "password",
+      "name",
+      "gender",
+      "age",
+      "phoneNumber",
+    ];
+    if (isDoctor) {
+      requiredFields.push("hospitalInfo");
+    }
+    const missingFields = requiredFields.filter((field) => {
+      if (field === "hospitalInfo") {
+        return (
+          isDoctor && (!hospitalInfo || Object.keys(hospitalInfo).length === 0)
+        );
+      } else {
+        return !userInfo[field];
+      }
+    });
+
+    if (missingFields.length > 0) {
+      toast.warn("모든 항목을 입력해주세요");
+      return;
+    }
+
     if (!isEmailDuplicate) {
       toast.warn("이메일 중복확인을 진행해주세요");
       return;
@@ -136,7 +166,6 @@ const SignUpContainer = () => {
 
     try {
       if (isDoctor === false) {
-        // 필수 필드가 비어 있는 경우
         axios
           .post(
             "/patient/join",
@@ -190,6 +219,7 @@ const SignUpContainer = () => {
           )
           .then(function (response) {
             toast.success("회원가입에 성공했습니다.");
+            setHospitalInfo([]);
             navigate("/");
           })
           .catch(function (error) {
