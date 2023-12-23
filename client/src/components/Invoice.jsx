@@ -2,44 +2,41 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Button from "./Button";
 import { palette } from "../styles/GlobalStyles";
-import { useRecoilState } from "recoil";
+import { userRoleAtom } from "../stores/userInfo";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { invoiceAtom } from "../stores/invoiceAtom";
 
 const Invoice = ({
   id,
   patientInfo,
   cost,
+  prevCost,
   sum,
   patientDetailCost,
-  setSelectedFields,
-  selectedFields,
-  isDoctor,
-  userRole,
 }) => {
   const [selectedValue, setSelectedValue] = useState("");
+  const [selectedFields, setSelectedFields] = useState([]);
   const [copiedValue, setCopiedValue] = useRecoilState(invoiceAtom);
-
+  const userRole = useRecoilValue(userRoleAtom);
   const copySelectedValue = () => {
     const copiedValue = [...selectedFields];
     setCopiedValue(copiedValue);
   };
   useEffect(copySelectedValue, [selectedFields]);
+  const isDoctor = userRole.role === "DOCTOR";
   // const prevTotalCost =
   //   prevCost && prevCost.reduce((acc, current) => acc + current.cost, 0);
   const totalCost = selectedFields.reduce(
     (total, item) => total + parseInt(item.cost),
     0
   );
-
   const total = totalCost;
   // 옵션에서 선택한 치료내역
   const handleSelectChange = (event) => {
     setSelectedValue(event.target.value);
   };
-
   const addInputField = (type, index) => {
     const selectedItem = cost.find((item) => item.treatment === selectedValue);
-
     if (type === "delete") {
       const newSelectedFields = selectedFields.filter(
         (item, idx) => idx !== index
@@ -47,6 +44,7 @@ const Invoice = ({
       setSelectedFields(newSelectedFields);
       return;
     }
+
     if (selectedItem) {
       setSelectedFields([
         ...selectedFields,
@@ -65,13 +63,11 @@ const Invoice = ({
     // set을 다시 배열로 변환하여 옵션으로 사용할 수 있도록 반환
     return Array.from(treatmentOptions);
   };
-
   return (
     <Wrapper>
       <SectionHeader>
         <Section>진료비</Section>
       </SectionHeader>
-
       <GridContainer>
         <GridItem>
           <Title>예약번호</Title>
@@ -189,7 +185,6 @@ const Invoice = ({
                       등록
                     </Button>
                   </StyledInput>
-
                   <StyledInput type="text" />
                 </GridItem>
               </>
@@ -227,7 +222,6 @@ const Invoice = ({
                   <StyledInput>{cost}원</StyledInput>
                 </GridItem>
               ))}
-
             <GridItem className="noBorderBottom" header>
               <Title>총금액</Title>
               <Content>{sum}원</Content>
@@ -238,7 +232,6 @@ const Invoice = ({
     </Wrapper>
   );
 };
-
 export default Invoice;
 const Wrapper = styled.div`
   display: flex;
@@ -247,16 +240,15 @@ const Wrapper = styled.div`
   justify-content: center;
   width: 80%;
   height: auto;
-  max-width: 2000px;
   border: 2px solid ${palette.primary.black};
+  overflow-x: auto;
+  max-width: 1500px;
 `;
-
 const GridContainer = styled.div`
   display: grid;
   grid-template-columns: ${(props) =>
     props.detail ? "none" : "repeat(4, 1fr)"};
   width: 100%;
-  /* max-width: 800px; */
   margin: 0 auto;
 `;
 const GridItem = styled.div`
@@ -271,16 +263,13 @@ const GridItem = styled.div`
     props.header
       ? `2px solid ${palette.primary.black}`
       : `1px solid ${palette.primary.black}`};
-
   &.noBorderBottom {
     border-bottom: none;
   }
-
   &.borderTop {
     border-top: 1px solid ${palette.primary.black};
   }
 `;
-
 const Section = styled.div`
   padding: 20px;
   display: flex;
@@ -297,7 +286,6 @@ const Title = styled.div`
   width: 140px;
   white-space: nowrap;
 `;
-
 const Content = styled.div`
   padding: 16px;
   width: 100%;
@@ -315,7 +303,6 @@ const StyledInput = styled.div`
   background-color: ${(props) => (props.title ? " #d9d9d9" : "#fff")};
   height: 50px;
 `;
-
 const PayList = styled.select`
   width: 200px;
   height: 35px;
@@ -323,7 +310,6 @@ const PayList = styled.select`
   border: 2px solid ${palette.gray.border};
   border-radius: 5px;
 `;
-
 const ListBox = styled.div`
   position: absolute;
   display: flex;
