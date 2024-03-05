@@ -1,8 +1,14 @@
-# SmartChart
+#  서비스 소개
 
->
->
-> 기간 : 2023년 8월 1일 ~ 2023년 12월 18일
+<img src=https://github.com/hongandlee/apuda/assets/91598778/72e3da4d-ee5b-4203-87ee-757c212ab6e0/>
+
+<br/>
+
+## [👍 SmartChart 사용해보기](https://smartchart.vercel.app)
+ 의사 로그인: 아이디 - doctor@gmail.com 비밀번호 - doctor
+ <br/>
+ 환자 로그인 : 아이디 patient@naver.com  비밀번호 - patient
+
 
 <br />
 
@@ -18,6 +24,7 @@
 - [과제목표](#과제목표)
 - [폴더구조](#폴더구조)
 - [사용기술](#사용기술)
+- [Service Architecture](#Service-Architecture)
 
 <br />
 
@@ -32,7 +39,7 @@
 <br />
 
 ## 📝프로젝트 설명
-환자는 SmartChart를 통해 병원예약, 문진, 실시간 의료상담, 진료비 관리를 진행할 수 있으며 의사는 예약된 환자를 관리하고 매출을 관리하는 등 환자와 의사의 소통을 돕는 서비스입니다. 
+환자는 SmartChart를 통해 병원예약, 문진, 실시간 의료상담, 진료비 확인 또는 지불할 수 있으며 의사는 예약된 환자를 관리하고 매출을 관리하는 등 환자와 의사의 소통을 돕는 서비스입니다. 
 
 <br />
 
@@ -58,38 +65,111 @@ $ npm start
 ## 📝프로젝트 gif
 
 <details>
-  <summary>1 </summary>
+  <summary>환자-회원가입 </summary>
     <div markdown="1">
+     <img src=https://github.com/hongandlee/apuda/assets/91598778/894082a9-59f1-4cd2-88e1-7c360a844a16/>
     </div>
 </details>
-
-
 <details>
-  <summary>2</summary>
+  <summary>환자-로그인</summary>
     <div markdown="1">
+     <img src=https://github.com/hongandlee/apuda/assets/91598778/5d42578a-fba4-4392-ad70-136d12774e3d/>
+    </div>
+</details><details>
+  <summary>환자-병원예약하기 </summary>
+    <div markdown="1">
+        <img src=https://github.com/hongandlee/apuda/assets/91598778/1d3425c7-863f-4b67-8778-8842041f874d/>
+     병원예약하기
+    <img src=https://github.com/hongandlee/apuda/assets/91598778/43618274-8105-4a6f-9750-ab159e3fa4bd/>
+     내위치 주변 병원 찾기 
+    <img src=https://github.com/hongandlee/apuda/assets/91598778/eee10e04-4e89-475f-ad8d-6c2c601be711/>
+예약 불가
+</div>
+</details><details>
+  <summary>환자-진료비 내기  </summary>
+    <div markdown="1">
+    <img src=https://github.com/hongandlee/apuda/assets/91598778/6e28563a-e9a3-40e8-b852-437d36604ed1/>
+진료비 보기 
+         <img src=https://github.com/hongandlee/apuda/assets/91598778/a5b85fc4-0aaa-4427-985d-587bd19fa820/>
+     진료비 내기 
+    </div>
+</details><details>
+  <summary>환자-스마트문진 </summary>
+    <div markdown="1">
+     <img src=https://github.com/hongandlee/apuda/assets/91598778/9715e828-c226-461f-b988-a47c617928e0/>
+    </div>
+</details><details>
+  <summary>환자-마이페이지 </summary>
+    <div markdown="1">
+    <img src=https://github.com/hongandlee/apuda/assets/91598778/734a4344-9cd3-4feb-82af-4296feb64aa1/>
+회원정보 수정(전화번호)
+     <img src=https://github.com/hongandlee/apuda/assets/91598778/52639210-eeb6-4d25-843d-2468cd81f653/>
+     예약 취소
+    </div>
+</details><details>
+  <summary>의사-회원가입 </summary>
+    <div markdown="1">
+     <img src=https://github.com/hongandlee/apuda/assets/91598778/27f508a0-1d77-41e9-b577-0ea98652b305/>
     </div>
 </details>
-
 <details>
-  <summary>3</summary>
+  <summary>의사-로그인</summary>
     <div markdown="1">
+     <img src=https://github.com/hongandlee/apuda/assets/91598778/ee2c48b0-449a-485b-8efd-9780c088c97d/>
     </div>
 </details>
-
 <details>
-  <summary> 4  </summary>
+  <summary>의사-예약/진료관리 </summary>
     <div markdown="1">
-     
+ <img src=https://github.com/hongandlee/apuda/assets/91598778/b976c296-5612-4780-ac31-9a5743561a84/>
+     예약확정 문자
+<img src=https://github.com/hongandlee/apuda/assets/91598778/d1dc6274-3419-40d9-ab29-29cd4c5da0c4/>
+진료비 청구 
+<img src=https://github.com/hongandlee/apuda/assets/91598778/55150fbf-2465-4b16-b62b-c8cb6427ebf8/>
+예약관리 검색 
+    <img src=https://github.com/hongandlee/apuda/assets/91598778/90cc0e72-6d35-4f54-aec6-3e63f2898912/>
+     진료관리 
+     <img src=https://github.com/hongandlee/apuda/assets/91598778/2ec2a25d-0c0d-401d-92c2-f90374ba3c02/>
+     환자의 건강체크 확인 
     </div>
 </details>
-
+<details>
+  <summary>의사-대기환자 관리  </summary>
+    <div markdown="1">
+<img src=https://github.com/hongandlee/apuda/assets/91598778/8e91f278-6569-4f1a-a5c5-83afe3f4f665/>
+    </div>
+</details>
+<details>
+  <summary>의사-매출관리 </summary>
+    <div markdown="1">
+    <img src=https://github.com/hongandlee/apuda/assets/91598778/2d6236d3-0164-4444-8342-0de119eb290b/>
+    </div>
+</details>
+<details>
+  <summary>의사-병원페이지(정보 수정)</summary>
+    <div markdown="1">
+     <img src=https://github.com/hongandlee/apuda/assets/91598778/5294da15-5482-4608-ae94-f0a4e3848e40/>
+    </div>
+</details>
+<details>
+  <summary>공용-비밀번호 찾기  </summary>
+    <div markdown="1">
+    <img src=https://github.com/hongandlee/apuda/assets/91598778/6323f76a-406c-49fa-a11f-6075f6544112/>
+    </div>
+</details>
+<details>
+  <summary>공용-실시간 진료 관리  </summary>
+    <div markdown="1">
+    <img src=https://github.com/hongandlee/apuda/assets/91598778/d9630304-02e8-4798-b7b4-9048b3ea3faf/>
+    </div>
+</details>
 
 
 <br />
 
 ## 📌배포링크
 
-https://smartchart.store
+https://smartchart.vercel.app
 
 <br />
 <br />
@@ -125,20 +205,22 @@ https://smartchart.store
 
 <br />
 
-## 💯과제목표
+## 목표
 
-#### 로그인 
-
-- 
 #### 병원 예약하기
-
-- 
-
+- 지도 api를 사용하여 원하는 병원을 찾고 내 주변에 있는 병원을 검색할 수 있습니다.
+- 병원을 선택한 후 해당병원이 특정시간에 예약가능한지 확인 후 예약할 수 있습니다.
+#### 병원비 지불하기
+- 환자는 처방된 내역을 확인 할 수 있으면 카카오 페이를 통해 지불할 수 있습니다.
 #### 환자 관리하기 
-
-- 
-
-
+- 의사는 예약한 환자들의 데이터를 한번에 관리 할 수 있습니다.
+- 환자가 작성한 문진 리스트를 확인하고 진료비를 청구하거나 진료 내역을 저장할 수 있습니다.
+#### 환자 대기 관리 
+- 드래그앤드롭을 사용해여 그 날 방문 예정인 환자의 상태를 대기중, 진료중, 완료로 구별하여 관리 할 수 있습니다.
+#### 병원 매출관리 조회 
+- Chart.js를 사용하여 의사는 병원의 매출을 한번에 관리할 수 있습니다. 년별, 월별, 주별, 일별, 기간별 데이터를 한번에 확인 할 수 있습니다. 
+#### 실시간 진료 상담
+- WebSocket을 사용하여 환자와 의사가 실시간으로 채팅할 수 있도록 구현하였습니다. 
 
 <br />
 
@@ -166,7 +248,6 @@ https://smartchart.store
  ┃ ┣ 📜ChatIcon.jsx
  ┃ ┣ 📜doctor_female.png
  ┃ ┣ 📜doctor_male.png
- ┃ ┣ 📜kakao_login_medium_wide.png
  ┃ ┣ 📜patient.png
  ┃ ┣ 📜questions.js
  ┃ ┗ 📜smartLogo.png
@@ -209,6 +290,7 @@ https://smartchart.store
  ┃ ┣ 📜Modal.jsx
  ┃ ┣ 📜MypageComponent.jsx
  ┃ ┣ 📜NavItem.jsx
+ ┃ ┣ 📜Pagination.jsx
  ┃ ┣ 📜PatientBill.jsx
  ┃ ┣ 📜PayComponent.jsx
  ┃ ┣ 📜SalesTable.jsx
@@ -246,6 +328,7 @@ https://smartchart.store
  ┃ ┗ 📜TeleConsult.jsx
  ┣ 📂stores
  ┃ ┣ 📜answerAtom.js
+ ┃ ┣ 📜billingStatusAtom.js
  ┃ ┣ 📜dateAtom.js
  ┃ ┣ 📜invoiceAtom.js
  ┃ ┣ 📜sizeStore.js
@@ -258,7 +341,8 @@ https://smartchart.store
  ┣ 📜App.js
  ┣ 📜index.css
  ┣ 📜index.js
- ┗ 📜routesCollection.js
+ ┣ 📜routesCollection.js
+ ┗ 📜setupProxy.js
 
 
 ```
@@ -274,14 +358,30 @@ https://smartchart.store
 <img src="https://img.shields.io/badge/Recoil-3578E5?style=for-the-badge&logo=recoil&logoColor=white" />
 <img src="https://img.shields.io/badge/styledcomponents-DB7093?style=for-the-badge&logo=styledcomponents&logoColor=white" >
 <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=Vercel&logoColor=white"/>
- </div>
+<img src="https://img.shields.io/badge/sockJS-010101?style=for-the-badge&logo=socket.io&logoColor=white"> 
+<img src="https://img.shields.io/badge/StompJS-010101?style=for-the-badge&logo=STOMP&logoColor=white">
+</div>
 
 ### Back
 <div align=left>
-<img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"/>
-<img src="https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=Spring&logoColor=white"/>
-<img src="https://img.shields.io/badge/Amazon AWS-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white"/>
-<img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white"/>
-
+<img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"> <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=black">  <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=black"> 
+ <img src="https://img.shields.io/badge/springsecurity-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">
+ <img src="https://img.shields.io/badge/WebSocket-010101?style=for-the-badge&logo=WebSocket&logoColor=white">
+<img src="https://img.shields.io/badge/sockJS-010101?style=for-the-badge&logo=socket.io&logoColor=white"> 
+ <img src="https://img.shields.io/badge/STOMP-010101?style=for-the-badge&logo=STOMP&logoColor=white">
+ <img src="https://img.shields.io/badge/JPA-F0047F?style=for-the-badge&logo=JPA&logoColor=white">
+  <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white">
+  <img src="https://img.shields.io/badge/amazons3-569A31?style=for-the-badge&logo=amazons3&logoColor=black">
+<img src="https://img.shields.io/badge/amazonec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=black">
+<img src="https://img.shields.io/badge/amazonrds-527FFF?style=for-the-badge&logo=amazonrds&logoColor=black">
+<img src="https://img.shields.io/badge/githubactions-2088FF?style=for-the-badge&logo=githubactions&logoColor=black">
+<img src="https://img.shields.io/badge/amazonCodeDeploy-F7A81B?style=for-the-badge&logo=amazonCodeDeploy&logoColor=black">
+<img src="https://img.shields.io/badge/nginx-009639?style=for-the-badge&logo=nginx&logoColor=black">
+<img src="https://img.shields.io/badge/ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=black">
 </div>
+<br />
+
+## Service Architecture
+<img src=https://github.com/hongandlee/apuda/assets/91598778/3ca4894a-8a4d-4a7b-80c2-b58db391635f/>
+
 <br />
